@@ -10,12 +10,12 @@ Version: 2.01
  2. Directory Structure
  3. Prerequisites
  4. Installation Instructions
-    4.1 Build Embedded Xinu
-    4.2 Make serial and network connections
-    4.3 Enter Common Firmware Environment prompt
-    4.4 Set IP address
-    4.5 Load image over TFTP
- 4. Links
+    1. Build Embedded Xinu
+    2. Make serial and network connections
+    3. Enter Common Firmware Environment prompt
+    4. Set IP address
+    5. Load image over TFTP
+ 5. Links
 
 
 ## 1. What is Embedded Xinu? ##
@@ -104,13 +104,13 @@ the compiled Embedded Xinu image.
 
 ### 4.1 Build Embedded Xinu ###
 
-Update the MIPS_ROOT and MIPS_PREFIX variables in compile/mipsVars to 
+Update the `MIPS_ROOT` and `MIPS_PREFIX` variables in compile/mipsVars to 
 correctly point to the cross-compiler on your machine.
 
 Then, from the compile directory, simply run make, which should leave you
 with a xinu.boot file.  This is the binary image you need to transfer to
 your router for it to run Embedded Xinu.  The default build is for the
-WRT54GL router; change the compile/Makefile PLATFORM variable for other
+WRT54GL router; change the compile/Makefile `PLATFORM` variable for other
 builds.  See the compile/platforms directory for supported configurations.
 
 ### 4.2 Make serial and network connections ###
@@ -159,10 +159,12 @@ If all has gone correctly the router you will be greeted with the Xinu Shell
 ### The Embedded Xinu Wiki ###
 
 The home of the Embedded Xinu project
-   http://xinu.mscs.mu.edu/
+
+    http://xinu.mscs.mu.edu/
 
 ### Dr. Brylow's Embedded Xinu Lab Infrastructure Page ###
 
 More information about the Embedded Xinu Lab at Marquette University
-   http://www.mscs.mu.edu/~brylow/xinu/
+
+    http://www.mscs.mu.edu/~brylow/xinu/
 
