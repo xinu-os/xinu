@@ -1,0 +1,35 @@
+* Embedded Xinu, Copyright (c) 2010, Douglas Comer and Dennis Brylow
+* All rights reserved.
+
+   The Xinu operating system was Copyright (c) 1984 by Dr. Douglas
+Comer and Prentice Hall, and ran on the LSI-11 platform.  The VAX port
+of Xinu was developed in 1987 by Douglas Comer.  The IBM PC port of
+Xinu was developed in 1988 by Douglas Comer and Timothy Fossum, and
+the 486 version was developed by John Lin in 1995.  The Macintosh
+platform port of Xinu was developed in 1989 by Douglas Comer and
+Steven Munson.  The Motorola 68000 (Sun 3) port of Xinu was developed
+by Shawn Ostermann, circa 1988.  The Sparc port of Xinu was developed
+by Jim Griffioen.  The PowerPC port of Xinu was developed in 2005 by
+Dennis Brylow.  The MIPS implementation of Embedded Xinu was developed
+in 2006 by Dennis Brylow.
+
+   The Embedded Xinu operating system is Copyright (c) 2007, 2008, 2009,
+and 2010 by Douglas Comer and Dennis Brylow.
+
+   Embedded Xinu is a fresh reimplementation of the Xinu design in
+ANSI-compliant C on an embedded RISC architecture.  The MIPS port of
+Embedded Xinu was developed from 2006 to 2010 at Marquette University,
+under the direction of Dr. Dennis Brylow.
+
+   Major contributors to the Embedded Xinu Project include Ryan Berg, Tim
+Blattner, Aaron Gember, Paul Hinze, Kyle Jackson, Adam Koehler, Zachary Lund,
+Steve Luppi, Dan Mahoney, Adam Mallen, Mohammad "Meraj" Molla, Justin Picotte,
+Joe Pintozzi, Justin Rawson, Michael Schultz, Paul Spillane, Anthony Stassi,
+and Kyle Thurow.
+
+Dr. Paul Ruth has been instrumental in porting Embedded Xinu to the Qemu
+virtual platform.
+
+   Work on Embedded Xinu was made possible in part by support from Marquette
+University, the Wehr Foundation, Cisco Systems, Intel Corporation, and the
+National Science Foundation (Grant DUE-CCLI-0737476).

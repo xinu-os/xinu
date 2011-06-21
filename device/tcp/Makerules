@@ -1,0 +1,22 @@
+# This Makefile contains rules to build this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/tcp
+
+# Source files for this component
+C_FILES = tcpAlloc.c tcpChksum.c tcpClose.c tcpControl.c \
+          tcpDemux.c tcpFree.c tcpGetc.c tcpInit.c tcpOpen.c \
+          tcpOpenActive.c tcpPutc.c tcpRead.c \
+          tcpRecvAck.c tcpRecv.c tcpRecvData.c tcpRecvListen.c \
+          tcpRecvOpts.c tcpRecvOther.c tcpRecvRtt.c \
+          tcpRecvSynsent.c tcpRecvValid.c tcpSendAck.c tcpSend.c \
+          tcpSendData.c tcpSendPersist.c tcpSendRst.c tcpSendRxt.c \
+          tcpSendSyn.c tcpSendWindow.c tcpSeqdiff.c tcpSetup.c tcpStat.c \
+          tcpTimer.c tcpTimerPurge.c tcpTimerRemain.c tcpTimerSched.c \
+          tcpTimerTrigger.c tcpWrite.c
+
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

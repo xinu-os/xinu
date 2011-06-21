@@ -1,0 +1,14 @@
+#This Makefile contains rules to build files in the net/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = network/snoop
+
+# Source files for this component
+
+# Important network components
+C_FILES =  snoopCapture.c snoopClose.c snoopFilter.c snoopOpen.c snoopPrint.c snoopPrintArp.c snoopPrintEthernet.c snoopPrintIpv4.c snoopPrintTcp.c snoopPrintUdp.c snoopRead.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

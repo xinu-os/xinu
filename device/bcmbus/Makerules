@@ -1,0 +1,12 @@
+# This Makefile contains rules to build this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/bcmbus
+
+# Source files for this component
+C_FILES = backplaneInit.c backplaneCoreDisable.c backplaneCoreReset.c backplaneCoreUp.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

@@ -1,0 +1,12 @@
+# This Makefile contains rules to build files in this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = network/route
+
+# Source files for this component
+C_FILES = rtAdd.c rtAlloc.c rtClear.c rtDaemon.c rtDefault.c rtInit.c rtLookup.c rtRecv.c rtRemove.c rtSend.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

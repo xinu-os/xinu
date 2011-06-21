@@ -1,0 +1,12 @@
+# This Makefile contains rules to build files in the device/uart/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/uart-ns16550a
+
+# Source files for this component
+C_FILES = kprintf.c uartInit.c uartInterrupt.c uartPutc.c uartRead.c uartWrite.c uartGetc.c uartControl.c uartStat.c
+S_FILES = 
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

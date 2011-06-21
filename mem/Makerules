@@ -1,0 +1,22 @@
+# This Makefile contains rules to build files in the mem/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = mem
+
+# Region Allocator files
+ALLOC_FILES = memRegionInit.c memRegionClear.c memRegionInsert.c memRegionRemove.c memRegionSplit.c memRegionValid.c memRegionTransfer.c memRegionAlloc.c memRegionReclaim.c
+
+# User Allocator files
+USER_FILES = malloc.c free.c
+
+# Memory Protection files
+SAFEMEM_FILES = safeInit.c safeMap.c safeMapRange.c safeUnmap.c safeUnmapRange.c safeKmapInit.c
+
+# TLB Handler files
+TLB_FILES = tlbInit.c tlbMiss.S tlbMissHandler.c
+
+FILES = ${ALLOC_FILES} ${USER_FILES} ${SAFEMEM_FILES} ${TLB_FILES}
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${FILES:%=${DIR}/%}

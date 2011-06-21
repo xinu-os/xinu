@@ -1,0 +1,12 @@
+#This Makefile contains rules to build this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = network/net
+
+# Source files for this component
+C_FILES = netChksum.c netDown.c netFreebuf.c netGetbuf.c netInit.c netLookup.c netRecv.c netSend.c netUp.c 
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

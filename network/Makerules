@@ -1,0 +1,10 @@
+# This Makefile contains rules to build devices within this directory
+
+# Name of this component (the directory this file is stored in)
+COMP = network
+
+# Name of networking modules to include in the built system
+NETWORKING = arp emulate icmp ipv4 net netaddr route snoop
+
+DIR = ${TOPDIR}/${COMP}
+include ${NETWORKING:%=${DIR}/%/Makerules}

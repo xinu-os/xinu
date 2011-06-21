@@ -1,0 +1,14 @@
+# This Makefile contains rules to build files in the network/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = network/ipv4
+
+# Source files for this component
+
+# Important network components
+C_FILES = dot2ipv4.c ipv4Recv.c ipv4RecvDemux.c ipv4RecvValid.c ipv4Send.c ipv4SendFrag.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

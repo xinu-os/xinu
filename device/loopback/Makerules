@@ -1,0 +1,12 @@
+# This Makefile contains rules to build files in the device/tty/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/loopback
+
+# Source files for this component
+C_FILES = loopbackGetc.c loopbackClose.c loopbackOpen.c loopbackPutc.c loopbackWrite.c loopbackRead.c loopbackControl.c loopbackInit.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

@@ -1,0 +1,17 @@
+# This Makefile contains rules to include data in the data/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = data
+
+# pcap files
+PCAP_FILES = testarp.pcap testip.pcap testnetif.pcap testraw.pcap testsnoop.pcap testudp.pcap
+
+# tar files
+TAR_FILES = mytar.tar
+
+# Muster all the needed files together
+FILES = ${PCAP_FILES} ${TAR_FILES}
+
+# Add the files to the compile source path
+DIR = ${COMP}
+DATA_SRC += ${FILES:%=${DIR}/%}

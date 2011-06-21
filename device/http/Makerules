@@ -1,0 +1,23 @@
+# This Makefile contains rules to build this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/http
+
+# Source files for this component
+DEV_FILES = httpClose.c httpControl.c \
+            httpGetc.c httpInit.c httpOpen.c httpPutc.c \
+            httpRead.c httpWrite.c
+HELP_FILES = httpAlloc.c httpCleanPrompts.c httpConfigPage.c \
+             httpErrorResponse.c \
+             httpFlushWBuffer.c httpFree.c \
+             httpHtmlBegin.c httpReadRqst.c \
+             httpReadHdrs.c httpValidations.c
+SERVER_FILES = httpServer.c
+
+S_FILES =
+
+C_FILES = ${DEV_FILES} ${HELP_FILES} ${SERVER_FILES}
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

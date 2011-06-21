@@ -1,0 +1,12 @@
+# This Makefile contains rules to build this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/ag71xx
+
+# Source files for this component
+C_FILES = etherInit.c etherOpen.c etherClose.c etherRead.c etherWrite.c etherControl.c etherInterrupt.c allocRxBuffer.c etherStat.c vlanStat.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

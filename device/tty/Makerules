@@ -1,0 +1,12 @@
+# This Makefile contains rules to build files in the device/tty/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/tty
+
+# Source files for this component
+C_FILES = ttyControl.c ttyOpen.c ttyRead.c ttyClose.c ttyGetc.c ttyInit.c ttyPutc.c ttyWrite.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

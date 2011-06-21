@@ -1,0 +1,25 @@
+OUTPUT_ARCH(mips)
+ENTRY(_start)
+SECTIONS {
+	. = 0x80010000;          /* Image starts here                     */
+	.text   :
+	{
+		*(.text .text.*)     /* asm text, then C text                 */
+		*(.rodata .rodata.*) /* asm and C read-only data              */
+		_etext = . ;         /* provide _etext constant               */
+	}
+
+	.data   :
+	{
+		*(.data .data.*)     /* asm and C data                        */
+		_edata = . ;         /* end of data constant                  */
+	}
+
+	.bss    :
+	{
+		_bss = . ;           /* beginning of bss segment              */
+		*(.bss .bss.*)       /* asm and C bss                         */
+		*(COMMON)            /* extra sections that are common        */
+		_end = . ;           /* end of image constant                 */
+	}
+}
