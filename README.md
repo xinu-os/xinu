@@ -1,8 +1,8 @@
 # Embedded Xinu #
 
- * Embedded Xinu, Copyright (C) 2008, 2009, 2010.  All rights reserved.
+Embedded Xinu, Copyright (C) 2008, 2009, 2010.  All rights reserved.
 
- * Version: 2.01
+Version: 2.01
 
  1. What is Embedded Xinu?
  2. Directory Structure
