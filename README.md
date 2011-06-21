@@ -1,10 +1,8 @@
-README: information about the directory tree and how to build an image.
-
-Embedded Xinu, Copyright (C) 2008, 2009, 2010.  All rights reserved.
-
 # Embedded Xinu #
 
-Version: 2.01
+ * Embedded Xinu, Copyright (C) 2008, 2009, 2010.  All rights reserved.
+
+ * Version: 2.01
 
  1. What is Embedded Xinu?
  2. Directory Structure
