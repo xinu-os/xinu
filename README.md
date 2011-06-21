@@ -43,7 +43,7 @@ basic directory structure:
               Xinu system once you have a cross-compiler.
  * `device/`  contains directories with source for all device drivers in Xinu.
  * `include/` contains all the header files used by Xinu.
- * `lib/`     contains library folders (e.g., libxc/) with a Makefile and 
+ * `lib/`     contains library folders (e.g., `libxc/`) with a Makefile and 
               source for the library
  * `LICENSE`  the license under which this project falls.
  * `loader/`  contains assembly files and is where the bootloader will begin
@@ -55,8 +55,8 @@ basic directory structure:
  * `RELEASE`  release notes for the current version.
  * `shell/`   contains the source for all Xinu shell related functions.
  * `system/`  contains the source for all Xinu system functions such as the
-              nulluser process (initialize.c) as well as code to set up a C
-              environment (startup.S).
+              nulluser process (`initialize.c`) as well as code to set up a C
+              environment (`startup.S`).
  * `test/`    contains a number of testcases (which can be run using the shell
               command `testsuite`).
 
