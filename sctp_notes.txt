@@ -1,0 +1,23 @@
+a SCTP message destined for ANY of our known IPs is accepted--do not bind to a specific IP on ingress (egress can bind arbitrarily)
+=> SCTP port matches separate from IP matches(?)
+
+receive window indicates buffer occupancy at the receiver
+per-path congestion window is maintained to manage the packets in flight
+
+logical parts of SCTP (RFC 4960 -- pg 11):
+- association startup/takedown
+- sequence delivery within streams
+- user data fragmentation
+- acknowledgment and congestion avoidance
+- chunk bundling
+- packet validation
+- path management
+
+Variable Parameters			Status		Type Value
+-----------------------------------------------------------------------
+IPv4 Address (Note 1)			Optional	5
+IPv6 Address (Note 1)			Optional	6
+Cookie Preservative			Optional	9
+Reserved for ECN Capable (Note 2)	Optional 	32768 (0x8000)
+Host Name Address (Note 3) 		Optional	11
+Supported Address Types (Note 4)	Optional	12
