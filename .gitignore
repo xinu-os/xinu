@@ -1,0 +1,11 @@
+*.o
+*.a
+compile/config/config
+compile/config/lex.yy.c
+compile/config/y.tab.c
+compile/version
+compile/vn
+compile/xinu.boot
+compile/xinu.elf
+include/conf.h
+system/conf.c
