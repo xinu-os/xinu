@@ -1,0 +1,18 @@
+# This Makefile contains rules to build files in the currect directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = network/sctp
+
+# Source files for this component
+
+# Important network components
+C_FILES = sctpInitialize.c sctpAssociate.c sctpShutdown.c sctpAbort.c \
+          sctpSend.c sctpSetPrimary.c sctpReceive.c sctpStatus.c \
+          sctpChangeHeartbeat.c sctpRequestHeartbeat.c sctpGetSRTTReport.c \
+          sctpSetFailureThreshold.c sctpSetProtocolParams.c \
+          sctpReceiveUnsent.c sctpReceiveUnack.c sctpDestroy.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}
