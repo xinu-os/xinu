@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <sctp.h>
 
-struct sctp sctptab[NSCTP];
+struct sctp_tcb sctptab[NSCTP];
 
 /**
  * Prepare available SCTP devices for use during system initialization.

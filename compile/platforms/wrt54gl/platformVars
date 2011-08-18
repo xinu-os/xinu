@@ -35,7 +35,7 @@ INCLUDE  = -I../include -I../system/platforms/${PLATFORM}
 BUGFLAG = -gstabs+
 
 # C compilation flags
-CFLAGS = -O0 -Wall -Werror -Wstrict-prototypes -Wno-trigraphs    \
+CFLAGS = -O0 -Wall -Wstrict-prototypes -Wno-trigraphs    \
          -nostdinc -fno-builtin -fno-strict-aliasing -fno-common \
        	 -fomit-frame-pointer -fno-pic -ffunction-sections -G 0  \
          -mlong-calls -mno-abicalls -mabi=32 -march=mips32       \

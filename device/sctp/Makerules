@@ -4,7 +4,7 @@
 COMP = device/sctp
 
 # Source files for this component
-DEV_FILES := Init.c Open.c Control.c Read.c Write.c Close.c
+DEV_FILES := Init.c Open.c Control.c Getc.c Read.c Putc.c Write.c Close.c
 
 C_FILES = ${DEV_FILES:%=sctp%}
 S_FILES =

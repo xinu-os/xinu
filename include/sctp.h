@@ -42,6 +42,23 @@
 #define SCTP_IBLEN (1<<14) /**< length of input buffer */
 #define SCTP_OBLEN (1<<14) /**< length of output buffer */
 
+/* System constants */
+#define NSCTP_HOMES 4      /**< Max. number of IPs an association can have */
+
+struct sctp_tcb
+{
+	/* Xinu-oriented details */
+	device *devptr;        /**< device entry associated with this TCB */
+	semaphore lock;        /**< Lock to protect this TCB entry */
+	int state;             /**< Connection state */
+
+	/* Connection details */
+	ushort localport;      /**< Local port number */
+	ushort remoteport;     /**< Remote port number */
+	struct netaddr localip[NSCTP_HOMES]; /**< Local IPs for association */
+	struct netaddr remoteip[NSCTP_HOMES]; /**< Remote IPs for association */
+};
+
 /************************
  * PROTOCOL Definitions *
  ************************/
@@ -74,7 +91,7 @@ typedef enum {
 	heartbeat_ack = 5,    /**< Heartbeat Acknowledgement */
 	abort = 6,            /**< Abort */
 	shutdown = 7,         /**< Shutdown */
-	shutdown_ack 8 14,    /**< Shutdown Acknowledgement */
+	shutdown_ack = 8,    /**< Shutdown Acknowledgement */
 	error = 9,            /**< Operation Error */
 	cookie_echo = 10,     /**< State Cookie */
 	cookie_ack = 11,      /**< Cookie Acknowledgement */
@@ -96,7 +113,7 @@ struct sctpChunkParam
 {
 	ushort type;          /**< type of SCTP chunk parameter */
 	ushort length;        /**< length of this chunk parameter (bytes) */
-	uchar  value[1]       /**< value of this chunk parameter */
+	uchar  value[1];      /**< value of this chunk parameter */
 };
 
 /* SCTP DATA Chunk format */
@@ -120,7 +137,7 @@ struct sctpChunkInit
 	ushort n_out_streams; /**< Number of Outbound Streams */
 	ushort n_in_streams;  /**< Number of Inbound Streams */
 	uint init_tsn;        /**< Initial Transmission Sequence Number */
-	struct sctpChunkParam[1]; /**< Optional Parameter list */
+	struct sctpChunkParam param[1]; /**< Optional Parameter list */
 };
 #define SCTP_INIT_PARAM_IPv4_ADDR       5
 #define SCTP_INIT_PARAM_IPv6_ADDR       6
@@ -137,7 +154,7 @@ struct sctpChunkInitAck
 	ushort n_out_streams; /**< Number of Outbound Streams */
 	ushort n_in_streams;  /**< Number of Inbound Streams */
 	uint init_tsn;        /**< Initial Transmission Sequence Number */
-	struct sctpChunkParam[1]; /**< Optional Parameter list */
+	struct sctpChunkParam param[1]; /**< Optional Parameter list */
 };
 #define SCTP_INITACK_PARAM_IPv4_ADDR       5
 #define SCTP_INITACK_PARAM_IPv6_ADDR       6
@@ -237,7 +254,9 @@ struct sctpChunkCookieEcho
 devcall sctpInit(device *);
 devcall sctpOpen(device *, va_list);
 devcall sctpClose(device *);
+devcall sctpGetc(device *);
 devcall sctpRead(device *, void *, uint);
+devcall sctpPutc(device *, char);
 devcall sctpWrite(device *, void *, uint);
 devcall sctpControl(device *, int, long, long);
 
