@@ -214,6 +214,21 @@ struct sctpChunkCookieEcho
 /* SCTP SHUTDOWN COMPLETE Chunk has no parameters */
 #define SCTP_SHUTDOWN_COMPLETE_FLAG_T 0x01 /**< verification tag set */
 
+/*****************************
+ * STATE MACHINE Definitions *
+ *****************************/
+#define SCTP_STATE_CLOSED            0
+#define SCTP_STATE_COOKIE_WAIT       1
+#define SCTP_STATE_COOKIE_ECHOED     2
+#define SCTP_STATE_ESTABLISHED       3
+#define SCTP_STATE_SHUTDOWN_PENDING  4
+#define SCTP_STATE_SHUTDOWN_SENT     5
+#define SCTP_STATE_SHUTDOWN_RECEIVED 6
+#define SCTP_STATE_SHUTDOWN_ACK_SENT 7
+
+/*****************************************
+ * Definitions that SHOULDN'T BE HERE... *
+ *****************************************/
 /* Dynamic/private (ephemeral) port allocation range */
 #define SCTP_LOWPORT  49152 /**< low port number (IANA suggestion) */
 #define SCTP_HIGHPORT 65535 /**< highest port number */

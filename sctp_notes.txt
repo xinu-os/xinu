@@ -13,11 +13,50 @@ logical parts of SCTP (RFC 4960 -- pg 11):
 - packet validation
 - path management
 
-Variable Parameters			Status		Type Value
------------------------------------------------------------------------
-IPv4 Address (Note 1)			Optional	5
-IPv6 Address (Note 1)			Optional	6
-Cookie Preservative			Optional	9
-Reserved for ECN Capable (Note 2)	Optional 	32768 (0x8000)
-Host Name Address (Note 3) 		Optional	11
-Supported Address Types (Note 4)	Optional	12
+State movement:
+
+- Receiver:
+  - Start in CLOSED state
+    - Recv INIT Chunk, generate Cookie, send INIT ACK Chunk (with State Cookie)
+    - Recv COOKIE ECHO (with valid cookie)
+      - create the TCB and send COOKIE ACK
+    - Now in ESTABLISHED state
+
+- Sender:
+  - Start in CLOSED state
+    - [User request to associate a connection]
+    - Create a TCB, send an INIT to receiver
+      - start initialization timer timeout
+    - Recv INIT ACK (with cookie)
+      - send COOKIE ECHO back with cookie
+      - stop init timer/start cookie timer timeout
+    - Recv COOKIE ACK
+      - stope cookie timer
+    - Now in ESTABLISHED state
+
+[Revisit for shutdown states...]
+
+User Commands:
+[INITIALIZE] - build up internal data structures
+[ABORT] - force abort the connection
+[ASSOCIATE] - create a connection with remote host
+[SHUTDOWN] - properly shutdown the connection
+
+Association Steps:
+ "A wants to connect to Z"
+- A sends INIT with verification tag (init_tag[A] = rand(1, 2**32-1))
+- Z responds with INIT ACK
+  - init_tag[Z] = rand(1, 2**32-1); ver_tag = init_tag[A]
+  - state cookie (do not keep state locally)
+    + MAC (RFC2104)
+	+ timestamp of cookie creation time
+	+ lifespan of cookie
+	+ info needed to establish connection
+	- create temp TCP with info from INIT chunk and INIT ACK chunk
+	- in TCB set create time and lifespan to protocol param Valid.Cookie.Life
+	- Collect info from TCB to recreate TCB, make MAC from info + secret key
+	- Cookie consists of this info and MAC
+- A gets INIT ACK, sends COOKIE-ECHO
+- Z gets COOKIE_ECHO, (checks)
+  - creates TCB, move to ESTABLISHED state, send back COOKIE_ACK + DATA
+    chunk
