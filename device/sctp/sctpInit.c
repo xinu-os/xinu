@@ -11,8 +11,6 @@
 #include <stdlib.h>
 #include <sctp.h>
 
-struct sctp_tcb sctptab[NSCTP];
-
 /**
  * Prepare available SCTP devices for use during system initialization.
  * @param devptr SCTP device entry pointer

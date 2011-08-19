@@ -43,20 +43,25 @@
 #define SCTP_OBLEN (1<<14) /**< length of output buffer */
 
 /* System constants */
-#define NSCTP_HOMES 4      /**< Max. number of IPs an association can have */
+#define SCTP_MAX_IPS 4     /**< Max. number of IPs per association */
+#define SCTP_MAX_STREAMS 4 /**< Max. number of streams per association */
 
-struct sctp_tcb
+#define SCTP_DEV_FREE 0    /**< SCTP "device" is free for use */
+#define SCTP_DEV_USED 1    /**< SCTP device is in some used state */
+
+struct sctp
 {
 	/* Xinu-oriented details */
 	device *devptr;        /**< device entry associated with this TCB */
 	semaphore lock;        /**< Lock to protect this TCB entry */
-	int state;             /**< Connection state */
+	short dev_state;       /**< Device state */
+	short state;           /**< Connection state */
 
 	/* Connection details */
 	ushort localport;      /**< Local port number */
 	ushort remoteport;     /**< Remote port number */
-	struct netaddr localip[NSCTP_HOMES]; /**< Local IPs for association */
-	struct netaddr remoteip[NSCTP_HOMES]; /**< Remote IPs for association */
+	struct netaddr localip[SCTP_MAX_IPS];  /**< Local IPs for association */
+	struct netaddr remoteip[SCTP_MAX_IPS]; /**< Remote IPs for association */
 };
 
 /************************
