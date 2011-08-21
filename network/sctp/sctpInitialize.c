@@ -24,6 +24,7 @@ static int sctpGetPort(void);
  * localaddr is a pointer to `naddrs` local IP addresses to support.
  * If `localaddr` is NULL or `naddrs` is 0, the "primary" IP used will be
  * the first local IP used with this instance.
+ * See RFC 4960, pg. 110--111 for details.
  * @param localpt local port for this SCTP instance
  * @param *localaddr pointer to start of struct netaddr array
  * @param naddrs number of localaddrs in array
