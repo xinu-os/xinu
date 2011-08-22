@@ -20,6 +20,8 @@
  */
 int sctpShutdown(struct sctp *instance)
 {
+	/* Make sure instance has association */
+
 	/* Make sure all locally queued data is sent for delivery */
 	/* state -> SHUTDOWN_PENDING */
 
