@@ -13,7 +13,7 @@
  * Ungracefully terminate an association. Will return SCTP instance to the
  * initialized state.  (See sctpShutdown details for more information.)
  * Reference: RFC 4960, pg. 113
- * @param *instance SCTP instance association to abort
+ * @param *instance Associated SCTP instance
  * @param reason the user-defined reason for aborting the association
  * @return non-zero on error
  */

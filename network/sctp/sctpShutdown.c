@@ -15,7 +15,7 @@
  * associations and instances this will effectively reset the instance to
  * be ready for re-association.
  * See RFC 4960, pg. 112 for details
- * @param *instance SCTP instance to shutdown
+ * @param *instance Associated SCTP instance
  * @return result of shutdown process (non-zero for errors)
  */
 int sctpShutdown(struct sctp *instance)
