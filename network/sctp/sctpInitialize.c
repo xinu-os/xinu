@@ -15,7 +15,7 @@
 
 struct sctp sctptab[NSCTP];
 
-static struct sctp sctpGetInstance(void);
+static struct sctp *sctpGetInstance(void);
 static int sctpGetPort(void);
 
 /**
@@ -30,9 +30,9 @@ static int sctpGetPort(void);
  * @param naddrs number of localaddrs in array
  * @return SCTP instance, NULL on error
  */
-struct sctp sctpInitialize(int localpt, struct netaddr *localaddr, int naddrs)
+struct sctp *sctpInitialize(int localpt, struct netaddr *localaddr, int naddrs)
 {
-	struct sctp instance;
+	struct sctp *instance;
 	int i;
 
 	/* get the instance as needed */
@@ -73,10 +73,10 @@ struct sctp sctpInitialize(int localpt, struct netaddr *localaddr, int naddrs)
  * Find and allocate a free SCTP instance.
  * @return pointer to SCTP instance allocated (NULL if none available)
  */
-static struct sctp sctpGetInstance(void)
+static struct sctp *sctpGetInstance(void)
 {
 	int i;
-	struct sctp instance = NULL;
+	struct sctp *instance = NULL;
 
 	for (i = 0; i < NSCTP; i++)
 	{
@@ -106,7 +106,7 @@ static int sctpGetPort(void)
 	nextport = (nextport + 1) % (SCTP_HIGHPORT - SCTP_LOWPORT + 1);
 	for (i = 0; i < NSCTP; i++)
 	{
-		if (sctptcb[i].localpt == (SCTP_LOWPORT + port))
+		if (sctptab[i].localport == (SCTP_LOWPORT + nextport))
 		{
 			nextport = (nextport + 1) % (SCTP_HIGHPORT - SCTP_LOWPORT + 1);
 			i = 0;

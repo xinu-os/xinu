@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <network.h>
+#include <mailbox.h>
 #include <sctp.h>
 
 /**
@@ -25,8 +26,8 @@
  * @param nos Number of output streams
  * @return NULL if there is an error, `instance` on success
  */
-int sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
-				  int remotept, int nos)
+struct sctp *sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
+                           int remotept, int nos)
 {
 	int status;
 
@@ -44,7 +45,7 @@ int sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
 
 	/* wait for INIT ACK */
 	status = mailboxReceive(instance->signal);
-	if (status != SCTP_OK)
+	if (status != SCTP_TYPE_INIT_ACK)
 	{
 		SCTP_TRACE("Received bad status: %d", status);
 	}
@@ -56,7 +57,7 @@ int sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
 
 	/* wait for COOKIE ACK */
 	status = mailboxReceive(instance->signal);
-	if (status != SCTP_OK)
+	if (status != SCTP_TYPE_COOKIE_ACK)
 	{
 		SCTP_TRACE("Received bad status: %d", status);
 	}

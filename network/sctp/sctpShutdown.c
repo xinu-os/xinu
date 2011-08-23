@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <network.h>
 #include <sctp.h>
+#include <mailbox.h>
 
 /**
  * Gracefully shutdown an SCTP association and return an SCTP instance to
@@ -20,6 +21,8 @@
  */
 int sctpShutdown(struct sctp *instance)
 {
+	int status;
+
 	/* Make sure instance has association */
 
 	/* Make sure all locally queued data is sent for delivery */
@@ -34,11 +37,11 @@ int sctpShutdown(struct sctp *instance)
 	status = mailboxReceive(instance->signal);
 	switch (status)
 	{
-	case SHUTDOWN_ACK:
+	case SCTP_TYPE_SHUTDOWN_ACK:
 		/* stop shutdown timer */
 		/* send SHUTDOWN_COMPLETE message */
 		break;
-	case SHUTDOWN:
+	case SCTP_TYPE_SHUTDOWN:
 		/* send SHUTDOWN_ACK message */
 		/* (re)start shutdown timer */
 		/* state -> SHUTDOWN_ACK_SENT */
@@ -46,17 +49,16 @@ int sctpShutdown(struct sctp *instance)
 		/* wait for SHUTDOWN COMPLETE or SHUTDOWN ACK message */
 		switch (status)
 		{
-		case SHUTDOWN_COMPLETE:
+		case SCTP_TYPE_SHUTDOWN_COMPLETE:
 			/* stop shutdown timer */
 			break;
-		case SHUTDOWN_ACK:
+		case SCTP_TYPE_SHUTDOWN_ACK:
 			/* stop shutdown timer */
 			/* send SHUTDOWN_COMPLETE message */
 			break;
 		default :
 			return -1;
 		}
-		/* 
 		break;
 	default:
 		/* XXX: better error/cleanup handling */

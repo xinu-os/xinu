@@ -8,14 +8,11 @@
 #ifndef _SCTP_H_
 #define _SCTP_H_
 
-#include <stddef.h>
 #include <conf.h>
-#include <ethernet.h>
-#include <ipv4.h>
-#include <semaphore.h>
-#include <stdarg.h>
 #include <stdio.h>
-#include <thread.h>
+#include <stddef.h>
+#include <stdarg.h>
+#include <mailbox.h>
 
 /* Tracing macros */
 //#define TRACE_SCTP     TTY1
@@ -56,11 +53,14 @@ struct sctp
 	semaphore lock;        /**< Lock to protect this TCB entry */
 	short dev_state;       /**< Device state */
 	short state;           /**< Connection state */
+	mailbox signal;        /**< Mailbox for signalling packets */
 
-	/* Connection details */
+	/* Instance details */
 	ushort localport;      /**< Local port number */
-	ushort remoteport;     /**< Remote port number */
 	struct netaddr localip[SCTP_MAX_IPS];  /**< Local IPs for association */
+
+	/* Association details */
+	ushort remoteport;     /**< Remote port number */
 	struct netaddr remoteip[SCTP_MAX_IPS]; /**< Remote IPs for association */
 };
 
@@ -87,21 +87,19 @@ struct sctpChunk
 };
 
 /* Accepted SCTP Chunk Types (as of RFC 4960) */
-typedef enum {
-	data = 0,             /**< Payload data */
-	init = 1,             /**< Initiation */
-	init_ack = 2,         /**< Initiation Acknowledgement */
-	sack = 3,             /**< Selective Acknowledgement */
-	heartbeat = 4,        /**< Heartbeat Request */
-	heartbeat_ack = 5,    /**< Heartbeat Acknowledgement */
-	abort = 6,            /**< Abort */
-	shutdown = 7,         /**< Shutdown */
-	shutdown_ack = 8,    /**< Shutdown Acknowledgement */
-	error = 9,            /**< Operation Error */
-	cookie_echo = 10,     /**< State Cookie */
-	cookie_ack = 11,      /**< Cookie Acknowledgement */
-	shutdown_complete = 14, /**< Shutdown Complete */
-} sctpChunkType;
+#define SCTP_TYPE_DATA 0               /**< Payload data */
+#define SCTP_TYPE_INIT 1               /**< Initiation */
+#define SCTP_TYPE_INIT_ACK 2           /**< Initiation Acknowledgement */
+#define SCTP_TYPE_SACK 3               /**< Selective Acknowledgement */
+#define SCTP_TYPE_HEARTBEAT 4          /**< Heartbeat Request */
+#define SCTP_TYPE_HEARTBEAT_ACK 5      /**< Heartbeat Acknowledgement */
+#define SCTP_TYPE_ABORT 6              /**< Abort */
+#define SCTP_TYPE_SHUTDOWN 7           /**< Shutdown */
+#define SCTP_TYPE_SHUTDOWN_ACK 8       /**< Shutdown Acknowledgement */
+#define SCTP_TYPE_ERROR 9              /**< Operation Error */
+#define SCTP_TYPE_COOKIE_ECHO 10       /**< State Cookie */
+#define SCTP_TYPE_COOKIE_ACK 11        /**< Cookie Acknowledgement */
+#define SCTP_TYPE_SHUTDOWN_COMPLETE 14 /**< Shutdown Complete */
 
 /* SCTP packet format */
 struct sctpPkt
