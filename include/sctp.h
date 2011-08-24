@@ -51,17 +51,58 @@ struct sctp
 	/* Xinu-oriented details */
 	device *devptr;        /**< device entry associated with this TCB */
 	semaphore lock;        /**< Lock to protect this TCB entry */
-	short dev_state;       /**< Device state */
-	short state;           /**< Connection state */
+	int dev_state;         /**< Device state */
 	mailbox signal;        /**< Mailbox for signalling packets */
+	uint secret;           /**< Secret key */
 
-	/* Instance details */
+	/* Instance details. RFC 4960, pg. 129 */
 	ushort localport;      /**< Local port number */
 	struct netaddr localip[SCTP_MAX_IPS];  /**< Local IPs for association */
 
-	/* Association details */
+	/* Association details. RFC 4960, pg. 129-- */
+	uint peer_tag;         /**< peer verification tag */
+	uint my_tag;           /**< my verification tag */
+
+	short state;           /**< Connection state */
+
 	ushort remoteport;     /**< Remote port number */
 	struct netaddr remoteip[SCTP_MAX_IPS]; /**< Remote IPs for association */
+
+	int primary_path;      /**< Index of remote IP that is "primary" */
+
+	uint err_count;
+	uint err_threshold;
+
+	uint peer_rwnd;
+	uint next_tsn;
+	uint last_tsn;
+	/* XXX: mapping array ??? */
+	int ack_state;
+
+	struct sctp_stream inboud[SCTP_MAX_STREAMS];
+	struct sctp_stream outboud[SCTP_MAX_STREAMS];
+
+	char reasm_queue[];
+	char out_queue[];
+	char in_queue[];
+	uint mtu;
+
+	/* per transport address data */
+	struct {
+		uint err_count;
+		uint err_threshold;
+		uint cwnd;
+		uint ssthresh;
+		uint rto;
+		uint srtt;
+		uint rtt_var;
+		uint bytes_acked;
+		int state;
+		uint pmtu;
+		int timer_id;
+		uint rto_pending;
+		uint last_time;
+	} trans[SCTP_MAX_IPS];
 };
 
 /************************

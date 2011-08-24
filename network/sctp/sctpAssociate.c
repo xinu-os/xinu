@@ -38,7 +38,9 @@ struct sctp *sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
 	}
 
 	/* "create" TCB (already allocated durning Initialize) */
+
 	/* send INIT message */
+
 	/* start init timer for timeout */
 	/* state -> COOKIE_WAIT */
 	instance->state = SCTP_STATE_COOKIE_WAIT;

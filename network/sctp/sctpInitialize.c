@@ -63,6 +63,9 @@ struct sctp *sctpInitialize(int localpt, struct netaddr *localaddr, int naddrs)
 		memcpy(&instance->localip[i], &localaddr[i], sizeof(localaddr[i]));
 	}
 
+	/* get a secret key for this instance */
+	instance->secret = rand();
+
 	signal(instance->lock);
 	SCTP_TRACE("SCTP instance initialized with %d homes", naddrs);
 
