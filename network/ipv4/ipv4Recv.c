@@ -116,6 +116,13 @@ syscall ipv4Recv(struct packet *pkt)
 #endif                          /* NTCP */
         break;
 
+        /* SCTP Packet */
+    case IPv4_PROTO_SCTP:
+#if NSCTP
+        sctpInput(pkt, &src, &dst);
+#endif                          /* NSCTP */
+        break;
+
         /* Unknown IP packet protocol */
     default:
 #if NRAW

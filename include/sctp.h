@@ -82,9 +82,9 @@ struct sctp
 	struct sctp_stream inboud[SCTP_MAX_STREAMS];
 	struct sctp_stream outboud[SCTP_MAX_STREAMS];
 
-	char reasm_queue[];
-	char out_queue[];
-	char in_queue[];
+	char reasm_queue[1];
+	char out_queue[1];
+	char in_queue[1];
 	uint mtu;
 
 	/* per transport address data */
@@ -293,6 +293,13 @@ struct sctpChunkCookieEcho
 /* Dynamic/private (ephemeral) port allocation range */
 #define SCTP_LOWPORT  49152 /**< low port number (IANA suggestion) */
 #define SCTP_HIGHPORT 65535 /**< highest port number */
+
+/* Upper Layer Protocol functions */
+// TODO: this.
+
+/* Input/Output functions and helpers */
+int sctpOutput(struct sctp *, uchar, uchar, ushort, void *);
+int sctpTimer(uint, void (*callback)(void *), void *);
 
 /* Function prototypes */
 devcall sctpInit(device *);

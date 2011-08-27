@@ -45,8 +45,9 @@
 /* IP Protocols */
 #define IPv4_PROTO_ICMP  1
 #define IPv4_PROTO_IGMP  2
-#define IPv4_PROTO_TCP	  6
+#define IPv4_PROTO_TCP	 6
 #define IPv4_PROTO_UDP   17
+#define IPv4_PROTO_SCTP  132
 
 /* Flags */
 #define IPv4_FLAG_LF		0x0000
