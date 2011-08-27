@@ -6,11 +6,14 @@ COMP = network/sctp
 # Source files for this component
 
 # Important network components
-C_FILES = sctpInitialize.c sctpAssociate.c sctpShutdown.c sctpAbort.c \
-          sctpSend.c sctpSetPrimary.c sctpReceive.c sctpStatus.c \
-          sctpChangeHeartbeat.c sctpRequestHeartbeat.c sctpGetSRTTReport.c \
-          sctpSetFailureThreshold.c sctpSetProtocolParams.c \
-          sctpReceiveUnsent.c sctpReceiveUnack.c sctpDestroy.c
+ULP_FILES = sctpInitialize.c sctpAssociate.c sctpShutdown.c sctpAbort.c \
+            sctpSend.c sctpSetPrimary.c sctpReceive.c sctpStatus.c \
+            sctpChangeHeartbeat.c sctpRequestHeartbeat.c sctpGetSRTTReport.c \
+            sctpSetFailureThreshold.c sctpSetProtocolParams.c \
+            sctpReceiveUnsent.c sctpReceiveUnack.c sctpDestroy.c
+IOH_FILES = sctpInput.c sctpOutput.c sctpChecksum.c
+
+C_FILES = ${ULP_FILES} ${IOH_FILES}
 S_FILES =
 
 # Add the files to the compile source path

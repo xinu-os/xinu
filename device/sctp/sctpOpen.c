@@ -15,8 +15,6 @@
 #include <stdarg.h>
 #include <interrupt.h>
 
-static ushort allocPort(void);
-
 /**
  * Open SCTP socket on local device.
  * @param devptr SCTP device entry pointer
@@ -31,13 +29,3 @@ devcall sctpOpen(device *devptr, va_list ap)
     return OK;
 }
 
-/**
- * Allocates an unused SCTP port to use as a local port
- * @return SCTP port
- */
-static ushort allocPort()
-{
-    static ushort nextport = 0;
-
-    return (nextport + SCTP_LOWPORT);
-}

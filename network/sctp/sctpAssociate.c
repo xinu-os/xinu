@@ -6,9 +6,13 @@
  */
 
 #include <stddef.h>
+#include <stdlib.h>
 #include <network.h>
 #include <mailbox.h>
 #include <sctp.h>
+
+static void sctpInitTimeout(void *args);
+static void sctpCookieTimeout(void *args);
 
 /**
  * Associate an SCTP instance with another endpoint. `instance` must be a
@@ -55,8 +59,8 @@ struct sctp *sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
 	sctpOutput(instance, SCTP_TYPE_INIT, 0, sizeof(init_chunk), &init_chunk);
 
 	/* start init timer for timeout */
-	// XXX: Find value for timeout
-	timer = sctpTimerStart(timeout, &sctpInitTimeout, instance);
+	// XXX: Find value for timeout (first param)
+	timer = sctpTimerStart(10, 0, &sctpInitTimeout, instance);
 
 	/* state -> COOKIE_WAIT */
 	instance->state = SCTP_STATE_COOKIE_WAIT;
@@ -73,12 +77,13 @@ struct sctp *sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
 
 	// XXX Where do I get the sent cookie from? tcb? mailbox?
 	/* send COOKIE_ECHO message */
-	memcpy(&cookie_chunk.cookie, cookie, sizeof(cookie));
+	//memcpy(&cookie_chunk.cookie, cookie, sizeof(cookie));
 	sctpOutput(instance, SCTP_TYPE_COOKIE_ECHO, 0,
 			   sizeof(cookie_chunk), &cookie_chunk);
 
 	/* start cookie timer */
-	timer = sctpTimerStart(timeout, &sctpCookieTimeout, instance);
+    // XXX: find value for timeout (first param)
+	timer = sctpTimerStart(10, 0, &sctpCookieTimeout, instance);
 
 	/* state -> COOKIE_ECHOED */
 	instance->state = SCTP_STATE_COOKIE_ECHOED;
@@ -102,3 +107,12 @@ struct sctp *sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
     return instance;
 }
 
+static void sctpInitTimeout(void *args)
+{
+    SCTP_TRACE("Timeout: 0x%08x", args);
+}
+
+static void sctpCookieTimeout(void *args)
+{
+    SCTP_TRACE("Timeout: 0x%08x", args);
+}

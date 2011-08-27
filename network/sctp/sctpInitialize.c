@@ -6,6 +6,7 @@
  */
 
 #include <stddef.h>
+#include <stdlib.h>
 #include <network.h>
 #include <sctp.h>
 

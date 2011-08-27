@@ -13,6 +13,7 @@
 #include <route.h>
 #include <udp.h>
 #include <tcp.h>
+#include <sctp.h>
 #include <icmp.h>
 #include <netemu.h>
 

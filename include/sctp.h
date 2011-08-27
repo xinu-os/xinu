@@ -12,10 +12,11 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdarg.h>
+#include <network.h>
 #include <mailbox.h>
 
 /* Tracing macros */
-//#define TRACE_SCTP     TTY1
+#define TRACE_SCTP     TTY1
 #ifdef TRACE_SCTP
 #define SCTP_TRACE(...)     { \
 		fprintf(TRACE_SCTP, "%s:%d (%d) ", __FILE__, __LINE__, gettid()); \
@@ -45,6 +46,11 @@
 
 #define SCTP_DEV_FREE 0    /**< SCTP "device" is free for use */
 #define SCTP_DEV_USED 1    /**< SCTP device is in some used state */
+
+struct sctp_stream
+{
+    int id;
+};
 
 struct sctp
 {
@@ -115,7 +121,7 @@ struct sctpHeader
     ushort srcpt;         /**< source port number */
     ushort dstpt;         /**< destination port number */
     uint   tag;           /**< verification tag */
-    uint   chksum;        /**< checksum */
+    uint   checksum;      /**< checksum */
 };
 
 /* SCTP generic chunk format (should be padded to 4 byte boundary) */
@@ -287,6 +293,22 @@ struct sctpChunkCookieEcho
 #define SCTP_STATE_SHUTDOWN_RECEIVED 6
 #define SCTP_STATE_SHUTDOWN_ACK_SENT 7
 
+/*********************
+ * Timer Definitions *
+ *********************/
+struct sctpTimer
+{
+	int id;                   /**< arbitrary identifier for timer */
+	uint ms;                  /**< length of timer */
+	uint remain_ms;           /**< remaining time on entry */
+	void (*callback)(void *); /**< callback function when timer fires */
+	void *args;               /**< arguments for callback function */
+	struct sctpTimer *prev;   /**< previous timer entry pointer */
+	struct sctpTimer *next;   /**< next timer entry pointer */
+};
+
+extern struct sctpTimer *head;
+
 /*****************************************
  * Definitions that SHOULDN'T BE HERE... *
  *****************************************/
@@ -298,8 +320,14 @@ struct sctpChunkCookieEcho
 // TODO: this.
 
 /* Input/Output functions and helpers */
+int sctpInput(struct packet *, struct netaddr *, struct netaddr *);
 int sctpOutput(struct sctp *, uchar, uchar, ushort, void *);
-int sctpTimer(uint, void (*callback)(void *), void *);
+uint sctpChecksum(void *, uint);
+
+struct sctpTimer *sctpTimerStart(uint, int, void (*callback)(void *), void *);
+int sctpTimerCancel(struct sctpTimer *timer);
+struct sctpTimer *sctpTimerMatch(int id);
+thread sctpTimerThread(void);
 
 /* Function prototypes */
 devcall sctpInit(device *);

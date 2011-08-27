@@ -1,16 +1,12 @@
+/**
+ * @file sctpTimer.c
+ * @provides sctpTimerStart, sctpTimerCancel, sctpTimerMatch, sctpTimerThread.
+ *
+ * $Id$
+ */
 #include <stdio.h>
 #include <stdlib.h>
-
-struct sctpTimer
-{
-	int id;                   /**< arbitrary identifier for timer */
-	uint ms;                  /**< length of timer */
-	uint remain_ms;           /**< remaining time on entry */
-	void (*callback)(void *); /**< callback function when timer fires */
-	void *args;               /**< arguments for callback function */
-	struct sctpTimer *prev;   /**< previous timer entry pointer */
-	struct sctpTimer *next;   /**< next timer entry pointer */
-};
+#include <sctp.h>
 
 struct sctpTimer *head;
 

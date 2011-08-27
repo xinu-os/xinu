@@ -6,7 +6,7 @@
  */
 #include <sctp.h>
 
-#define CRC32c(c,d) (c = (c>>8) ^ crc_c[(c^(d))&0xFF])
+#define CRC32C(c,d) (c = (c>>8) ^ crc_c[(c^(d))&0xFF])
 
 static unsigned long crc_c[256] = {
 	0x00000000L, 0xF26B8303L, 0xE13B70F7L, 0x1350F3F4L,
@@ -93,19 +93,19 @@ uint sctpChecksum(void *data, uint length)
 {
 	uint i;
 	uchar b0, b1, b2, b3;
-	unsigned long crc32c = ~0L;
+	unsigned long crc = ~0L;
 	uchar *stream = data;
 
 	for (i = 0; i < length; i++)
 	{
-		CRC32C(crc32, stream[i]);
+		CRC32C(crc, stream[i]);
 	}
 
-	crc32 = ~crc32;
+	crc = ~crc;
 
-	b0 = crc32 & 0xFF;
-	b1 = (crc32 >> 8) & 0xFF;
-	b2 = (crc32 >> 16) & 0xFF;
-	b3 = (crc32 >> 24) & 0xFF;
+	b0 = crc & 0xFF;
+	b1 = (crc >> 8) & 0xFF;
+	b2 = (crc >> 16) & 0xFF;
+	b3 = (crc >> 24) & 0xFF;
 	return ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
 }
