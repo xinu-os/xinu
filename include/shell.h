@@ -79,6 +79,7 @@ shellcmd xsh_ps(int, char *[]);
 shellcmd xsh_rdate(int, char *[]);
 shellcmd xsh_reset(int, char *[]);
 shellcmd xsh_route(int, char *[]);
+shellcmd xsh_sctp(int, char *[]);
 shellcmd xsh_sleep(int, char *[]);
 shellcmd xsh_snoop(int, char *[]);
 shellcmd xsh_tar(int, char *[]);

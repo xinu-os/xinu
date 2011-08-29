@@ -64,6 +64,7 @@ const struct centry commandtab[] = {
     {"reset", FALSE, xsh_reset},
 #if NETHER
     {"route", FALSE, xsh_route},
+    {"sctp", FALSE, xsh_sctp},
 #endif
     {"sleep", TRUE, xsh_sleep},
 #if NETHER

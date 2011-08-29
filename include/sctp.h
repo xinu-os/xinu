@@ -111,6 +111,8 @@ struct sctp
 	} trans[SCTP_MAX_IPS];
 };
 
+extern struct sctp sctptab[NSCTP];
+
 /************************
  * PROTOCOL Definitions *
  ************************/
@@ -152,6 +154,16 @@ struct sctpPkt
 {
 	struct sctpHeader header; /**< common header */
     struct sctpChunkHeader chunk[1]; /**< one or more chunk(s) */
+};
+
+/* SCTP Cookie -- should have enough to "recreate" TCB. RFC 4960, pg. 61 */
+struct sctpCookie
+{
+    uint mac;                /**< Message Authentication Code */
+    uint create_time;        /**< Local creation time of TCB */
+    uint life_time;          /**< Time at which this Cookie expires */
+    struct netaddr remoteip; /**< Source IP of the INIT packet */
+    ushort remotept;         /**< Source port of the INIT packet */
 };
 
 /**

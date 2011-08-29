@@ -25,7 +25,7 @@ C_FILES += xsh_uartstat.c
 C_FILES += xsh_gpiostat.c xsh_led.c
 
 # Networking commands
-C_FILES += xsh_arp.c xsh_ethstat.c xsh_nc.c xsh_netdown.c xsh_netemu.c xsh_netstat.c xsh_netup.c xsh_ping.c xsh_rdate.c xsh_route.c xsh_snoop.c xsh_tcpstat.c xsh_telnet.c xsh_telnetserver.c xsh_udpstat.c xsh_vlanstat.c xsh_voip.c xsh_xweb.c
+C_FILES += xsh_arp.c xsh_ethstat.c xsh_nc.c xsh_netdown.c xsh_netemu.c xsh_netstat.c xsh_netup.c xsh_ping.c xsh_rdate.c xsh_route.c xsh_sctp.c xsh_snoop.c xsh_tcpstat.c xsh_telnet.c xsh_telnetserver.c xsh_udpstat.c xsh_vlanstat.c xsh_voip.c xsh_xweb.c
 
 # TAR commands
 C_FILES += xsh_tar.c
