@@ -125,12 +125,11 @@ struct sctpHeader
 };
 
 /* SCTP generic chunk format (should be padded to 4 byte boundary) */
-struct sctpChunk
+struct sctpChunkHeader
 {
 	uchar  type;          /**< type of SCTP chunk */
 	uchar  flags;         /**< flags for this chunk (type specific) */
 	ushort length;        /**< length of this chunk (bytes) */
-	uchar  value[1];      /**< value of this chunk */
 };
 
 /* Accepted SCTP Chunk Types (as of RFC 4960) */
@@ -152,7 +151,7 @@ struct sctpChunk
 struct sctpPkt
 {
 	struct sctpHeader header; /**< common header */
-    struct sctpChunk  chunk[1]; /**< one or more chunk(s) */
+    struct sctpChunkHeader chunk[1]; /**< one or more chunk(s) */
 };
 
 /**
@@ -172,6 +171,7 @@ struct sctpChunkParam
 #define SCTP_DATA_FLAG_E 0x01 /**< (E)nding fragment bit */
 struct sctpChunkData
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	uint tsn;             /**< Transmission Sequence Number */
 	ushort stream_id;     /**< Stream Identifier */
 	ushort stream_seq;    /**< Stream Sequence Number */
@@ -182,6 +182,7 @@ struct sctpChunkData
 /* SCTP INIT Chunk format */
 struct sctpChunkInit
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	uint init_tag;        /**< Initiate Tag */
 	uint a_rwnd;          /**< Advertised Receiver Window Credit */
 	ushort n_out_streams; /**< Number of Outbound Streams */
@@ -199,6 +200,7 @@ struct sctpChunkInit
 /* SCTP INIT ACK Chunk format */
 struct sctpChunkInitAck
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	uint init_tag;        /**< Initiate Tag */
 	uint a_rwnd;          /**< Advertised Receiver Window Credit */
 	ushort n_out_streams; /**< Number of Outbound Streams */
@@ -217,6 +219,7 @@ struct sctpChunkInitAck
 /* SCTP SACK Chunk format */
 struct sctpChunkSack
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	uint cum_tsn_ack;     /**< Cumulative TSN Ack */
 	uint a_rwnd;          /**< Advertised Receiver Window Credit */
 	ushort n_gap_acks;    /**< Number of Gap Ack Blocks */
@@ -231,6 +234,7 @@ struct sctpChunkSack
 /* SCTP HEARTBEAT (and HEARTBEAT ACK) Chunk format */
 struct sctpChunkHeartbeat
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	struct sctpChunkParam info[1]; /**< Heartbeat info */
 };
 #define SCTP_HEARTBEAT_SENDER_INFO 1
@@ -238,6 +242,7 @@ struct sctpChunkHeartbeat
 /* SCTP ABORT Chunk format */
 struct sctpChunkAbort
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	struct sctpChunkParam err_cause[0]; /**< zero or more error causes */
 };
 #define SCTP_ABORT_FLAG_T 0x01 /**< Sender filled verification tag set */
@@ -245,6 +250,7 @@ struct sctpChunkAbort
 /* SCTP SHUTDOWN Chunk format */
 struct sctpChunkShutdown
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	uint cum_tsn_ack;     /**< Cumulative TSN Ack */
 };
 
@@ -253,6 +259,7 @@ struct sctpChunkShutdown
 /* SCTP ERROR Chunk format */
 struct sctpChunkError
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	struct sctpChunkParam err_cause[1]; /**< one or more error causes */
 };
 /* Defined on RFC 4960, pages 43--50 */
@@ -273,6 +280,7 @@ struct sctpChunkError
 /* SCTP COOKIE ECHO Chunk format */
 struct sctpChunkCookieEcho
 {
+	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
 	uchar cookie[1]; /**< Cookie */
 };
 
