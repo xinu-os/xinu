@@ -56,7 +56,7 @@ APPCOMPS  = apps mailbox shell test network # mem
 
 DEVICES = bcmbus bcm4713 flash \
 		ethloop loopback raw tty uart-ns16550 \
-		udp tcp sctp http telnet
+		udp tcp http telnet
 DEVCOMPS  = ${DEVICES:%=device/%}
 
 ${BOOTIMAGE}: xinu.elf

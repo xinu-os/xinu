@@ -10,10 +10,6 @@
 #include <network.h>
 #include <sctp.h>
 
-#ifndef NSCTP
-#define NSCTP 0
-#endif
-
 struct sctp sctptab[NSCTP];
 
 static struct sctp *sctpGetInstance(void);

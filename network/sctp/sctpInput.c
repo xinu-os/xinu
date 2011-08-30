@@ -89,7 +89,7 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
                 SCTP_INITACK_PARAM_STATE_COOKIE;
             initack_chunk->param[0].length =
                 sizeof(initack_chunk->param[0]) + sizeof(*cookie) - 1;
-            cookie = initack_chunk->param[0].value;
+            cookie = (struct sctpCookie *)initack_chunk->param[0].value;
             cookie->create_time = clktime;
             cookie->life_time = 10;     /* Valid.Cookie.Life */
             memcpy(&cookie->remoteip, src, sizeof(cookie->remoteip));

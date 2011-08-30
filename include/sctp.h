@@ -26,6 +26,11 @@
 #define SCTP_TRACE(...)
 #endif
 
+/* Make sure we have 1 SCTP at minimum */
+#ifndef NSCTP
+# define NSCTP 1
+#endif
+
 /**********************
  * DEVICE Definitions *
  **********************/
