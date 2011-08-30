@@ -73,8 +73,9 @@ int sctpInput(struct packet *pkt, struct netaddr *src, struct netaddr *dst)
             cookie.mac = 0;
             //cookie.mac = sctpCookieDigest(instance->secret, &cookie);
             /* Send INIT ACK */
-            sctpOutput(instance, SCTP_TYPE_INIT_ACK, 0,
-                       sizeof(cookie), &cookie);
+            // XXX: This isn't even close to right
+            // Should be a constructed INIT ACK packet
+            sctpOutput(instance, &cookie, sizeof(cookie));
 
             SCTP_TRACE("No SCTP association, INIT chunk");
         }

@@ -341,7 +341,7 @@ extern struct sctpTimer *head;
 
 /* Input/Output functions and helpers */
 int sctpInput(struct packet *, struct netaddr *, struct netaddr *);
-int sctpOutput(struct sctp *, uchar, uchar, ushort, void *);
+int sctpOutput(struct sctp *, void *, uint);
 uint sctpChecksum(void *, uint);
 
 struct sctpTimer *sctpTimerStart(uint, int, void (*callback)(void *), void *);

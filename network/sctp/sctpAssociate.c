@@ -51,12 +51,15 @@ struct sctp *sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
 	instance->primary_path = 0;
 
 	/* send INIT message */
+    init_chunk.head.type = SCTP_TYPE_INIT;
+    init_chunk.head.flags = 0;
+    init_chunk.head.length = sizeof(init_chunk);
 	init_chunk.init_tag = instance->my_tag;
 	init_chunk.a_rwnd = 1; //XXX Figure this out
 	init_chunk.n_out_streams = nos;
 	init_chunk.n_in_streams = SCTP_MAX_STREAMS; // XXX ???
 	init_chunk.init_tsn = 1; //XXX Figure this out
-	sctpOutput(instance, SCTP_TYPE_INIT, 0, sizeof(init_chunk), &init_chunk);
+    sctpOutput(instance, &init_chunk, sizeof(init_chunk));
 
 	/* start init timer for timeout */
 	// XXX: Find value for timeout (first param)
@@ -78,8 +81,10 @@ struct sctp *sctpAssociate(struct sctp *instance, struct netaddr *remoteaddr,
 	// XXX Where do I get the sent cookie from? tcb? mailbox?
 	/* send COOKIE_ECHO message */
 	//memcpy(&cookie_chunk.cookie, cookie, sizeof(cookie));
-	sctpOutput(instance, SCTP_TYPE_COOKIE_ECHO, 0,
-			   sizeof(cookie_chunk), &cookie_chunk);
+    cookie_chunk.head.type = SCTP_TYPE_COOKIE_ECHO;
+    cookie_chunk.head.flags = 0;
+    cookie_chunk.head.length = sizeof(init_chunk);
+    sctpOutput(instance, &cookie_chunk, sizeof(cookie_chunk));
 
 	/* start cookie timer */
     // XXX: find value for timeout (first param)
