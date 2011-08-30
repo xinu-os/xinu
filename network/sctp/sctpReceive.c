@@ -19,12 +19,12 @@
  * @param stream_id stream identifier to send message on
  * @return number of bytes written to buffer, zero if no data available
  */
-int sctpReceive(struct sctp *instance, void *buffer, uint size, int stream_id)
+int sctpReceive(struct sctp *instance, void *buffer, uint size,
+                int stream_id)
 {
-	/* Make sure instance is valid association */
-	/* Read the SCTP data */
-	/* Copy the data into the user buffer*/
+    /* Make sure instance is valid association */
+    /* Read the SCTP data */
+    /* Copy the data into the user buffer */
 
     return 0;
 }
-

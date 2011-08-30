@@ -21,4 +21,3 @@ int sctpReceiveUnack(int data_id, void *buffer, uint size, int stream_id)
 {
     return 0;
 }
-

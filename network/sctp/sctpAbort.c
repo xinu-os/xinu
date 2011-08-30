@@ -19,12 +19,11 @@
  */
 int sctpAbort(struct sctp *instance, int reason)
 {
-	/* Make sure instance has association */
+    /* Make sure instance has association */
 
-	/* send ABORT message */
-	/* delete TCB */
-	/* state -> CLOSED */
+    /* send ABORT message */
+    /* delete TCB */
+    /* state -> CLOSED */
 
     return 0;
 }
-

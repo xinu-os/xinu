@@ -6,11 +6,13 @@
  */
 
 #include <stddef.h>
+#include <stdlib.h>
 #include <network.h>
 #include <sctp.h>
 #include <clock.h>
 
-static struct sctp *sctpFindAssociation(struct sctp *, struct netaddr *, ushort);
+static struct sctp *sctpFindAssociation(struct sctp *, struct netaddr *,
+                                        ushort);
 static struct sctp *sctpFindInstance(struct netaddr *, ushort);
 
 /**
@@ -20,64 +22,82 @@ static struct sctp *sctpFindInstance(struct netaddr *, ushort);
  * @param *dst Destination network address of packet
  * @return non-zero on error
  */
-int sctpInput(struct packet *pkt, struct netaddr *src, struct netaddr *dst)
+int sctpInput(struct packet *pkt, struct netaddr *src,
+              struct netaddr *dst)
 {
-	struct sctpPkt *sctp;
-	struct sctp *instance, *assoc;
-	struct sctpChunkHeader *chunk;
-    struct sctpCookie cookie;
-	uint checksum, sctp_len, pos;
-	int result = 0;
+    struct sctpPkt *sctp;
+    struct sctp *instance, *assoc;
+    struct sctpChunkHeader *chunk;
+    uint checksum, sctp_len, pos;
+    int result = 0;
 
-	/* Set up the beginning of the SCTP packet */
-	sctp = (struct sctpPkt *)pkt->curr;
-	sctp_len = pkt->len - (pkt->curr - pkt->linkhdr);
-	checksum = net2hl(sctp->header.checksum);
-	sctp->header.checksum = 0;
-	if (checksum != sctpChecksum(sctp, sctp_len))
-	{
-		netFreebuf(pkt);
+    /* Set up the beginning of the SCTP packet */
+    sctp = (struct sctpPkt *)pkt->curr;
+    sctp_len = pkt->len - (pkt->curr - pkt->linkhdr);
+    checksum = net2hl(sctp->header.checksum);
+    sctp->header.checksum = 0;
+    if (checksum != sctpChecksum(sctp, sctp_len))
+    {
+        netFreebuf(pkt);
         SCTP_TRACE("Invalid checkum: 0x%08x != 0x%08x", checksum,
                    sctpChecksum(sctp, sctp_len));
-		return result;
-	}
+        return result;
+    }
 
-	sctp->header.srcpt = net2hs(sctp->header.srcpt);
-	sctp->header.dstpt = net2hs(sctp->header.dstpt);
-	sctp->header.tag = net2hl(sctp->header.tag);
-	chunk = &sctp->chunk[0];
-	SCTP_TRACE("SCTP Input {%d:%d, 0x%08x, Chunk:%d}", sctp->header.srcpt,
-			   sctp->header.dstpt, sctp->header.tag, chunk->type);
+    sctp->header.srcpt = net2hs(sctp->header.srcpt);
+    sctp->header.dstpt = net2hs(sctp->header.dstpt);
+    sctp->header.tag = net2hl(sctp->header.tag);
+    chunk = &sctp->chunk[0];
+    SCTP_TRACE("SCTP Input {%d:%d, 0x%08x, Chunk:%d}", sctp->header.srcpt,
+               sctp->header.dstpt, sctp->header.tag, chunk->type);
 
-	instance = sctpFindInstance(dst, sctp->header.dstpt);
-	if (NULL == instance)
-	{
-		/* XXX: some special error case here? */
-		netFreebuf(pkt);
+    instance = sctpFindInstance(dst, sctp->header.dstpt);
+    if (NULL == instance)
+    {
+        /* XXX: some special error case here? */
+        netFreebuf(pkt);
         SCTP_TRACE("Could not find SCTP instance");
-		return result;
-	}
+        return result;
+    }
 
-	assoc = sctpFindAssociation(instance, src, sctp->header.srcpt);
-	if (NULL == assoc)
-	{
+    assoc = sctpFindAssociation(instance, src, sctp->header.srcpt);
+    if (NULL == assoc)
+    {
         /* Should only be CLOSED if no association TCB exists */
         if (SCTP_TYPE_INIT == chunk->type)
         {
             /* Someone is trying to connect */
-            /* Generate Cookie -- DO NOT make TCB */
-            cookie.create_time = clktime;
-            cookie.life_time = 10; /* Valid.Cookie.Life */
-            memcpy(&cookie.remoteip, src, sizeof(cookie.remoteip));
-            cookie.remotept = sctp->header.srcpt;
-            cookie.mac = 0;
-            //cookie.mac = sctpCookieDigest(instance->secret, &cookie);
-            /* Send INIT ACK */
-            // XXX: This isn't even close to right
-            // Should be a constructed INIT ACK packet
-            sctpOutput(instance, &cookie, sizeof(cookie));
+            struct sctpChunkInitAck *initack_chunk;
+            struct sctpCookie *cookie;
+            uint length = sizeof(*initack_chunk) + sizeof(*cookie) - 1;
 
             SCTP_TRACE("No SCTP association, INIT chunk");
+
+            /* Set up response chunk */
+            initack_chunk = memget(length);
+            initack_chunk->head.type = SCTP_TYPE_INIT_ACK;
+            initack_chunk->head.flags = 0;
+            initack_chunk->head.length = length;
+            initack_chunk->init_tag = rand();
+            initack_chunk->a_rwnd = 1600;       // XXX: Figure out this value
+            initack_chunk->n_out_streams = SCTP_MAX_STREAMS;
+            initack_chunk->n_in_streams = SCTP_MAX_STREAMS;
+            initack_chunk->init_tsn = 0;        // XXX: Figure out this value
+
+            /* Generate Cookie Param-- DO NOT make TCB */
+            initack_chunk->param[0].type =
+                SCTP_INITACK_PARAM_STATE_COOKIE;
+            initack_chunk->param[0].length =
+                sizeof(initack_chunk->param[0]) + sizeof(*cookie) - 1;
+            cookie = initack_chunk->param[0].value;
+            cookie->create_time = clktime;
+            cookie->life_time = 10;     /* Valid.Cookie.Life */
+            memcpy(&cookie->remoteip, src, sizeof(cookie->remoteip));
+            cookie->remotept = sctp->header.srcpt;
+            cookie->mac = 0;
+            //cookie->mac = sctpCookieDigest(instance->secret, cookie);
+            /* Send INIT ACK */
+            sctpOutput(instance, initack_chunk, length);
         }
         else if (SCTP_TYPE_COOKIE_ECHO == chunk->type)
         {
@@ -94,45 +114,46 @@ int sctpInput(struct packet *pkt, struct netaddr *src, struct netaddr *dst)
         }
         netFreebuf(pkt);
         return result;
-	}
+    }
 
-	/* lock the TCB */
-	wait(assoc->lock);
+    /* lock the TCB */
+    wait(assoc->lock);
 
-	/* Iterate over the SCTP chunks in the packet */
-	pos = sizeof(sctp->header);
-	while (pos < sctp_len)
-	{
-		chunk->length = net2hs(chunk->length);
-		SCTP_TRACE("Chunk: {%d, 0x%02x, %u}", chunk->type, chunk->flags,
-				   chunk->length);
+    /* Iterate over the SCTP chunks in the packet */
+    pos = sizeof(sctp->header);
+    while (pos < sctp_len)
+    {
+        chunk->length = net2hs(chunk->length);
+        SCTP_TRACE("Chunk: {%d, 0x%02x, %u}", chunk->type, chunk->flags,
+                   chunk->length);
 
-		/* handle this chunk (depends on chunk type and state) */
-		switch (assoc->state)
-		{
-		case SCTP_STATE_CLOSED:
+        /* handle this chunk (depends on chunk type and state) */
+        switch (assoc->state)
+        {
+        case SCTP_STATE_CLOSED:
             /* XXX: Should never hit this case, error */
-			break;
-		case SCTP_STATE_COOKIE_WAIT:
-			/* Should handle INIT ACK (or ABORT) */
-			break;
-		case SCTP_STATE_COOKIE_ECHOED:
-			/* Should handle COOKIE ACK (or ABORT) */
-		case SCTP_STATE_ESTABLISHED:
-		case SCTP_STATE_SHUTDOWN_PENDING:
-		case SCTP_STATE_SHUTDOWN_SENT:
-		case SCTP_STATE_SHUTDOWN_RECEIVED:
-		case SCTP_STATE_SHUTDOWN_ACK_SENT:
             break;
-		}
+        case SCTP_STATE_COOKIE_WAIT:
+            /* Should handle INIT ACK (or ABORT) */
+            break;
+        case SCTP_STATE_COOKIE_ECHOED:
+            /* Should handle COOKIE ACK (or ABORT) */
+        case SCTP_STATE_ESTABLISHED:
+        case SCTP_STATE_SHUTDOWN_PENDING:
+        case SCTP_STATE_SHUTDOWN_SENT:
+        case SCTP_STATE_SHUTDOWN_RECEIVED:
+        case SCTP_STATE_SHUTDOWN_ACK_SENT:
+            break;
+        }
 
-		/* move to next chunk */
-		pos += chunk->length;
-		chunk = (struct sctpChunkHeader *)((uchar *)chunk + chunk->length);
-	}
+        /* move to next chunk */
+        pos += chunk->length;
+        chunk =
+            (struct sctpChunkHeader *)((uchar *)chunk + chunk->length);
+    }
 
-	/* unlock the TCB */
-	signal(assoc->lock);
+    /* unlock the TCB */
+    signal(assoc->lock);
 
     return result;
 }
@@ -144,25 +165,26 @@ int sctpInput(struct packet *pkt, struct netaddr *src, struct netaddr *dst)
  * @param localpt the local port of the inbound packet
  * @return the SCTP instance, or NULL if none is found
  */
-static struct sctp *sctpFindInstance(struct netaddr *localip, ushort localpt)
+static struct sctp *sctpFindInstance(struct netaddr *localip,
+                                     ushort localpt)
 {
-	int i, j;
-	struct sctp *instance;
+    int i, j;
+    struct sctp *instance;
 
-	for (i = 0; i < NSCTP; i++)
-	{
-		instance = &sctptab[i];
-		for (j = 0; j < SCTP_MAX_IPS; j++)
-		{
-			if (localpt == instance->localport &&
-				netaddrequal(&instance->localip[j], localip))
-			{
-				return instance;
-			}
-		}
-	}
+    for (i = 0; i < NSCTP; i++)
+    {
+        instance = &sctptab[i];
+        for (j = 0; j < SCTP_MAX_IPS; j++)
+        {
+            if (localpt == instance->localport &&
+                netaddrequal(&instance->localip[j], localip))
+            {
+                return instance;
+            }
+        }
+    }
 
-	return NULL;
+    return NULL;
 }
 
 /**
@@ -177,23 +199,23 @@ static struct sctp *sctpFindInstance(struct netaddr *localip, ushort localpt)
  * @return the SCTP "association", or NULL if none is found
  */
 static struct sctp *sctpFindAssociation(struct sctp *instance,
-		struct netaddr *remoteip, ushort remotept)
+                                        struct netaddr *remoteip,
+                                        ushort remotept)
 {
-	int i;
+    int i;
 
-	if (instance->remoteport != remotept)
-	{
-		return NULL;
-	}
+    if (instance->remoteport != remotept)
+    {
+        return NULL;
+    }
 
-	for (i = 0; i < SCTP_MAX_IPS; i++)
-	{
-		if (netaddrequal(&instance->remoteip[i], remoteip))
-		{
-			return instance;
-		}
-	}
+    for (i = 0; i < SCTP_MAX_IPS; i++)
+    {
+        if (netaddrequal(&instance->remoteip[i], remoteip))
+        {
+            return instance;
+        }
+    }
 
-	return NULL;
+    return NULL;
 }
-

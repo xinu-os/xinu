@@ -54,61 +54,62 @@ struct sctp_stream
 
 struct sctp
 {
-	/* Xinu-oriented details */
-	device *devptr;        /**< device entry associated with this TCB */
-	semaphore lock;        /**< Lock to protect this TCB entry */
-	int dev_state;         /**< Device state */
-	mailbox signal;        /**< Mailbox for signalling packets */
-	uint secret;           /**< Secret key */
+    /* Xinu-oriented details */
+    device *devptr;            /**< device entry associated with this TCB */
+    semaphore lock;            /**< Lock to protect this TCB entry */
+    int dev_state;             /**< Device state */
+    mailbox signal;            /**< Mailbox for signalling packets */
+    uint secret;               /**< Secret key */
 
-	/* Instance details. RFC 4960, pg. 129 */
-	ushort localport;      /**< Local port number */
-	struct netaddr localip[SCTP_MAX_IPS];  /**< Local IPs for association */
+    /* Instance details. RFC 4960, pg. 129 */
+    ushort localport;          /**< Local port number */
+    struct netaddr localip[SCTP_MAX_IPS];      /**< Local IPs for association */
 
-	/* Association details. RFC 4960, pg. 129-- */
-	uint peer_tag;         /**< peer verification tag */
-	uint my_tag;           /**< my verification tag */
+    /* Association details. RFC 4960, pg. 129-- */
+    uint peer_tag;             /**< peer verification tag */
+    uint my_tag;               /**< my verification tag */
 
-	short state;           /**< Connection state */
+    short state;               /**< Connection state */
 
-	ushort remoteport;     /**< Remote port number */
-	struct netaddr remoteip[SCTP_MAX_IPS]; /**< Remote IPs for association */
+    ushort remoteport;         /**< Remote port number */
+    struct netaddr remoteip[SCTP_MAX_IPS];     /**< Remote IPs for association */
 
-	int primary_path;      /**< Index of remote IP that is "primary" */
+    int primary_path;          /**< Index of remote IP that is "primary" */
 
-	uint err_count;
-	uint err_threshold;
+    uint err_count;
+    uint err_threshold;
 
-	uint peer_rwnd;
-	uint next_tsn;
-	uint last_tsn;
-	/* XXX: mapping array ??? */
-	int ack_state;
+    uint peer_rwnd;
+    uint next_tsn;
+    uint last_tsn;
+    /* XXX: mapping array ??? */
+    int ack_state;
 
-	struct sctp_stream inboud[SCTP_MAX_STREAMS];
-	struct sctp_stream outboud[SCTP_MAX_STREAMS];
+    struct sctp_stream inboud[SCTP_MAX_STREAMS];
+    struct sctp_stream outboud[SCTP_MAX_STREAMS];
 
-	char reasm_queue[1];
-	char out_queue[1];
-	char in_queue[1];
-	uint mtu;
+    char reasm_queue[1];
+    char out_queue[1];
+    char in_queue[1];
+    uint mtu;
 
-	/* per transport address data */
-	struct {
-		uint err_count;
-		uint err_threshold;
-		uint cwnd;
-		uint ssthresh;
-		uint rto;
-		uint srtt;
-		uint rtt_var;
-		uint bytes_acked;
-		int state;
-		uint pmtu;
-		int timer_id;
-		uint rto_pending;
-		uint last_time;
-	} trans[SCTP_MAX_IPS];
+    /* per transport address data */
+    struct
+    {
+        uint err_count;
+        uint err_threshold;
+        uint cwnd;
+        uint ssthresh;
+        uint rto;
+        uint srtt;
+        uint rtt_var;
+        uint bytes_acked;
+        int state;
+        uint pmtu;
+        int timer_id;
+        uint rto_pending;
+        uint last_time;
+    } trans[SCTP_MAX_IPS];
 };
 
 extern struct sctp sctptab[NSCTP];
@@ -122,16 +123,16 @@ struct sctpHeader
 {
     ushort srcpt;         /**< source port number */
     ushort dstpt;         /**< destination port number */
-    uint   tag;           /**< verification tag */
-    uint   checksum;      /**< checksum */
+    uint tag;             /**< verification tag */
+    uint checksum;        /**< checksum */
 };
 
 /* SCTP generic chunk format (should be padded to 4 byte boundary) */
 struct sctpChunkHeader
 {
-	uchar  type;          /**< type of SCTP chunk */
-	uchar  flags;         /**< flags for this chunk (type specific) */
-	ushort length;        /**< length of this chunk (bytes) */
+    uchar type;               /**< type of SCTP chunk */
+    uchar flags;              /**< flags for this chunk (type specific) */
+    ushort length;            /**< length of this chunk (bytes) */
 };
 
 /* Accepted SCTP Chunk Types (as of RFC 4960) */
@@ -152,7 +153,7 @@ struct sctpChunkHeader
 /* SCTP packet format */
 struct sctpPkt
 {
-	struct sctpHeader header; /**< common header */
+    struct sctpHeader header;     /**< common header */
     struct sctpChunkHeader chunk[1]; /**< one or more chunk(s) */
 };
 
@@ -172,9 +173,9 @@ struct sctpCookie
 /* SCTP (optional) chunk paramater format */
 struct sctpChunkParam
 {
-	ushort type;          /**< type of SCTP chunk parameter */
-	ushort length;        /**< length of this chunk parameter (bytes) */
-	uchar  value[1];      /**< value of this chunk parameter */
+    ushort type;              /**< type of SCTP chunk parameter */
+    ushort length;            /**< length of this chunk parameter (bytes) */
+    uchar value[1];           /**< value of this chunk parameter */
 };
 
 /* SCTP DATA Chunk format */
@@ -183,24 +184,24 @@ struct sctpChunkParam
 #define SCTP_DATA_FLAG_E 0x01 /**< (E)nding fragment bit */
 struct sctpChunkData
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	uint tsn;             /**< Transmission Sequence Number */
-	ushort stream_id;     /**< Stream Identifier */
-	ushort stream_seq;    /**< Stream Sequence Number */
-	uint protocol_id;     /**< Payload Protocol Identifier */
-	uchar data[1];        /**< User data */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    uint tsn;                 /**< Transmission Sequence Number */
+    ushort stream_id;         /**< Stream Identifier */
+    ushort stream_seq;        /**< Stream Sequence Number */
+    uint protocol_id;         /**< Payload Protocol Identifier */
+    uchar data[1];            /**< User data */
 };
 
 /* SCTP INIT Chunk format */
 struct sctpChunkInit
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	uint init_tag;        /**< Initiate Tag */
-	uint a_rwnd;          /**< Advertised Receiver Window Credit */
-	ushort n_out_streams; /**< Number of Outbound Streams */
-	ushort n_in_streams;  /**< Number of Inbound Streams */
-	uint init_tsn;        /**< Initial Transmission Sequence Number */
-	struct sctpChunkParam param[1]; /**< Optional Parameter list */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    uint init_tag;            /**< Initiate Tag */
+    uint a_rwnd;              /**< Advertised Receiver Window Credit */
+    ushort n_out_streams;     /**< Number of Outbound Streams */
+    ushort n_in_streams;      /**< Number of Inbound Streams */
+    uint init_tsn;            /**< Initial Transmission Sequence Number */
+    struct sctpChunkParam param[1];     /**< Optional Parameter list */
 };
 #define SCTP_INIT_PARAM_IPv4_ADDR       5
 #define SCTP_INIT_PARAM_IPv6_ADDR       6
@@ -212,13 +213,13 @@ struct sctpChunkInit
 /* SCTP INIT ACK Chunk format */
 struct sctpChunkInitAck
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	uint init_tag;        /**< Initiate Tag */
-	uint a_rwnd;          /**< Advertised Receiver Window Credit */
-	ushort n_out_streams; /**< Number of Outbound Streams */
-	ushort n_in_streams;  /**< Number of Inbound Streams */
-	uint init_tsn;        /**< Initial Transmission Sequence Number */
-	struct sctpChunkParam param[1]; /**< Optional Parameter list */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    uint init_tag;            /**< Initiate Tag */
+    uint a_rwnd;              /**< Advertised Receiver Window Credit */
+    ushort n_out_streams;     /**< Number of Outbound Streams */
+    ushort n_in_streams;      /**< Number of Inbound Streams */
+    uint init_tsn;            /**< Initial Transmission Sequence Number */
+    struct sctpChunkParam param[1];     /**< Optional Parameter list */
 };
 #define SCTP_INITACK_PARAM_IPv4_ADDR       5
 #define SCTP_INITACK_PARAM_IPv6_ADDR       6
@@ -231,39 +232,40 @@ struct sctpChunkInitAck
 /* SCTP SACK Chunk format */
 struct sctpChunkSack
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	uint cum_tsn_ack;     /**< Cumulative TSN Ack */
-	uint a_rwnd;          /**< Advertised Receiver Window Credit */
-	ushort n_gap_acks;    /**< Number of Gap Ack Blocks */
-	ushort n_dup_tsns;    /**< Number of Duplicate TSNs */
-	struct {
-		ushort start;     /**< Gap Ack Block #n start */
-		ushort end;       /**< Gap Ack Block #n end */
-	} gap_ack[0];
-	uint dup_tsn[0];      /**< Duplicate TSN #x */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    uint cum_tsn_ack;         /**< Cumulative TSN Ack */
+    uint a_rwnd;              /**< Advertised Receiver Window Credit */
+    ushort n_gap_acks;        /**< Number of Gap Ack Blocks */
+    ushort n_dup_tsns;        /**< Number of Duplicate TSNs */
+    struct
+    {
+        ushort start;             /**< Gap Ack Block #n start */
+        ushort end;               /**< Gap Ack Block #n end */
+    } gap_ack[0];
+    uint dup_tsn[0];          /**< Duplicate TSN #x */
 };
 
 /* SCTP HEARTBEAT (and HEARTBEAT ACK) Chunk format */
 struct sctpChunkHeartbeat
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	struct sctpChunkParam info[1]; /**< Heartbeat info */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    struct sctpChunkParam info[1];     /**< Heartbeat info */
 };
 #define SCTP_HEARTBEAT_SENDER_INFO 1
 
 /* SCTP ABORT Chunk format */
 struct sctpChunkAbort
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	struct sctpChunkParam err_cause[0]; /**< zero or more error causes */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    struct sctpChunkParam err_cause[0];     /**< zero or more error causes */
 };
 #define SCTP_ABORT_FLAG_T 0x01 /**< Sender filled verification tag set */
 
 /* SCTP SHUTDOWN Chunk format */
 struct sctpChunkShutdown
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	uint cum_tsn_ack;     /**< Cumulative TSN Ack */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    uint cum_tsn_ack;         /**< Cumulative TSN Ack */
 };
 
 /* SCTP SHUTDOWN ACK Chunk has no parameters */
@@ -271,8 +273,8 @@ struct sctpChunkShutdown
 /* SCTP ERROR Chunk format */
 struct sctpChunkError
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	struct sctpChunkParam err_cause[1]; /**< one or more error causes */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    struct sctpChunkParam err_cause[1];     /**< one or more error causes */
 };
 /* Defined on RFC 4960, pages 43--50 */
 #define SCTP_ERR_CAUSE_INVALID_STREAM        1
@@ -292,8 +294,8 @@ struct sctpChunkError
 /* SCTP COOKIE ECHO Chunk format */
 struct sctpChunkCookieEcho
 {
-	struct sctpChunkHeader head; /**< chunk header (type, flags, len) */
-	uchar cookie[1]; /**< Cookie */
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+    uchar cookie[1];     /**< Cookie */
 };
 
 /* SCTP COOKIE ACK Chunk has no parameters */
@@ -318,13 +320,13 @@ struct sctpChunkCookieEcho
  *********************/
 struct sctpTimer
 {
-	int id;                   /**< arbitrary identifier for timer */
-	uint ms;                  /**< length of timer */
-	uint remain_ms;           /**< remaining time on entry */
-	void (*callback)(void *); /**< callback function when timer fires */
-	void *args;               /**< arguments for callback function */
-	struct sctpTimer *prev;   /**< previous timer entry pointer */
-	struct sctpTimer *next;   /**< next timer entry pointer */
+    int id;                       /**< arbitrary identifier for timer */
+    uint ms;                      /**< length of timer */
+    uint remain_ms;               /**< remaining time on entry */
+    void (*callback) (void *);    /**< callback function when timer fires */
+    void *args;                   /**< arguments for callback function */
+    struct sctpTimer *prev;       /**< previous timer entry pointer */
+    struct sctpTimer *next;       /**< next timer entry pointer */
 };
 
 extern struct sctpTimer *head;
@@ -344,7 +346,8 @@ int sctpInput(struct packet *, struct netaddr *, struct netaddr *);
 int sctpOutput(struct sctp *, void *, uint);
 uint sctpChecksum(void *, uint);
 
-struct sctpTimer *sctpTimerStart(uint, int, void (*callback)(void *), void *);
+struct sctpTimer *sctpTimerStart(uint, int, void (*callback) (void *),
+                                 void *);
 int sctpTimerCancel(struct sctpTimer *timer);
 struct sctpTimer *sctpTimerMatch(int id);
 thread sctpTimerThread(void);

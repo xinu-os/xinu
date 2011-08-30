@@ -19,12 +19,12 @@
  * @param stream_id stream identifier to send message on
  * @return non-zero on error
  */
-int sctpSend(struct sctp *instance, void *buffer, uint size, int stream_id)
+int sctpSend(struct sctp *instance, void *buffer, uint size,
+             int stream_id)
 {
-	/* Make sure instance is valid association */
-	/* Ready the SCTP data chunk for sending */
-	/* Send the data chunk */
+    /* Make sure instance is valid association */
+    /* Ready the SCTP data chunk for sending */
+    /* Send the data chunk */
 
     return 0;
 }
-

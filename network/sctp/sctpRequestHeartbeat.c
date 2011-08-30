@@ -17,9 +17,8 @@
  * @param remotept Remote port
  * @return non-zero on error
  */
-int sctpRequestHeartbeat(struct sctp *instance, struct netaddr *remoteaddr,
-		ushort remotept)
+int sctpRequestHeartbeat(struct sctp *instance,
+                         struct netaddr *remoteaddr, ushort remotept)
 {
     return 0;
 }
-

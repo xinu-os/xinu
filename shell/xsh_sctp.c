@@ -39,15 +39,15 @@ shellcmd xsh_sctp(int nargs, char *args[])
     }
     else if (strncmp("stat", args[1], 4) == 0)
     {
-        return sctp_stat(nargs-2, &args[2]);
+        return sctp_stat(nargs - 2, &args[2]);
     }
     else if (strncmp("test", args[1], 4) == 0)
     {
-        return sctp_test(nargs-2, &args[2]);
+        return sctp_test(nargs - 2, &args[2]);
     }
     else if (strncmp("chat", args[1], 4) == 0)
     {
-        return sctp_chat(nargs-2, &args[2]);
+        return sctp_chat(nargs - 2, &args[2]);
     }
     else
     {
@@ -64,12 +64,7 @@ int sctp_stat(int argc, char **argv)
 int sctp_test(int argc, char **argv)
 {
     struct netaddr local;
-    local.type = NETADDR_IPv4;
-    local.len = 4;
-    local.addr[0] = 192;
-    local.addr[1] = 168;
-    local.addr[2] = 6;
-    local.addr[3] = 103;
+    dot2ipv4("192.168.6.103", &local);
 
     sctpInitialize(53233, &local, 1);
     return 0;

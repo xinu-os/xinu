@@ -19,8 +19,7 @@
  * @return the SRTT (in milliseconds)
  */
 int sctpGetSRTTReport(struct sctp *instance, struct netaddr *remoteaddr,
-		ushort remotept)
+                      ushort remotept)
 {
     return 0;
 }
-

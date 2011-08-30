@@ -18,8 +18,7 @@
  */
 int sctpStatus(struct sctp *instance)
 {
-	/* Make sure instance is valid association */
+    /* Make sure instance is valid association */
 
     return 0;
 }
-

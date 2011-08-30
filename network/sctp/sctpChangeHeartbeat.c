@@ -19,8 +19,7 @@
  * @return non-zero on error
  */
 int sctpChangeHeartbeat(struct sctp *instance, struct netaddr *remoteaddr,
-		ushort remotept, int new_state)
+                        ushort remotept, int new_state)
 {
     return 0;
 }
-

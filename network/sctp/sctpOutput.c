@@ -28,7 +28,7 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
     struct netaddr *localip, *remoteip;
     ushort localpt, remotept;
 
-	/* Make sure instance is valid */
+    /* Make sure instance is valid */
     if (SCTP_DEV_USED != instance->dev_state)
     {
         SCTP_TRACE("Invalid instance given");
@@ -62,7 +62,7 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
         return SYSERR;
     }
 
-	/* acquire a netbuf */
+    /* acquire a netbuf */
     pkt = netGetbuf();
     if (SYSERR == (int)pkt)
     {
@@ -71,10 +71,10 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
     }
 
     /* Data should be chunked, we just add the common header */
-    pkt->curr -= (length + 0x03) & ~0x03; // 4-byte aligned
+    pkt->curr -= (length + 0x03) & ~0x03;       // 4-byte aligned
     pkt->len = length;
 
-	/* copy sctp chunk into netbuf */
+    /* copy sctp chunk into netbuf */
     memcpy(pkt->curr, data, length);
 
     /* Back off for SCTP header */
@@ -92,8 +92,10 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
     {
     case NETADDR_IPv4:
         result = ipv4Send(pkt, localip, remoteip, IPv4_PROTO_SCTP);
+        break;
     default:
         result = SYSERR;
+        break;
     }
 
     if (OK == result)
@@ -102,7 +104,7 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
     }
     else
     {
-        SCTP_TRACE("Send failure %d:%d ; 0x%08x",
+        SCTP_TRACE("Send failure on %d:%d ; 0x%08x",
                    localpt, remotept, header->tag);
     }
 
@@ -113,4 +115,3 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
 
     return result;
 }
-

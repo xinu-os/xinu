@@ -17,13 +17,12 @@
  */
 int sctpDestroy(struct sctp *instance)
 {
-	/* Make sure it is a valid instance */
+    /* Make sure it is a valid instance */
 
-	/* clear out port and addresses */
+    /* clear out port and addresses */
 
-	/* free the "device" */
-	instance->dev_state = SCTP_DEV_FREE;
+    /* free the "device" */
+    instance->dev_state = SCTP_DEV_FREE;
 
     return 0;
 }
-

@@ -17,8 +17,8 @@
  * @param param_value new value of parameter
  * @return non-zero on error
  */
-int sctpSetProtocolParams(struct sctp *instance, int param_id, int param_value)
+int sctpSetProtocolParams(struct sctp *instance, int param_id,
+                          int param_value)
 {
     return 0;
 }
-

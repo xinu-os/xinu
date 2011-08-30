@@ -18,13 +18,12 @@
  * @return non-zero on error
  */
 int sctpSetPrimary(struct sctp *instance, struct netaddr *remoteaddr,
-				  int remotept)
+                   int remotept)
 {
-	/* Make sure SCTP instance is associated */
+    /* Make sure SCTP instance is associated */
 
-	/* make sure remoteaddr:remotept are valid remotes */
-	/* swap 0th transport entry with index of this entry */
+    /* make sure remoteaddr:remotept are valid remotes */
+    /* swap 0th transport entry with index of this entry */
 
     return 0;
 }
-

@@ -18,9 +18,9 @@
  * @param threshold maximum number of retransmissions
  * @return the set number of retransmissions
  */
-int sctpSetFailureThreshold(struct sctp *instance, struct netaddr *remoteaddr,
-		ushort remotept, uint threshold)
+int sctpSetFailureThreshold(struct sctp *instance,
+                            struct netaddr *remoteaddr, ushort remotept,
+                            uint threshold)
 {
     return 0;
 }
-
