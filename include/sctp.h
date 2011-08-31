@@ -170,6 +170,7 @@ struct sctpCookie
     uint life_time;          /**< Time at which this Cookie expires */
     struct netaddr remoteip; /**< Source IP of the INIT packet */
     ushort remotept;         /**< Source port of the INIT packet */
+    uint peer_tag;           /**< Verification tag of peer */
 };
 
 /**

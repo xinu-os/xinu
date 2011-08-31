@@ -27,6 +27,7 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
     struct packet *pkt;
     struct netaddr *localip, *remoteip;
     ushort localpt, remotept;
+    uint peer_tag;
 
     /* Make sure instance is valid */
     if (SCTP_DEV_USED != instance->dev_state)
@@ -42,12 +43,13 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
     {
         remoteip = &instance->remoteip[0];
         remotept = instance->remoteport;
+        peer_tag = instance->peer_tag;
     }
     else if (SCTP_TYPE_INIT_ACK == ((struct sctpChunkHeader *)data)->type)
     {
         param = ((struct sctpChunkInitAck *)data)->param;
         /* For simplicity, we assume the cookie is the first param */
-        if (SCTP_INITACK_PARAM_STATE_COOKIE != param->type)
+        if (SCTP_INITACK_PARAM_STATE_COOKIE != net2hs(param->type))
         {
             SCTP_TRACE("Missing cookie param");
             return SYSERR;
@@ -55,6 +57,7 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
         cookie = (struct sctpCookie *)param->value;
         remoteip = &cookie->remoteip;
         remotept = cookie->remotept;
+        peer_tag = cookie->peer_tag;
     }
     else
     {
@@ -81,11 +84,11 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
     pkt->curr -= sizeof(*header);
     pkt->len += sizeof(*header);
     header = (struct sctpHeader *)pkt->curr;
-    header->srcpt = localpt;
-    header->dstpt = remotept;
-    header->tag = 0;
+    header->srcpt = hs2net(localpt);
+    header->dstpt = hs2net(remotept);
+    header->tag = hl2net(peer_tag);
     header->checksum = 0;
-    header->checksum = sctpChecksum(pkt->curr, pkt->len);
+    header->checksum = hl2net(sctpChecksum(pkt->curr, pkt->len));
 
     /* Bump over to network layer */
     switch (localip->type)

@@ -9,8 +9,9 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sctp.h>
 #include <network.h>
+#include <ipv4.h>
+#include <sctp.h>
 
 int sctp_stat(int argc, char **argv);
 int sctp_test(int argc, char **argv);
