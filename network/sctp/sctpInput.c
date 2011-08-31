@@ -100,6 +100,7 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
             //cookie->mac = sctpCookieDigest(instance->secret, cookie);
             /* Send INIT ACK */
             sctpOutput(instance, initack_chunk, length);
+			memfree(initack_chunk, length);
         }
         else if (SCTP_TYPE_COOKIE_ECHO == chunk->type)
         {
