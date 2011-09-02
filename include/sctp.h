@@ -321,6 +321,9 @@ struct sctpChunkShutdownComplete
 };
 #define SCTP_SHUTDOWN_COMPLETE_FLAG_T 0x01 /**< verification tag set */
 
+/* SCTP chunks are padded to 4-byte bounds */
+#define SCTP_PAD(n) (((n) + 0x03) & ~0x03)
+
 /*****************************
  * STATE MACHINE Definitions *
  *****************************/

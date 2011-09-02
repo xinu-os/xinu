@@ -139,13 +139,17 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
                 return result;
             }
 
+            /* Make sure instance can accept an association */
+            // XXX: see above...
+            assoc = instance;
+
             /* Create TCB for association */
-            instance->state = SCTP_STATE_ESTABLISHED;
-            instance->my_tag = cookie->my_tag;
-            instance->peer_tag = cookie->peer_tag;
-            instance->remoteport = cookie->remotept;
-            memcpy(&instance->remoteip[0], &cookie->remoteip, sizeof(cookie->remoteip));
-            instance->primary_path = 0;
+            assoc->state = SCTP_STATE_ESTABLISHED;
+            assoc->my_tag = cookie->my_tag;
+            assoc->peer_tag = cookie->peer_tag;
+            assoc->remoteport = cookie->remotept;
+            memcpy(&assoc->remoteip[0], &cookie->remoteip, sizeof(cookie->remoteip));
+            assoc->primary_path = 0;
             // XXX: Probably need more...
 
             /* Send COOKIE ACK */
@@ -156,10 +160,9 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
 
             /* Cookie Echo can come with more chunks */
             chunk->length = net2hs(chunk->length);
-			kprintf("chunk@0x%08x:+0x%08x\r\n", chunk, chunk->length);
-            pos += chunk->length;
+            pos += SCTP_PAD(chunk->length);
             chunk =
-                (struct sctpChunkHeader *)((uchar *)chunk + chunk->length);
+                (struct sctpChunkHeader *)((uchar *)chunk + SCTP_PAD(chunk->length));
         }
         else
         {
@@ -178,7 +181,6 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
     while (pos < sctp_len)
     {
         chunk->length = net2hs(chunk->length);
-		kprintf("chunk@0x%08x:+0x%08x (%d)\r\n", chunk, chunk->length, pos);
         SCTP_TRACE("Chunk: {%d, 0x%02x, %u}", chunk->type, chunk->flags,
                    chunk->length);
 
@@ -202,9 +204,9 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
         }
 
         /* move to next chunk */
-        pos += chunk->length;
+        pos += SCTP_PAD(chunk->length);
         chunk =
-            (struct sctpChunkHeader *)((uchar *)chunk + chunk->length);
+            (struct sctpChunkHeader *)((uchar *)chunk + SCTP_PAD(chunk->length));
     }
 
     /* unlock the TCB */
