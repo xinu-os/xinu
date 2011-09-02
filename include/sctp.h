@@ -366,6 +366,7 @@ extern struct sctpTimer *head;
 int sctpInput(struct packet *, struct netaddr *, struct netaddr *);
 int sctpOutput(struct sctp *, void *, uint);
 uint sctpChecksum(void *, uint);
+uint sctpCookieDigest(uint, struct sctpCookie *);
 
 struct sctpTimer *sctpTimerStart(uint, int, void (*callback) (void *),
                                  void *);

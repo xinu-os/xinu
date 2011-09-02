@@ -11,7 +11,9 @@ ULP_FILES = sctpInitialize.c sctpAssociate.c sctpShutdown.c sctpAbort.c \
             sctpChangeHeartbeat.c sctpRequestHeartbeat.c sctpGetSRTTReport.c \
             sctpSetFailureThreshold.c sctpSetProtocolParams.c \
             sctpReceiveUnsent.c sctpReceiveUnack.c sctpDestroy.c
-IOH_FILES = sctpInput.c sctpOutput.c sctpChecksum.c
+IOH_FILES = sctpInput.c sctpInputInit.c sctpInputCookieEcho.c \
+            sctpOutput.c \
+            sctpCookieDigest.c sctpChecksum.c
 
 C_FILES = ${ULP_FILES} ${IOH_FILES}
 S_FILES =
