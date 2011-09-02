@@ -102,6 +102,7 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
             cookie->mac = sctpCookieDigest(instance->secret, cookie);
             /* Send INIT ACK */
             sctpOutput(instance, initack_chunk, length);
+			memfree(initack_chunk, length);
 
             /* XXX: No more chunks allowed with INIT, clean up */
             // XXX: Make sure RFC specifies this
