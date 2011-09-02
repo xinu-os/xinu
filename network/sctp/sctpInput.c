@@ -156,6 +156,7 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
 
             /* Cookie Echo can come with more chunks */
             chunk->length = net2hs(chunk->length);
+			kprintf("chunk@0x%08x:+0x%08x\r\n", chunk, chunk->length);
             pos += chunk->length;
             chunk =
                 (struct sctpChunkHeader *)((uchar *)chunk + chunk->length);
@@ -177,6 +178,7 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
     while (pos < sctp_len)
     {
         chunk->length = net2hs(chunk->length);
+		kprintf("chunk@0x%08x:+0x%08x (%d)\r\n", chunk, chunk->length, pos);
         SCTP_TRACE("Chunk: {%d, 0x%02x, %u}", chunk->type, chunk->flags,
                    chunk->length);
 
