@@ -181,7 +181,6 @@ struct sctpChunkParam
 {
     ushort type;              /**< type of SCTP chunk parameter */
     ushort length;            /**< length of this chunk parameter (bytes) */
-    uchar value[1];           /**< value of this chunk parameter */
 };
 
 /* SCTP DATA Chunk format */

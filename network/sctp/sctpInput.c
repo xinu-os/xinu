@@ -70,7 +70,7 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
             struct sctpChunkInitAck *initack_chunk;
             struct sctpCookie *cookie;
             struct sctpChunkInit *init_chunk = (struct sctpChunkInit *)chunk;
-            uint length = sizeof(*initack_chunk) + sizeof(*cookie) - 1;
+            uint length = sizeof(*initack_chunk) + sizeof(*cookie);
 
             SCTP_TRACE("No SCTP association, INIT chunk");
 
@@ -89,8 +89,9 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
             initack_chunk->param[0].type =
                 hs2net(SCTP_INITACK_PARAM_STATE_COOKIE);
             initack_chunk->param[0].length =
-                hs2net(sizeof(initack_chunk->param[0])+sizeof(*cookie)-1);
-            cookie = (struct sctpCookie *)initack_chunk->param[0].value;
+                hs2net(sizeof(initack_chunk->param[0])+sizeof(*cookie));
+            SCTP_TRACE("sizeof(param)=%d ; sizeof(cookie)=%d", sizeof(initack_chunk->param[0]), sizeof(*cookie));
+            cookie = (struct sctpCookie *)&initack_chunk->param[1];
             cookie->create_time = clktime;
             cookie->life_time = 10;     /* Valid.Cookie.Life */
             memcpy(&cookie->remoteip, src, sizeof(cookie->remoteip));

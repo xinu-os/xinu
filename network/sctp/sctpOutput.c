@@ -54,7 +54,7 @@ int sctpOutput(struct sctp *instance, void *data, uint length)
             SCTP_TRACE("Missing cookie param");
             return SYSERR;
         }
-        cookie = (struct sctpCookie *)param->value;
+        cookie = (struct sctpCookie *)(param+1);
         remoteip = &cookie->remoteip;
         remotept = cookie->remotept;
         peer_tag = cookie->peer_tag;
