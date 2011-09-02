@@ -14,6 +14,7 @@
 static struct sctp *sctpFindAssociation(struct sctp *, struct netaddr *,
                                         ushort);
 static struct sctp *sctpFindInstance(struct netaddr *, ushort);
+uint sctpCookieDigest(uint, struct sctpCookie *);
 
 /**
  * Accept a packet from the underlying network layer for SCTP processing.
@@ -28,7 +29,7 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
     struct sctpPkt *sctp;
     struct sctp *instance, *assoc;
     struct sctpChunkHeader *chunk;
-    uint checksum, sctp_len, pos;
+    uint checksum, sctp_len, pos = 0;
     int result = 0;
 
     /* Set up the beginning of the SCTP packet */
@@ -90,40 +91,88 @@ int sctpInput(struct packet *pkt, struct netaddr *src,
                 hs2net(SCTP_INITACK_PARAM_STATE_COOKIE);
             initack_chunk->param[0].length =
                 hs2net(sizeof(initack_chunk->param[0])+sizeof(*cookie));
-            SCTP_TRACE("sizeof(param)=%d ; sizeof(cookie)=%d", sizeof(initack_chunk->param[0]), sizeof(*cookie));
             cookie = (struct sctpCookie *)&initack_chunk->param[1];
             cookie->create_time = clktime;
             cookie->life_time = 10;     /* Valid.Cookie.Life */
             memcpy(&cookie->remoteip, src, sizeof(cookie->remoteip));
             cookie->remotept = sctp->header.srcpt;
             cookie->peer_tag = net2hl(init_chunk->init_tag);
+            cookie->my_tag = initack_chunk->init_tag;
             cookie->mac = 0;
-            //cookie->mac = sctpCookieDigest(instance->secret, cookie);
+            cookie->mac = sctpCookieDigest(instance->secret, cookie);
             /* Send INIT ACK */
             sctpOutput(instance, initack_chunk, length);
+
+            /* XXX: No more chunks allowed with INIT, clean up */
+            // XXX: Make sure RFC specifies this
+            netFreebuf(pkt);
+            return result;
         }
         else if (SCTP_TYPE_COOKIE_ECHO == chunk->type)
         {
             /* Someone is trying to *legitimately* connect */
-            /* Validate Cookie */
-            /* Create TCB for association */
-            /* Send COOKIE ACK */
+            struct sctpChunkCookieAck cack_chunk;
+            struct sctpCookie *cookie;
+            uint mac;
+            struct sctpChunkCookieEcho *cecho_chunk = (struct sctpChunkCookieEcho *)chunk;
+
             SCTP_TRACE("No SCTP association, COOKIE ECHO chunk");
+
+            /* Validate Cookie */
+            cookie = (struct sctpCookie *)cecho_chunk->cookie;
+            mac = cookie->mac;
+            cookie->mac = 0;
+            if (sctpCookieDigest(instance->secret, cookie) != mac)
+            {
+                SCTP_TRACE("COOKIE ECHO returned invalid cookie");
+                netFreebuf(pkt);
+                return result;
+            }
+
+            SCTP_TRACE("COOKIE ECHO {%d+%d > %d", cookie->create_time, cookie->life_time, clktime);
+            /* Check create time/life time of cookie */
+            if (cookie->create_time + cookie->life_time < clktime)
+            {
+                SCTP_TRACE("COOKIE ECHO returned after life time expired");
+                netFreebuf(pkt);
+                return result;
+            }
+
+            /* Create TCB for association */
+            instance->state = SCTP_STATE_ESTABLISHED;
+            instance->my_tag = cookie->my_tag;
+            instance->peer_tag = cookie->peer_tag;
+            instance->remoteport = cookie->remotept;
+            memcpy(&instance->remoteip[0], &cookie->remoteip, sizeof(cookie->remoteip));
+            instance->primary_path = 0;
+            // XXX: Probably need more...
+
+            /* Send COOKIE ACK */
+            cack_chunk.head.type = SCTP_TYPE_COOKIE_ACK;
+            cack_chunk.head.flags = 0;
+            cack_chunk.head.length = hs2net(sizeof(cack_chunk));
+            sctpOutput(instance, &cack_chunk, sizeof(cack_chunk));
+
+            /* Cookie Echo can come with more chunks */
+            chunk->length = net2hs(chunk->length);
+            pos += chunk->length;
+            chunk =
+                (struct sctpChunkHeader *)((uchar *)chunk + chunk->length);
         }
         else
         {
             /* XXX: No association, not INIT or COOKIE ECHO what should we do? */
             SCTP_TRACE("Could not find SCTP association");
+            netFreebuf(pkt);
+            return result;
         }
-        netFreebuf(pkt);
-        return result;
     }
 
     /* lock the TCB */
     wait(assoc->lock);
 
     /* Iterate over the SCTP chunks in the packet */
-    pos = sizeof(sctp->header);
+    pos += sizeof(sctp->header);
     while (pos < sctp_len)
     {
         chunk->length = net2hs(chunk->length);
@@ -221,4 +270,26 @@ static struct sctp *sctpFindAssociation(struct sctp *instance,
     }
 
     return NULL;
+}
+
+/**
+ * XXX: This should be a good crypto routine; it is not.
+ * @param secret instance specific secret key
+ * @param *cookie pointer to the cookie to digest
+ * @return result of digest operation
+ */
+uint sctpCookieDigest(uint secret, struct sctpCookie *cookie)
+{
+    uint i, temp;
+    uchar *c =(uchar *)cookie;
+    uint len = sizeof(*cookie);
+    uint result = 0xdeadc0de + secret;
+
+    for (i = 0; i < len; i += 4)
+    {
+        temp = (c[i] << 24) | (c[i+2] << 16) | (c[i+1] << 8) | c[i+3];
+        result ^= temp;
+    }
+
+    return result;
 }

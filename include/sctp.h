@@ -171,6 +171,7 @@ struct sctpCookie
     struct netaddr remoteip; /**< Source IP of the INIT packet */
     ushort remotept;         /**< Source port of the INIT packet */
     uint peer_tag;           /**< Verification tag of peer */
+    uint my_tag;             /**< Verification tag for myself */
 };
 
 /**
@@ -274,6 +275,10 @@ struct sctpChunkShutdown
 };
 
 /* SCTP SHUTDOWN ACK Chunk has no parameters */
+struct sctpChunkShutdownAck
+{
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+};
 
 /* SCTP ERROR Chunk format */
 struct sctpChunkError
@@ -304,8 +309,16 @@ struct sctpChunkCookieEcho
 };
 
 /* SCTP COOKIE ACK Chunk has no parameters */
+struct sctpChunkCookieAck
+{
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+};
 
 /* SCTP SHUTDOWN COMPLETE Chunk has no parameters */
+struct sctpChunkShutdownComplete
+{
+    struct sctpChunkHeader head;     /**< chunk header (type, flags, len) */
+};
 #define SCTP_SHUTDOWN_COMPLETE_FLAG_T 0x01 /**< verification tag set */
 
 /*****************************

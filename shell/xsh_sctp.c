@@ -65,9 +65,15 @@ int sctp_stat(int argc, char **argv)
 int sctp_test(int argc, char **argv)
 {
     struct netaddr local;
+    ushort port = 53233;
     dot2ipv4("192.168.6.103", &local);
 
-    sctpInitialize(53233, &local, 1);
+    if (argc > 0)
+    {
+        port = atoi(argv[0]);
+    }
+
+    sctpInitialize(port, &local, 1);
     return 0;
 }
 
