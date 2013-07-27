@@ -3,7 +3,7 @@
 #
 #  $Id: Makefile 2132 2009-11-17 23:22:38Z brylow $
 
-PLATFORM = wrt54gl
+PLATFORM = none
 
 # DETAIL   = -DDETAIL
 
@@ -27,7 +27,7 @@ LIBDIR    = ${TOPDIR}/lib
 # Each component is a directory in the source tree and should include a
 # Makerules specifying what files to include
 # (The loader should always be first, ensuring the image starts with it.)
-SYSCOMPS  = loader system/platforms/${PLATFORM} system
+SYSCOMPS  = loader/${PLATFORM} system/platforms/${PLATFORM} system
 COMPS     = ${SYSCOMPS} ${DEVCOMPS} ${APPCOMPS}
 
 # Location of the conf.c file defining system devices
@@ -39,7 +39,9 @@ LIBS      = libxc libdsp
 
 # Include expected files, each should add its part to the compile source
 COMP_SRC :=
+ifneq (${PLATFORM},none)
 include ${COMPS:%=${TOPDIR}/%/Makerules}
+endif
 
 COMP_OBJ = $(patsubst %.S,%.o,$(filter %.S,$(COMP_SRC))) \
            $(patsubst %.c,%.o,$(filter %.c,$(COMP_SRC)))

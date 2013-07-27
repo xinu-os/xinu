@@ -1,0 +1,70 @@
+#
+#  Platform-specific Makefile definitions for the
+#  Embedded Xinu operating system.
+#
+#  32-bit i386
+#
+#  $Id: platformVars 2188 2010-05-17 23:52:10Z akoehler $
+
+PLATFORM = x86
+
+BINIMAGE = xinu.bin
+BOOTIMAGE = xinu.boot
+
+BOOTSTRAP_ROOT = ../loader/${PLATFORM}/bootstrap
+
+X86_ROOT = /opt/dev/x86_64-unknown-elf/bin
+X86_PREFIX = x86_64-unknown-elf-
+
+COMPILER_ROOT = ${X86_ROOT}/${X86_PREFIX}
+
+CC       = ${COMPILER_ROOT}gcc
+CPP      = ${COMPILER_ROOT}cpp
+LD       = ${COMPILER_ROOT}ld
+AS       = ${COMPILER_ROOT}as
+AR       = ${COMPILER_ROOT}ar
+OBJCOPY  = ${COMPILER_ROOT}objcopy
+STRIP    = ${COMPILER_ROOT}strip
+MAKEDEP  = gcc -M -MG
+
+DOCGEN   = doxygen
+
+# DETAIL   = -DDETAIL
+
+DEFS     = -DI386
+INCLUDE  = -I../include -I../system/platforms/${PLATFORM}
+
+#flag for producing GDB debug information
+BUGFLAG = -gstabs+
+
+# C compilation flags
+CFLAGS = -O0 -m32 -Wall -Wstrict-prototypes -Wno-trigraphs            \
+         -nostdinc -fno-builtin -fno-strict-aliasing -fno-common \
+         -fomit-frame-pointer -fno-pic -ffunction-sections \
+         ${INCLUDE} ${DETAIL} ${DEFS} -c
+
+# Assembler flags
+ASFLAGS  = -m32 ${INCLUDE} ${DEBUG}
+
+# Loader flags
+IMG_START = 0x100000
+LDFLAGS   = -static --gc-sections --whole-archive -Ttext=${IMG_START} \
+            -e _start -m elf_i386
+
+# Objcopy flags
+OCFLAGS  = -I binary -O elf32-i386 -B i386
+
+# Embedded Xinu components to build into kernel image
+# APPCOMPS  = apps mailbox shell test network # mem
+APPCOMPS  = apps mailbox shell test
+
+
+DEVICES = tty x86uart #e100
+DEVCOMPS  = ${DEVICES:%=device/%}
+
+${BINIMAGE}: ${BOOTIMAGE}
+	${OBJCOPY} -O binary $^ $@
+
+${BOOTIMAGE}: xinu.elf
+	cp $^ $@
+	${STRIP} $@

@@ -2,7 +2,7 @@
  * @file     ctxsw.s
  * @provides ctxsw.
  *
- * $Id: ctxsw.S 2086 2009-10-06 22:24:27Z brylow $
+ * $Id: ctxsw.S 2382 2011-03-29 21:08:37Z mziwisky $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,10 +14,13 @@
 
 /*------------------------------------------------------------------------
  *  ctxsw  -  Switch from one thread context to another.
+ *            call is ctxsw(&oldsp, &newsp, asid)
  *------------------------------------------------------------------------
  */
 	.ent ctxsw
 ctxsw:
+	/* change address space                                        */
+	mtc0 a2, CP0_ENTRYHI
 	/* build context record on stack                               */
 	addiu	sp, sp, -CONTEXT
 	sw	ra, CONTEXT-4(sp)
@@ -57,6 +60,12 @@ ctxsw:
 	lw	v0, CONTEXT-4(sp)
 	lw	ra, CONTEXT-8(sp)
 	addiu	sp, sp, CONTEXT
+
+	beq	v0, ra, ctxdone
+	mfc0	v1, CP0_STATUS
+	ori	v1, v1, STATUS_IE  
+	mtc0	v1, CP0_STATUS
+
+ctxdone:
 	jr	v0
 	.end ctxsw
-

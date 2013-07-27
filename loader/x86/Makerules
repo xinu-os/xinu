@@ -1,12 +1,16 @@
 # This Makefile contains rules to build files in the loader/ directory.
 
 # Name of this component (the directory this file is stored in)
-COMP = loader
+COMP = loader/x86
 
 # Source files for this component
 C_FILES = 
-S_FILES = start.S flushcache.S
+S_FILES = start.S
 
 # Add the files to the compile source path
 DIR = ${TOPDIR}/${COMP}
 COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}
+
+${DIR}/start.o: ${DIR}/start.S
+	$(CC) $(CFLAGS) -DBRELOC=${IMG_START} -o $@ $<
+

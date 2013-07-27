@@ -2,24 +2,25 @@
 # Make the Xinu configuration program
 #
 
-CC     = gcc
-LEX    = flex
-YACC   = bison -y    # Flag enables yacc-compatible filenames
-CFLAGS = 
-LFLAGS = -lfl
+CC      = gcc
+LEX     = flex
+YACC    = bison -y    # Flag enables yacc-compatible filenames
+YFLAGS  = -d
+CFLAGS  =
+LDFLAGS =
 
-CONFIG = config
+CONFIG  = config
+OBJECTS = scan.o parse.o config.o
 
-all: ${CONFIG}
+${CONFIG}: ${OBJECTS}
 
-${CONFIG}: lex.yy.c y.tab.c
-	$(CC) ${CFLAGS} -o $@ y.tab.c ${LFLAGS}
+scan.o: scan.l parse.c
 
-lex.yy.c: config.l
-	$(LEX) config.l
+parse.o: parse.y
 
-y.tab.c: config.y
-	$(YACC) config.y
+y.tab.h: parse.o
+
+config.o: config.c y.tab.h
 
 clean:
-	rm -f ${CONFIG} lex.yy.c y.tab.c
+	rm -f ${CONFIG} *.o y.tab.h parse.c

@@ -45,17 +45,20 @@ shellcmd xsh_dumptlb(int nargs, char **args)
         return 1;
     }
 
+#ifndef I386
     dumptlb();
+#endif
     return 0;
 }
 
+#ifndef I386
 void dumptlb(void)
 {
     int i, asid;
     ulong entryhi = 0, entrylo0 = 0, entrylo1 = 0;
 
     /* grab current asid */
-  asm("mfc0 %0, $10":"=r"(asid));
+    asm("mfc0 %0, $10":"=r"(asid));
     asid &= 0x00ff;
 
     kprintf("Dumping TLB:\r\n");
@@ -84,3 +87,4 @@ void dumptlb(void)
     /* reset to original asid */
   asm("mtc0 %0, $10": :"r"(asid));
 }
+#endif

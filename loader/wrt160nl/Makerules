@@ -1,0 +1,12 @@
+# This Makefile contains rules to build files in the loader/ directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = loader/wrt160nl
+
+# Source files for this component
+C_FILES = 
+S_FILES = start.S flushcache.S
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}
