@@ -3,7 +3,7 @@
  * @provides _start.
  * This is where the firmware environment begins to execute code.
  *
- * $Id: start.S 2103 2009-10-27 01:43:40Z brylow $
+ * $Id: start.S 2372 2011-03-06 02:33:57Z mziwisky $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

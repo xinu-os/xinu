@@ -6,6 +6,7 @@
 
 thread spin(void)
 {
+#ifdef MIPS
     int i;
     for (i = IRQ_HW0; i <= IRQ_HW5; i++)
     {
@@ -18,6 +19,9 @@ thread spin(void)
         ;
 
     return OK;
+#else
+    return SYSERR;
+#endif
 }
 
 /**

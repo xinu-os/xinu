@@ -11,7 +11,7 @@
 #include <queue.h>
 #include <memory.h>
 
-extern void ctxsw(void *, void *);
+extern void ctxsw(void *, void *, uchar);
 int resdefer;                   /* >0 if rescheduling deferred */
 
 /**
@@ -55,9 +55,9 @@ int resched(void)
 
     /* change address space identifier to thread id */
     asid = thrcurrent & 0xff;
-  asm("mtc0 %0, $10": :"r"(asid));
 
-    ctxsw(&throld->stkptr, &thrnew->stkptr);
+    /* Note: only MIPS ctxsw actually uses asid */
+    ctxsw(&throld->stkptr, &thrnew->stkptr, asid);
 
     /* old thread returns here when resumed */
     restore(throld->intmask);
