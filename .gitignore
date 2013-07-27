@@ -23,8 +23,8 @@
 
 # Xinu build files
 compile/config/config
-compile/config/lex.yy.c
-compile/config/y.tab.c
+compile/config/y.tab.h
+compile/config/parse.c
 compile/version
 compile/vn
 include/conf.h
