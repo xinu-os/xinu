@@ -1,0 +1,26 @@
+# This Makefile contains rules to build files in the system/platforms/x86 directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = system/platforms/x86
+
+# Source files for this component
+
+# Important system components
+S_FILES = startup.S pause.S
+C_FILES = platforminit.c
+
+# Files for process control
+S_FILES += ctxsw.S
+C_FILES += create.c
+
+# Files for preemption and interrupts
+S_FILES += clkupdate.S intr.S halt.S
+C_FILES += xtrap.c
+
+# Files specific to Intel x86
+S_FILES += parport.S
+C_FILES += segment.c evec.c dispatch.c
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

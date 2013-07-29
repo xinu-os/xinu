@@ -1,21 +1,27 @@
-%token DEFBRK COLON OCTAL INTEGER IDENT CSR IRQ INTR INIT OPEN CLOSE READ
-       WRITE SEEK CONTROL IS ON GETC PUTC
-%{
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-extern char *yytext;
-extern int   yyleng;
+#include "y.tab.h"
 
 #define NIL (struct dev_ent *)0x00
+
+extern int yylex(void);
 
 #define CONFIGC   "../system/conf.c"  /* name of .c output     */
 #define CONFIGH   "../include/conf.h" /* name of .h output     */
 #define CONFHREF  "<conf.h>"          /* how conf.h referenced */
 #define CONFIGIN  "xinu.config"       /* name of input file    */
 #define CONFMAXNM 20                  /* max length of strings */
+
+#ifdef __MACH__
+size_t strnlen(const char *s, size_t n)
+{
+    const char *p = (const char *)memchr(s, 0, n);
+    return(p ? p-s : n);
+}
+#endif
 
 FILE *confc;
 FILE *confh;
@@ -26,6 +32,8 @@ int   currname = -1;
 int   currtname = -1;
 int   currdname = -1;
 int   brkcount = 0;
+
+const char *literal_string = "";
 
 struct sym_ent { /* symbol table */
 	char *name;
@@ -77,7 +85,7 @@ char *devstab[] =
 	"\tdevcall (*open)(struct dentry *, ...);",
 	"\tdevcall (*close)(struct dentry *);",
 	"\tdevcall (*read)(struct dentry *, void *, uint);",
-	"\tdevcall (*write)(struct dentry *, void *, uint);",
+	"\tdevcall (*write)(struct dentry *, const void *, uint);",
 	"\tdevcall (*seek)(struct dentry *, long);",
 	"\tdevcall (*getc)(struct dentry *);",
 	"\tdevcall (*putc)(struct dentry *, char);",
@@ -91,9 +99,9 @@ char *devstab[] =
 };
 
 /* Prototypes */
-void yyerror(char *s);
-int  lookup(char *str, int len);
-int  config_atoi(char *p, int len);
+void yyerror(const char *s);
+
+int  lookup(const char *str);
 void newattr(int tok, int val);
 int  cktname(int symid);
 void mktype(int deviceid);
@@ -101,81 +109,12 @@ void initattr(struct dev_ent *fstr, int tnum, int deviceid);
 void mkdev(int nameid, int typid, int deviceid);
 int  ckdname(int devid);
 
-%}
-%%
-configuration:  devtypes devdescriptors
-;
-
-devtypes:       ftypes DEFBRK { doing = "device definitions"; }
-;
-
-ftypes:         /* nothing */
-              | ftypes ftype
-;
-
-ftype:          tname dev_list
-;
-
-dev_list:       devheader attr_list
-              | dev_list devheader attr_list
-;
-
-devheader:      ON id { mktype($2); }
-;
-
-tname:          id COLON {$$ = currtname = cktname($1);}
-;
-
-id:             IDENT { $$ = currname = lookup(yytext, yyleng); }
-;
-
-attr_list:      /* nothing */
-              | attr_list attr
-;
-
-attr:           CSR number     { newattr(CSR, $2);     }
-              | IRQ number     { newattr(IRQ, $2);     }
-              | INTR id        { newattr(INTR, $2);    }
-              | OPEN id        { newattr(OPEN, $2);    }
-              | CLOSE id       { newattr(CLOSE, $2);   }
-              | INIT id        { newattr(INIT, $2);    }
-              | GETC id        { newattr(GETC, $2);    }
-              | PUTC id        { newattr(PUTC, $2);    }
-              | READ id        { newattr(READ, $2);    }
-              | WRITE id       { newattr(WRITE, $2);   }
-              | SEEK id        { newattr(SEEK, $2);    }
-              | CONTROL id     { newattr(CONTROL, $2); }
-;
-
-number:         INTEGER { $$ = config_atoi(yytext, yyleng); }
-;
-
-devdescriptors: /* nothing */
-              | devdescriptors descriptor
-;
-
-descriptor:     fspec attr_list
-;
-
-fspec:          dname IS id optional_on { mkdev($1, $3, $4); }
-;
-
-dname:          id { $$ = currdname = ckdname($1); }
-;
-
-optional_on:    /* nothing */  { $$ = 0;  }
-              | ON id          { $$ = $2; }
-;
-%%
-#include "lex.yy.c"
-
 int main(int argc, char **argv)
 {
-	int n, i, j, l, fcount;
+	int n, i, fcount;
 	struct dev_ent *s;
 	int   verbose = 0;
 	char *p;
-	int  c;
 
 	if ( argc > 1 && (strncmp("-v", argv[1], 2) == 0) )
 	{
@@ -291,8 +230,7 @@ int main(int argc, char **argv)
 
 	if (brkcount == 2 )
 	{
-		while ( (c = input()) > 0)    /* lex input routine */
-		{ putc(c, confh); }
+		fputs(literal_string, confh);
 	}
 
 	fprintf(confh, "\n#endif /* _CONF_H_ */\n");
@@ -364,18 +302,20 @@ int main(int argc, char **argv)
 			       s->csr, s->irq, s->minor);
 		}
 	}
+	return 0;
 }
 
-void yyerror(char *s)
+void yyerror(const char *s)
 {
 	fprintf(stderr, "Syntax error in %s on line %d\n", doing, linectr);
 }
 
 /* lookup  --  lookup a name in the symbol table; return position */
-int lookup(char *str, int len)
+int lookup(const char *str)
 {
 	int   i;
 	char *s;
+	int len = strlen(str);
 
 	if (len >= CONFMAXNM)
 	{
@@ -397,41 +337,6 @@ int lookup(char *str, int len)
 	symtab[nsym].occurs = 0;
 
 	return nsym++;
-}
-
-int config_atoi(char *p, int len)
-{
-	int base, rv;
-
-	if (*p == '0')
-	{
-		++p;
-		--len;
-		if (*p == 'x' || *p == 'X')
-		{
-			++p; --len; /* skip 'x' */
-			base = 16;
-		}
-		else
-		{
-			base = 8;
-		}
-	}
-	else
-	{
-		base = 10;
-	}
-
-	rv = 0;
-	for (; len > 0; ++p, --len)
-	{
-		rv *= base;
-		if      (isdigit(*p)) { rv += *p - '0'; }
-		else if (isupper(*p)) { rv += *p - 'A' + 10; }
-		else                  { rv += *p - 'a' + 10; }
-	}
-
-	return rv;
 }
 
 /* newattr -- add a new attribute spec to current type/device description */

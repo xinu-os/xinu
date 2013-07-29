@@ -1,0 +1,31 @@
+# Object files
+*.o
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Binary Images
+*.elf
+*.boot
+*.bin
+
+# Xinu build files
+compile/config/config
+compile/config/y.tab.h
+compile/config/parse.c
+compile/version
+compile/vn
+include/conf.h
+system/conf.c
