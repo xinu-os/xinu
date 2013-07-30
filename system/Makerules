@@ -38,6 +38,6 @@ COMP_SRC += ${C_FILES:%=${DIR}/%}
 
 # Special rules for special files
 ${DIR}/initialize.o: ${DIR}/initialize.c
-	sh mkvers.sh
+	sh mkvers.sh ${PLATFORM}
 	VERS=`cat version`
 	${CC} -DVERSION=\""`cat version`"\" ${CFLAGS} -o $@ $<
