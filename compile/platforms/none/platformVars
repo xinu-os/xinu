@@ -7,6 +7,6 @@ all:
 	@cd ${PLATFORM_DIR} ; \
 		for p in * ; do \
 			if [ $$p != "none" ] ; then \
-				echo "\tPLATFORM=$$p" ; \
+				echo "    PLATFORM=$$p" ; \
 			fi \
 		done
