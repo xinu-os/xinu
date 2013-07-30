@@ -38,13 +38,8 @@ void clkinit(void)
 #endif
 
     /* register clock interrupt */
-    /*
-#ifndef I386
-    interruptVector[IRQ_TIMER] = clkhandler;
-    enable_irq(IRQ_TIMER);
-    clkupdate(platform.clkfreq / CLKTICKS_PER_SEC);
-#else
-    */
+
+#ifdef I386
 	time_intr_freq = platform.clkfreq / CLKTICKS_PER_SEC;
 	outb(CLOCKCTL, 0x34);
 	/* LSB then MSB */
@@ -53,7 +48,11 @@ void clkinit(void)
 	outb(CLOCKBASE, time_intr_freq >> 8); /* why??? */
 
 	set_evec(IRQBASE, (ulong)clockIRQ);
-//#endif
+#else
+    interruptVector[IRQ_TIMER] = clkhandler;
+    enable_irq(IRQ_TIMER);
+    clkupdate(platform.clkfreq / CLKTICKS_PER_SEC);
+#endif
 
 }
 #endif /* RTCLOCK */

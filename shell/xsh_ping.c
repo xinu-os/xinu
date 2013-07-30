@@ -296,10 +296,8 @@ static ulong echoTripTime(struct packet *pkt)
 {
     struct icmpPkt *icmp = NULL;
     struct icmpEcho *echo = NULL;
-    struct ipv4Pkt *ip = NULL;
     ulong elapsed = 0, cycPerTick = 0;
 
-    ip = (struct ipv4Pkt *)pkt->nethdr;
     icmp = (struct icmpPkt *)pkt->curr;
     echo = (struct icmpEcho *)icmp->data;
 

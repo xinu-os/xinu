@@ -248,11 +248,10 @@ thread producer(mailbox box)
 thread consumer(mailbox box)
 {
     int i = 0;
-    int result = 0;
 
     for (i = 0; i < 3; i++)
     {
-        result = mailboxReceive(box);
+        mailboxReceive(box);
     }
 
     return OK;

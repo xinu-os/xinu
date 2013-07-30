@@ -160,7 +160,7 @@ static int _innum(int **ptr, int type, int len, int size,
     register char *np;
     char numbuf[64];
     register char c, base;
-    int expseen, negflg, c1, ndigit;
+    int negflg, c1, ndigit;
     long lcval;
 
     if (type == 'c' || type == 's' || type == '[')
@@ -181,7 +181,6 @@ static int _innum(int **ptr, int type, int len, int size,
         base = 16;
     }
     np = numbuf;
-    expseen = 0;
     negflg = 0;
     while ((c = (*getch) (arg1, arg2)) == ' ' || c == '\t' || c == '\n')
     {;

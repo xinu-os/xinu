@@ -61,11 +61,9 @@ int tarListFiles(struct tar *archive, char *filelist, int nentries)
 struct tar *tarGetFile(struct tar *archive, char *filename)
 {
     int pos, filesize;
-    int entries;
     struct tar *file;
 
     pos = 0;
-    entries = 0;
 
     /* loop until the end of archive or full filelist */
     while (1)

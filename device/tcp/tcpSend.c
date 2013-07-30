@@ -31,7 +31,6 @@ int tcpSend(struct tcb *tcbptr, uchar ctrl, uint seqnum,
     int result;
     uchar *data;
     uint i = 0;
-    ushort window = 0;
     ushort msslen = 0;
     ushort tcplen;
 
@@ -76,7 +75,6 @@ int tcpSend(struct tcb *tcbptr, uchar ctrl, uint seqnum,
     tcp->offset = octets2offset(TCP_HDR_LEN + msslen);
     tcp->control = ctrl;
     tcp->window = tcpSendWindow(tcbptr);
-    window = tcp->window;
     data = tcp->data;
 
     /* Add options */
@@ -126,12 +124,13 @@ int tcpSend(struct tcb *tcbptr, uchar ctrl, uint seqnum,
 
     if (result == OK)
     {
-    TCP_TRACE("SENT <C=0x%02X><S=%u><A=%u><dl=%u><w=%u>",
-                  ctrl, seqnum, acknum, datalen, window)}
+        TCP_TRACE("SENT <C=0x%02X><S=%u><A=%u><dl=%u><w=%u>",
+                  ctrl, seqnum, acknum, datalen, net2hs(window));
+    }
     else
     {
         TCP_TRACE("FAILED to send <C=0x%02X><S=%u><A=%u><dl=%u><w=%u>",
-                  ctrl, seqnum, acknum, datalen, window);
+                  ctrl, seqnum, acknum, datalen, net2hs(window));
     }
 
     return result;

@@ -109,9 +109,6 @@ shellcmd xsh_memdump(int nargs, char *args[])
 
 static ulong parse(char *string)
 {
-    long value;
-
-    value = 0;
     switch (string[0])
     {
     case '0':

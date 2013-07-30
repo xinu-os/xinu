@@ -38,7 +38,6 @@ thread test_netif(bool verbose)
     struct netaddr mask;
     struct netaddr gate;
     struct netaddr hw;
-    struct netaddr brc;
     struct pcap_file_header pcap;
     struct pcap_pkthdr phdr;
     struct packet *pkt;
@@ -67,13 +66,6 @@ thread test_netif(bool verbose)
     gate.addr[1] = 168;
     gate.addr[2] = 1;
     gate.addr[3] = 1;
-
-    brc.type = NETADDR_IPv4;
-    brc.len = IPv4_ADDR_LEN;
-    brc.addr[0] = 255;
-    brc.addr[1] = 255;
-    brc.addr[2] = 255;
-    brc.addr[3] = 255;
 
     testPrint(verbose, "Open loopback ethernet device");
     failif((SYSERR == open(ELOOP)), "");

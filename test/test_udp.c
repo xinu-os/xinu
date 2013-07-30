@@ -41,9 +41,6 @@ thread test_udp(bool verbose)
     struct netaddr ipc;
     struct netaddr ipd;
     struct netaddr ipl;
-    struct netaddr src;
-    struct netaddr dst;
-    struct netaddr mask;
     struct netaddr ipzero;
     struct packet *pkt[10];
     struct udpPkt *udppkt;
@@ -90,30 +87,6 @@ thread test_udp(bool verbose)
     ipl.addr[1] = 168;
     ipl.addr[2] = 1;
     ipl.addr[3] = 8;
-
-    /* Source IP address */
-    src.type = NETADDR_IPv4;
-    src.len = IPv4_ADDR_LEN;
-    src.addr[0] = 192;
-    src.addr[1] = 168;
-    src.addr[2] = 1;
-    src.addr[3] = 6;
-
-    /* Destination IP address */
-    dst.type = NETADDR_IPv4;
-    dst.len = IPv4_ADDR_LEN;
-    dst.addr[0] = 192;
-    dst.addr[1] = 168;
-    dst.addr[2] = 1;
-    dst.addr[3] = 1;
-
-    /* Mask */
-    mask.type = NETADDR_IPv4;
-    mask.len = IPv4_ADDR_LEN;
-    mask.addr[0] = 255;
-    mask.addr[1] = 255;
-    mask.addr[2] = 255;
-    mask.addr[3] = 0;
 
     /* Empty address */
     ipzero.type = 0;

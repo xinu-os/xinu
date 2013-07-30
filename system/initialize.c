@@ -39,6 +39,7 @@ extern void main(void);         /* main is the first thread created    */
 extern void xdone(void);        /* system "shutdown" procedure         */
 extern int platforminit(void);  /* determines platform settings        */
 static int sysinit(void);       /* intializes system structures        */
+static int userheapinit(void);  /* initialize user heap (if needed)    */
 
 /* Declarations of major kernel variables */
 struct thrent thrtab[NTHREAD];  /* Thread table                   */
@@ -142,7 +143,6 @@ int nulluser(void)
 static int sysinit(void)
 {
     int i;
-    void *userheap;             /* pointer to user memory heap   */
     struct thrent *thrptr;      /* thread control block pointer  */
     device *devptr;             /* device entry pointer          */
     struct sement *semptr;      /* semaphore entry pointer       */
@@ -207,23 +207,8 @@ static int sysinit(void)
     clkinit();
 #endif                          /* RTCLOCK */
 
-#ifdef UHEAP_SIZE
-    /* Initialize user memory manager */
-    userheap = stkget(UHEAP_SIZE);
-    if (SYSERR != (int)userheap)
-    {
-        userheap = (void *)((uint)userheap - UHEAP_SIZE + sizeof(int));
-        memRegionInit(userheap, UHEAP_SIZE);
-
-        /* initialize memory protection */
-        safeInit();
-
-        /* initialize kernel page mappings */
-        safeKmapInit();
-    }
-#else
-    userheap = NULL;
-#endif                          /* UHEAP_SIZE */
+    /* initialize user heap (if needed) */
+    userheapinit();
 
 #if USE_TLB
     /* initialize TLB */
@@ -260,4 +245,29 @@ static int sysinit(void)
     gpioLEDOn(GPIO_LED_CISCOWHT);
 #endif
     return OK;
+}
+
+static int userheapinit(void)
+{
+#ifdef UHEAP_SIZE
+    void *userheap;             /* pointer to user memory heap   */
+
+    /* Initialize user memory manager */
+    userheap = stkget(UHEAP_SIZE);
+    if (SYSERR != (int)userheap)
+    {
+        userheap = (void *)((uint)userheap - UHEAP_SIZE + sizeof(int));
+        memRegionInit(userheap, UHEAP_SIZE);
+
+        /* initialize memory protection */
+        safeInit();
+
+        /* initialize kernel page mappings */
+        safeKmapInit();
+    }
+
+    return (int)userheap;
+#else
+    return SYSERR;
+#endif
 }

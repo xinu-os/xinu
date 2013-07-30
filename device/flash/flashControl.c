@@ -25,13 +25,11 @@ devcall flashControl(device *devptr, ushort func, long arg1, long arg2)
     struct flash *flash;
     struct flash_block *e_block;
     struct flash_block l_block;
-    ulong position;
     uchar n;
     ulong v;
 
 
     flash = &flashtab[devptr->minor];
-    position = flash->base | arg1;
 
     switch (func)
     {

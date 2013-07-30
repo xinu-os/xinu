@@ -23,11 +23,9 @@ int tcpRecvOther(struct packet *pkt, struct tcb *tcbptr)
 {
     bool segAccept = FALSE;
     struct tcpPkt *tcp;
-    ushort tcplen;
 
     /* Setup packet pointers */
     tcp = (struct tcpPkt *)pkt->curr;
-    tcplen = pkt->len - (pkt->curr - pkt->linkhdr);
 
     /* Check if segment is acceptable */
     segAccept = tcpRecvValid(pkt, tcbptr);

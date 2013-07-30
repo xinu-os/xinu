@@ -18,7 +18,7 @@ extern int resdefer;
  */
 interrupt uartInterrupt(void)
 {
-    int u = 0, iir = 0, lsr = 0, count = 0;
+    int u = 0, iir = 0, count = 0;
     char c;
     struct uart *uartptr = NULL;
     struct uart_csreg *regptr = NULL;
@@ -58,7 +58,6 @@ interrupt uartInterrupt(void)
         {
             /* Receiver line status interrupt */
         case UART_IIR_RLSI:
-            lsr = regptr->lsr;
             uartptr->lserr++;
             break;
 
@@ -90,7 +89,6 @@ interrupt uartInterrupt(void)
             /* Transmitter holding register empty */
         case UART_IIR_THRE:
             uartptr->oirq++;
-            lsr = regptr->lsr;  /* Read from LSR to clear interrupt */
             count = 0;
             if (uartptr->ocount > 0)
             {

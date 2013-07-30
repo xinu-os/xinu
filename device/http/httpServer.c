@@ -68,13 +68,11 @@ thread httpServer(int netDescrp, int gentcpdev)
     tid_typ shelltid, killtid;
     int tcpdev, httpdev;
     char thrname[TNMLEN];
-    bool noGenHTTP;
     struct netaddr *host;
     struct netif *nif;
 
     enable();
 
-    noGenHTTP = FALSE;
     wait(maxhttp);              /* Make sure max HTTP threads not reached */
 
     /* Allocate HTTP device */

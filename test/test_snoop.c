@@ -69,7 +69,6 @@ thread test_snoop(bool verbose)
     struct packet *pktB;
     uchar *data;
     int i;
-    uint nmatch;
 
     src.len = IPv4_ADDR_LEN;
     src.type = NETADDR_IPv4;
@@ -220,7 +219,6 @@ thread test_snoop(bool verbose)
 
     testPrint(verbose, "Capture match");
     cap.type = SNOOP_FILTER_ALL;
-    nmatch = cap.nmatch;
     if (SYSERR == snoopCapture(&cap, pktA))
     {
         failif(TRUE, "Returned SYSERR");

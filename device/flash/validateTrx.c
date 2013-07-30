@@ -24,7 +24,6 @@ bool validateTrx(struct file *f)
     uint magic;
     uint len;
     uint crc;
-    uint flags_vers;
     uint calc_crc;
 
     struct file *checkme;
@@ -42,7 +41,6 @@ bool validateTrx(struct file *f)
     magic = header->magic;
     len = header->len;
     crc = header->crc;
-    flags_vers = header->flags_vers;
 
     /* Validate magic number */
     if (magic != TRX_MAGIC)
