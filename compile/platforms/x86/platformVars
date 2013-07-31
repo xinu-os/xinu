@@ -11,8 +11,6 @@ PLATFORM = x86
 BINIMAGE = xinu.bin
 BOOTIMAGE = xinu.boot
 
-BOOTSTRAP_ROOT = ../loader/${PLATFORM}/bootstrap
-
 X86_ROOT = /opt/dev/x86_64-unknown-elf/bin
 X86_PREFIX = x86_64-unknown-elf-
 

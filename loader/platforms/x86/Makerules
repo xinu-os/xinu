@@ -1,7 +1,7 @@
 # This Makefile contains rules to build files in the loader/ directory.
 
 # Name of this component (the directory this file is stored in)
-COMP = loader/x86
+COMP = loader/platforms/x86
 
 # Source files for this component
 C_FILES = 

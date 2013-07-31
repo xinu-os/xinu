@@ -18,6 +18,7 @@ TOPDIR    = ..
 LIBDIR    = ${TOPDIR}/lib
 
 # Default make target is in platformVars file.
+$(VERBOSE).SILENT:
 
 ###########################
 # Source file information #
@@ -27,7 +28,7 @@ LIBDIR    = ${TOPDIR}/lib
 # Each component is a directory in the source tree and should include a
 # Makerules specifying what files to include
 # (The loader should always be first, ensuring the image starts with it.)
-SYSCOMPS  = loader/${PLATFORM} system/platforms/${PLATFORM} system
+SYSCOMPS  = loader/platforms/${PLATFORM} system/platforms/${PLATFORM} system
 COMPS     = ${SYSCOMPS} ${DEVCOMPS} ${APPCOMPS}
 
 # Location of the conf.c file defining system devices
@@ -79,7 +80,8 @@ export
 ################
 # Make targets #
 ################
-xinu.elf: ${COMP_OBJ} ${CONF_OBJ} ${MAIN_OBJ} ${DATA_OBJ} ${LIB_ARC}
+xinu.elf: ${COMP_OBJ} ${CONF_OBJ} ${MAIN_OBJ} ${DATA_OBJ} ${LIB_ARC} ${USRTHRS_OBJ}
+	@echo "    Linking" $@
 	${LD} -o $@ ${LDFLAGS} $^
 
 ${COMP_OBJ}: ${CONF_OBJ}
@@ -90,15 +92,25 @@ ${KERNARC}: ${COMP_OBJ} ${CONF_OBJ} ../system/unistd.o
 
 objects: ${COMP_OBJ}
 
+%.o: %.c
+	@echo "    Compiling" $@
+	$(CC) $(CFLAGS) -o $@ $<
+
+%.o: %.S
+	@echo "    Assembling" $@
+	$(CC) $(CFLAGS) -o $@ $<
+
 clean:
-	rm -f *.o ${COMP_OBJ} ${CONF_OBJ} ${MAIN_OBJ} ${DATA_OBJ}
+	@echo "    Cleaning all objects"
+	rm -f *.o ${COMP_OBJ} ${CONF_OBJ} ${MAIN_OBJ} ${DATA_OBJ} ${USRTHRS_OBJ}
 	rm -f xinu.boot xinu.bin xinu.elf
-	rm -rf ${DOCS}
 
 depend:
+	@echo "    Building dependencies"
 	$(MAKEDEP) ${INCLUDE} ${COMP_SRC} > .deps
 
 indent:
+	@echo "    Indenting sources"
 	${INDENT} ${INDENT_ARGS} ${INDENT_TYPES} ${INDENT_FILES}
 	rm -f ${INDENT_FILES:%=%~}
 
@@ -108,21 +120,30 @@ ${MKIMAGE}:
 	exit 1
 
 docs:
+	@echo "    Building documentation"
 	${DOCGEN} ${DOCGEN_CONFIG}
 
 debug: 
+	@echo "    Building debug mode"
 	$(MAKE) DEBUG="-DDEBUG ${BUGFLAG}"
 
 libclean: ${LIBS:%=%-clean}
 
+docsclean:
+	@echo "    Cleaning documentation"
+	rm -rf ${DOCS}
+
 confclean:
+	@echo "    Cleaning configuration"
 	$(MAKE) -C config/ clean
 
 depclean:
+	@echo "    Cleaning dependencies"
 	rm -f .deps
 	touch .deps
 
-realclean: clean depclean libclean confclean
+realclean: clean docsclean depclean libclean confclean ${PLATCLEAN}
+	@echo "    Cleaning EVERYTHING"
 	rm -f ../include/conf.h
 	rm -f ../system/conf.c
 	rm -f vn version
@@ -134,24 +155,31 @@ realclean: clean depclean libclean confclean
 ${MAIN_OBJ}: ${CONF_OBJ} ${MAIN_SRC}
 
 ${COMPS}:
+	@echo "    Building" $@
 	$(MAKE) COMPS="$@" objects
 
 ${DATA_OBJ}:
+	@echo "    Object Copy" $@
 	$(OBJCOPY) $(OCFLAGS) ${@:%.o=%} $@
 
 ${CONFC}: config/config
+	@echo "    Configuring" $@
 	./config/config ${CONFIG}
 
 config/config:
+	@echo "    Building" $@
 	$(MAKE) -C config/
 
-${LIBS}: ${COMP_OBJ}
+${LIBS}: ${CONF_OBJ}
+	@echo "    Building" $@
 	$(MAKE) -C ${LIBDIR}/$@
 
-${LIB_ARC}: ${COMP_OBJ}
+${LIB_ARC}: ${CONF_OBJ}
+	@echo "    Installing" $@
 	$(MAKE) -C ${@:%.a=%} install
 
 ${LIBS:%=%-clean}:
+	@echo "    Cleaning" $@
 	$(MAKE) -C ${LIBDIR}/${@:%-clean=%} clean
 
 include .deps

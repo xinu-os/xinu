@@ -1,7 +1,7 @@
 # This Makefile contains rules to build files in the loader/ directory.
 
 # Name of this component (the directory this file is stored in)
-COMP = loader/wrt54gl
+COMP = loader/platforms/mipsel-qemu
 
 # Source files for this component
 C_FILES = 
