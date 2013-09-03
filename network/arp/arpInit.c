@@ -1,8 +1,6 @@
 /**
  * @file arpInit.c
- * @provides arpInit
  *
- * $Id: arpInit.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -16,6 +14,8 @@ struct arpEntry arptab[ARP_NENTRY];
 mailbox arpqueue;
 
 /**
+ * @ingroup arp
+ *
  * Initializes ARP table and ARP daemon.
  * @return OK if initialization is successful, otherwise SYSERR
  */

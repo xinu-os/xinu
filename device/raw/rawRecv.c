@@ -1,8 +1,6 @@
 /**
  * @file     rawRecv.c
- * @provides rawRecv
  *
- * $Id: rawRecv.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <raw.h>
 
 /**
+ * @ingroup raw
+ *
  * Process an incoming protocol other than UDP or TCP.
  * @param pkt pointer to the incoming packet
  * @return OK if packet was processed succesfully, otherwise SYSERR

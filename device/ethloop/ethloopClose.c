@@ -1,45 +1,44 @@
 /**
  * @file ethloopClose.c
- * @provides ethloopClose
- *
- * $Id: ethloopClose.c 2077 2009-09-24 23:58:54Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
 #include <bufpool.h>
 #include <device.h>
 #include <ethloop.h>
-#include <semaphore.h>
 #include <interrupt.h>
+#include <semaphore.h>
 
 /**
+ * @ingroup ethloop
+ *
  * Close a ethloop device.
  * @param devptr ethloop device table entry
  * @return OK if ethloop is closed properly, otherwise SYSERR
- **/
+ */
 devcall ethloopClose(device *devptr)
 {
     struct ethloop *elpptr;
     irqmask im;
 
-
-    /* Setup and error check pointers to structures */
     elpptr = &elooptab[devptr->minor];
-
     im = disable();
+
+    /* Make sure the ethloop is actually open */
     if (ELOOP_STATE_ALLOC != elpptr->state)
     {
         restore(im);
         return SYSERR;
     }
 
-    /* free the semaphore */
+    /* free the semaphores */
     semfree(elpptr->sem);
+    semfree(elpptr->hsem);
 
     /* free the buffer pool */
     bfpfree(elpptr->poolid);
 
+    /* mark as not open */
     elpptr->dev = NULL;
     elpptr->state = ELOOP_STATE_FREE;
     restore(im);

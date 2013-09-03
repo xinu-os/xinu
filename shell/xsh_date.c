@@ -1,8 +1,6 @@
 /*
  * @file     xsh_date.c
- * @provides xsh_date
  *
- * $Id: xsh_date.c 2108 2009-10-29 05:07:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <date.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (date).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments

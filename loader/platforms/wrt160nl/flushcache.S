@@ -1,12 +1,10 @@
 /**
  * @file flushcache.S
- * @provides flushcache.
  *
  * The overall structure for the flushcache function and calculations
  * used in the function were developed based on portions of: 
  * "See Mips Run, 2nd Edition" by Dominic Sweetman, published by Elsevier
  *
- * $Id: flushcache.S 2372 2011-03-06 02:33:57Z mziwisky $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 	

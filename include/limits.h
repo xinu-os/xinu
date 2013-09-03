@@ -1,19 +1,28 @@
 /**
  * @file limits.h
- * 
- * $Id: limits.h 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #ifndef _LIMITS_H_
 #define _LIMITS_H_
 
 #define CHAR_BIT  8             /**< bits in a char                     */
-#define CHAR_MAX  127           /**< maximum value of char              */
-#define CHAR_MIN  (-128)        /**< minimum value of char              */
+
 #define SCHAR_MAX 127           /**< maximum value of signed char       */
 #define SCHAR_MIN (-128)        /**< minimum value of signed char       */
+
 #define UCHAR_MAX 255           /**< maximum value of unsigned char     */
+
+/* gcc will automatically define __CHAR_UNSIGNED__ if it treats 'char' as
+ * unsigned on the current platform.  By default, char is signed on most
+ * platforms, but unsigned on ARM.  */
+#ifdef __CHAR_UNSIGNED__
+#  define CHAR_MAX  UCHAR_MAX   /**< maximum value of char              */
+#  define CHAR_MIN  0           /**< minimum value of char              */
+#else
+#  define CHAR_MAX  SCHAR_MAX   /**< maximum value of char              */
+#  define CHAR_MIN  SCHAR_MIN   /**< minimum value of char              */
+#endif
 
 #define INT_MAX   2147483647    /**< maximum value of int               */
 #define INT_MIN   (-INT_MAX-1)  /**< minimum value of int               */

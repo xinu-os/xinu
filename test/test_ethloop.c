@@ -1,24 +1,25 @@
+#include <device.h>
+#include <ethloop.h>
+#include <memory.h>
+#include <network.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <testsuite.h>
-#include <network.h>
-#include <device.h>
-#include <memory.h>
 #include <string.h>
-#include <ethloop.h>
-
-static int ethloopn_test(bool verbose, int dev);
+#include <testsuite.h>
 
 #define MAX_PAYLOAD  1516
 #define ETH_TYPE_ARP 0x0806
 
 #ifndef NETHLOOP
-#define NETHLOOP (-1)
+#  define NETHLOOP 0
 #endif
 
-#ifndef ELOOP
-#define ELOOP (-1)
+#if NETHLOOP
+#  ifndef ELOOP
+#    error "ELOOP not defined"
+#  endif
+static int ethloopn_test(bool verbose, int dev);
 #endif
 
 /* Simple ethernet packet structure */
@@ -35,11 +36,10 @@ struct etherGram
  */
 thread test_ethloop(bool verbose)
 {
+#if NETHLOOP
     /* the failif macro depends on 'passed' and 'verbose' vars */
     bool passed = TRUE;
     int i;
-
-    enable();
 
     for (i = 0; i < NETHLOOP; i++)
     {
@@ -56,9 +56,13 @@ thread test_ethloop(bool verbose)
         testFail(TRUE, "");
     }
 
+#else /* NETHLOOP */
+    testSkip(TRUE, "");
+#endif /* !NETHLOOP */
     return OK;
 }
 
+#if NETHLOOP
 static int ethloopn_test(bool verbose, int dev)
 {
     bool passed = TRUE;
@@ -82,7 +86,7 @@ static int ethloopn_test(bool verbose, int dev)
     testPrint(verbose, str);
     failif((SYSERR == open(dev)), "");
 
-    /* memget */
+    /* Allocate temporary buffers.  */
     memsize = sizeof(struct etherGram) + MAX_PAYLOAD - 1;
     inpkt = memget(memsize);
     outpkt = memget(memsize);
@@ -95,7 +99,7 @@ static int ethloopn_test(bool verbose, int dev)
     outpkt->type_len = hs2net(ETH_TYPE_ARP);
 
     /* generate payload content */
-    for (i = 0; i < MAX_PAYLOAD + 1; i++)
+    for (i = 0; i < MAX_PAYLOAD; i++)
     {
         /* Cycle through 0x20 to 0x7d (range of 0x5e) */
         value = (i % 0x5e) + 0x20;
@@ -112,37 +116,37 @@ static int ethloopn_test(bool verbose, int dev)
     sprintf(str, "%s 1514 byte packet (write)", pelp->dev->name);
     testPrint(verbose, str);
     len = write(dev, outpkt, 1514);
-    failif((len < 1514), "");
+    failif((len != 1514), "");
 
     sprintf(str, "%s 1514 byte packet (read)", pelp->dev->name);
     testPrint(verbose, str);
     bzero(inpkt, memsize);
     len = read(dev, inpkt, 1514);
-    failif((0 != memcmp(outpkt, inpkt, 1514)), "");
+    failif((len != 1514) || (0 != memcmp(outpkt, inpkt, 1514)), "");
 
     /* 'normal' packet (payload 686 bytes + 14 byte header) */
     sprintf(str, "%s  700 byte packet (write)", pelp->dev->name);
     testPrint(verbose, str);
     len = write(dev, outpkt, 700);
-    failif((len < 700), "");
+    failif((len != 700), "");
 
     sprintf(str, "%s  700 byte packet (read)", pelp->dev->name);
     testPrint(verbose, str);
     bzero(inpkt, memsize);
     len = read(dev, inpkt, 700);
-    failif((0 != memcmp(outpkt, inpkt, 700)), "");
+    failif((len != 700) || (0 != memcmp(outpkt, inpkt, 700)), "");
 
     /* small packet (payload 16 bytes + 14 byte header) */
     sprintf(str, "%s   30 byte packet (write)", pelp->dev->name);
     testPrint(verbose, str);
     len = write(dev, outpkt, 30);
-    failif((len < 30), "");
+    failif((len != 30), "");
 
     sprintf(str, "%s   30 byte packet (read)", pelp->dev->name);
     testPrint(verbose, str);
     bzero(inpkt, memsize);
     len = read(dev, inpkt, 30);
-    failif((0 != memcmp(outpkt, inpkt, 30)), "");
+    failif((len != 30) || (0 != memcmp(outpkt, inpkt, 30)), "");
 
     /* micro packet (12 bytes) */
     sprintf(str, "%s   12 byte packet", pelp->dev->name);
@@ -159,14 +163,14 @@ static int ethloopn_test(bool verbose, int dev)
     {
         len = 32 + (rand() % 1200);
         value = write(dev, outpkt, len);
-        if (value < len)
+        if (value != len)
         {
             subpass = FALSE;
         }
 
         bzero(inpkt, memsize);
         value = read(dev, inpkt, len);
-        if (0 != memcmp(outpkt, inpkt, 30))
+        if ((value != len) || (0 != memcmp(outpkt, inpkt, len)))
         {
             subpass = FALSE;
         }
@@ -178,7 +182,7 @@ static int ethloopn_test(bool verbose, int dev)
     sprintf(str, "%s  700 byte packet (write hold)", pelp->dev->name);
     testPrint(verbose, str);
     len = write(dev, outpkt, 700);
-    failif((len < 700), "");
+    failif((len != 700), "");
 
     sprintf(str, "%s  700 byte packet (read hold)", pelp->dev->name);
     testPrint(verbose, str);
@@ -191,21 +195,21 @@ static int ethloopn_test(bool verbose, int dev)
     sprintf(str, "%s  700 byte packet (write drop)", pelp->dev->name);
     testPrint(verbose, str);
     len = write(dev, outpkt, 700);
-    failif((len < 700), "");
+    failif((len != 700), "");
 
     sprintf(str, "%s  700 byte packet (write)", pelp->dev->name);
     testPrint(verbose, str);
     outpkt->dst[0] += 1;
     len = write(dev, outpkt, 700);
-    failif((len < 700), "");
+    failif((len != 700), "");
 
     sprintf(str, "%s  700 byte packet (read)", pelp->dev->name);
     testPrint(verbose, str);
     bzero(inpkt, memsize);
     len = read(dev, inpkt, 700);
-    failif((0 != memcmp(outpkt, inpkt, 700)), "");
+    failif((len != 700) || (0 != memcmp(outpkt, inpkt, 700)), "");
 
-    /* memfree */
+    /* Free temporary buffers. */
     memfree(outpkt, memsize);
     memfree(inpkt, memsize);
 
@@ -215,3 +219,4 @@ static int ethloopn_test(bool verbose, int dev)
 
     return passed;
 }
+#endif /* NETHLOOP */

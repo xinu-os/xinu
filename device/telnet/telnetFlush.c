@@ -1,8 +1,6 @@
 /**
  * @file telnetFlush.c
- * @provides telnetFlush.
  *
- * $Id: telnetFlush.c 2115 2009-11-03 02:31:19Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <telnet.h>
 
 /**
+ * @ingroup telnet
+ *
  * Flushes the telnet server's output buffer
  * @param devptr TELNET device table entry
  * @return OK if flush is successful, SYSERR on failure

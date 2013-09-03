@@ -11,11 +11,14 @@ C_FILES = initialize.c queue.c
 # Files for process control
 C_FILES += kill.c ready.c resched.c resume.c suspend.c chprio.c getprio.c queue.c getitem.c queinit.c insert.c gettid.c xdone.c yield.c userret.c
 
-# Files for preemption
-C_FILES += clkinit.c clkhandler.c insertd.c sleep.c unsleep.c wakeup.c
+# Files for system timer and preemption
+C_FILES += clkinit.c clkhandler.c mdelay.c udelay.c insertd.c sleep.c unsleep.c wakeup.c
 
 # Files for semaphores
 C_FILES += semcreate.c semfree.c semcount.c signal.c signaln.c wait.c
+
+# Files for monitors
+C_FILES += moncreate.c monfree.c moncount.c lock.c unlock.c
 
 # Files for memory management
 C_FILES += memget.c memfree.c stkget.c bfpalloc.c bfpfree.c bufget.c buffree.c
@@ -29,15 +32,12 @@ C_FILES += close.c control.c getc.c open.c ioerr.c ionull.c read.c putc.c seek.c
 # Files for system debugging
 C_FILES += debug.c
 
+# Files for MiniJava Compiler
+C_FILES += minijava.c
+
 # Files for reading tape archives
 C_FILES += tar.c
 
 # Add the files to the compile source path
 DIR = ${TOPDIR}/${COMP}
 COMP_SRC += ${C_FILES:%=${DIR}/%}
-
-# Special rules for special files
-${DIR}/initialize.o: ${DIR}/initialize.c
-	sh mkvers.sh ${PLATFORM}
-	VERS=`cat version`
-	${CC} -DVERSION=\""`cat version`"\" ${CFLAGS} -o $@ $<

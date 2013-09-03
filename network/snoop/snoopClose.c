@@ -1,7 +1,5 @@
 /* @file snoopClose.c
- * @provides snoopClose
  *
- * $Id: snoopClose.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <snoop.h>
 
 /**
+ * @ingroup snoop
+ *
  * Closes a capture from a network device or file.
  * @param cap pointer to capture structure
  * @return OK if close was successful, otherwise SYSERR
@@ -21,7 +21,6 @@ int snoopClose(struct snoop *cap)
     int i;
     irqmask im;
 
-    i = 0;
     /* Error check pointers */
     if (NULL == cap)
     {

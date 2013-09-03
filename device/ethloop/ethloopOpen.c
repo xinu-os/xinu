@@ -1,69 +1,82 @@
 /**
  * @file     ethloopOpen.c
- * @provides ethloopOpen
- * 
- * $Id: ethloopOpen.c 2077 2009-09-24 23:58:54Z mschul $
- **/
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+ */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
 #include <bufpool.h>
 #include <device.h>
 #include <ethloop.h>
-#include <stdlib.h>
 #include <interrupt.h>
+#include <semaphore.h>
+#include <stdlib.h>
 
 /**
+ * @ingroup ethloop
+ *
  * Open an ethloop device. 
  * @param devptr ethloop device table entry
  * @return OK if ethloop is opened properly, otherwise SYSERR
  */
 devcall ethloopOpen(device *devptr)
 {
-    struct ethloop *elpptr = NULL;
+    struct ethloop *elpptr;
     irqmask im;
+    int retval = SYSERR;
 
     elpptr = &elooptab[devptr->minor];
-
-    /* Check if ethloop is already open */
     im = disable();
+
+    /* Make sure the ethloop is actually closed */
     if (ELOOP_STATE_FREE != elpptr->state)
     {
-        restore(im);
-        return SYSERR;
+        goto out_restore;
     }
-    elpptr->state = ELOOP_STATE_ALLOC;
-    /* Link ethloop record with device table entry */
-    elpptr->dev = devptr;
 
     /* Clear flags and stats */
     elpptr->flags = 0;
     elpptr->nout = 0;
 
-    /* Create new semaphore */
+    /* Create semaphores */
     elpptr->sem = semcreate(0);
-    elpptr->hsem = semcreate(0);
-    if ((SYSERR == (int)elpptr->sem) || (SYSERR == (int)elpptr->hsem))
+    if (SYSERR == (int)elpptr->sem)
     {
-        restore(im);
-        return SYSERR;
+        goto out_restore;
     }
 
-    /* Zero out the buffer */
-    bzero(elpptr->buffer, ELOOP_NBUF);
-    bzero(elpptr->pktlen, ELOOP_NBUF);
+    elpptr->hsem = semcreate(0);
+    if (SYSERR == (int)elpptr->hsem)
+    {
+        goto out_free_sem;
+    }
+
+    /* Initialize buffers */
+    bzero(elpptr->buffer, sizeof(elpptr->buffer));
+    bzero(elpptr->pktlen, sizeof(elpptr->pktlen));
     elpptr->index = 0;
     elpptr->hold = NULL;
     elpptr->holdlen = 0;
     elpptr->count = 0;
 
-    /* Allocate a buffer pool */
+    /* Allocate a buffer pool  */
     elpptr->poolid = bfpalloc(ELOOP_BUFSIZE, ELOOP_NBUF);
     if (SYSERR == elpptr->poolid)
     {
-        restore(im);
-        return SYSERR;
+        goto out_free_hsem;
     }
+
+    /* Link ethloop record with device table entry and mark ethloop as open */
+    elpptr->state = ELOOP_STATE_ALLOC;
+    elpptr->dev = devptr;
+
+    /* Success */
+    retval = OK;
+    goto out_restore;
+
+out_free_hsem:
+    semfree(elpptr->hsem);
+out_free_sem:
+    semfree(elpptr->sem);
+out_restore:
     restore(im);
-    return OK;
+    return retval;
 }

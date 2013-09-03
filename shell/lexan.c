@@ -1,8 +1,6 @@
 /**
  * @file     lexan.c
- * @provides lexan.
  *
- * $Id: lexan.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <shell.h>
 
 /**
+ * @ingroup shell
+ *
  * Ad hoc lexical analyzer to divide command line into tokens
  * @param *line   pointer to line to parse
  * @param linelen length of line to parse

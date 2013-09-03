@@ -3,7 +3,6 @@
  * This file provides various definitions and prototypes for the flash
  * driver and all its affiliates
  *
- * $Id: flash.h 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 
@@ -111,7 +110,6 @@ extern struct flash_block bad_block;
 /* commands for data gathering */
 #define CFI_QUERY_ADDR    0x55
 #define CFI_QUERY_MODE    0x98
-#define CFI_QUERY_EXIT    0xFF
 
 #define CFI_MANUFACTURER  0x00
 #define CFI_DEVICE        0x01

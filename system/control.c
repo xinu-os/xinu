@@ -1,8 +1,6 @@
 /**
  * @file control.c
- * @provides control.
  *
- * $Id: control.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,12 +8,24 @@
 #include <device.h>
 
 /**
- * control a device (e.g., set the mode)
- * @param descrp definition of device to control
- * @param func specific control function for device
- * @param arg1 specific argument for func
- * @param arg2 specific argument for func
- * @return function to control device on success, SYSERR on failure
+ * @ingroup devcalls
+ *
+ * Execute an I/O Control request on a device.
+ *
+ * @param descrp
+ *      Index of the device.
+ * @param func
+ *      Device-specific specific control "function".
+ * @param arg1
+ *      Additional argument for the device-specific control function.
+ * @param arg2
+ *      Additional argument for the device-specific control function.
+ *
+ * @return
+ *      Returns ::SYSERR if the device index does not correspond to an
+ *      appropriate device or if the control function is not recognized;
+ *      otherwise returns a request-specific value that is typically ::SYSERR on
+ *      failure, but may be either ::OK or request-specific data on success.
  */
 devcall control(int descrp, int func, long arg1, long arg2)
 {

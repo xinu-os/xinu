@@ -1,8 +1,6 @@
 /**
  * @file colon2mac.c
- * @provides colon2mac.
  *
- * $Id: colon2mac.c 2092 2009-10-07 23:08:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 

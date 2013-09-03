@@ -1,8 +1,6 @@
 /**
  * @file tcpClose.c
- * @provides tcpClose
  *
- * $Id: tcpClose.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Close a TCP device.
  * @param devptr TCP device table entry
  * @return OK if TCP is closed properly, otherwise SYSERR

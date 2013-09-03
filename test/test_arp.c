@@ -1,8 +1,6 @@
 /**
  * @file     test_arp.c
- * @provides test_arp
  *
- * $Id: test_arp.c 2152 2010-01-07 02:43:18Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,6 +15,8 @@
 #include <pcap.h>
 #include <testsuite.h>
 #include <thread.h>
+
+#if NETHER
 
 #ifndef ELOOP
 #define ELOOP (-1)
@@ -50,12 +50,15 @@ static thread lookupTest(uchar *request, int rqlen, uchar *reply,
     return OK;
 }
 
+#endif /* NETHER */
+
 /**
  * Tests ARP.
  * @return OK when testing is complete
  */
 thread test_arp(bool verbose)
 {
+#if NETHER
     bool passed = TRUE;
     int i = 0;
     struct netaddr ip;
@@ -79,8 +82,6 @@ thread test_arp(bool verbose)
     tid_typ tids[ARP_NTHRWAIT];
     tid_typ tid;
     irqmask im;
-
-    enable();
 
     ip.type = NETADDR_IPv4;
     ip.len = IPv4_ADDR_LEN;
@@ -834,6 +835,9 @@ thread test_arp(bool verbose)
     {
         testFail(TRUE, "");
     }
+#else /* NETHER */
+    testSkip(TRUE, "");
+#endif /* NETHER == 0 */
 
     return OK;
 }

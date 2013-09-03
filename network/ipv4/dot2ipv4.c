@@ -1,8 +1,6 @@
 /**
  * @file dot2ipv4.c
- * @provides dot2ipv4
  *
- * $Id: dot2ipv4.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,12 +10,14 @@
 #include <network.h>
 
 /**
+ * @ingroup ipv4
+ *
  * Convert an IP Address in dotted-decimal notation into a netaddr.
  * @param str dotted-decimal IP Address string
  * @param ip netaddr structure for conversion result
  * @return OK if conversion was successful, otherwise SYSERR
  */
-syscall dot2ipv4(char *str, struct netaddr *ip)
+syscall dot2ipv4(const char *str, struct netaddr *ip)
 {
     char c;
     uint count = 0, temp = 0;

@@ -1,8 +1,6 @@
 /**
  * @file     xsh_tar.c
- * @provides xsh_tar.
  *
- * $Id: xsh_tar.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -20,6 +18,8 @@ extern int _binary_data_mytar_tar_start;
 void tarHelp(char *command);
 
 /**
+ * @ingroup shell
+ *
  * Shell command demonstrating reading of tar files.
  * @param nargs number of arguments
  * @param args  array of arguments

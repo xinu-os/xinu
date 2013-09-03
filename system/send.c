@@ -1,14 +1,14 @@
 /**
  * @file send.c
- * @provides send.
  *
- * $Id: send.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <thread.h>
 
 /**
+ * @ingroup threads
+ *
  * Send a message to another thread
  * @param tid thread id of recipient
  * @param msg contents of message

@@ -1,10 +1,7 @@
 /**
  * @file semcreate.c
- * @provides semcreate, semalloc.
- *
- * $Id: semcreate.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <semaphore.h>
 #include <interrupt.h>
@@ -12,26 +9,39 @@
 static semaphore semalloc(void);
 
 /**
- * Create and initialize a semaphore, returning its ID.
- * @param count  resources available.
- * @return new semaphore ID on success, SYSERR on failure
+ * @ingroup semaphores
+ *
+ * Creates a semaphore that initially has the specified count.
+ *
+ * @param count
+ *      Initial count of the semaphore (often the number of some resource that
+ *      is available).  Must be non-negative.
+ *
+ * @return
+ *      On success, returns the new semaphore; otherwise returns ::SYSERR.  The
+ *      new semaphore must be freed with semfree() when no longer needed.  This
+ *      function can only fail if the system is out of semaphores or if @p count
+ *      was negative.
  */
 semaphore semcreate(int count)
 {
-    register semaphore sem;
+    semaphore sem;
     irqmask im;
 
-    im = disable();             /* disable interrupts    */
-    sem = semalloc();           /* request new semaphore */
-    if (sem != SYSERR && count >= 0)    /* safety check          */
+    if (count < 0)          /* Don't allow starting with negative count.  */
     {
-        semtab[sem].count = count;      /* initialize count      */
-        restore(im);            /* restore interrupts    */
-        return sem;             /* return semaphore id   */
+        return SYSERR;
     }
 
+    im = disable();         /* Disable interrupts.  */
+    sem = semalloc();       /* Allocate semaphore.  */
+    if (SYSERR != sem)      /* If semaphore was allocated, set count.  */
+    {
+        semtab[sem].count = count;
+    }
+    /* Restore interrupts and return either the semaphore or SYSERR.  */
     restore(im);
-    return SYSERR;
+    return sem;
 }
 
 /**
@@ -42,11 +52,11 @@ semaphore semcreate(int count)
  */
 static semaphore semalloc(void)
 {
-    int sem = 0;                /* sempahore to return */
+    int i;
     static int nextsem = 0;
 
-    /* check all NSEM slots */
-    for (sem = 0; sem < NSEM; sem++)
+    /* check all NSEM slots, starting at 1 past the last slot searched.  */
+    for (i = 0; i < NSEM; i++)
     {
         nextsem = (nextsem + 1) % NSEM;
         if (SFREE == semtab[nextsem].state)

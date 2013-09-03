@@ -1,8 +1,6 @@
 /**
  * @file unsleep.c
- * @provides unsleep.
  *
- * $Id: unsleep.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 #include <clock.h>
 
 /**
+ * @ingroup threads
+ *
  * Remove thread from the sleep queue prematurely
  * @param tid  target thread
  * @return OK if thread removed, else SYSERR

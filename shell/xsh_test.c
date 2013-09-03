@@ -1,8 +1,6 @@
 /**
  * @file     xsh_test.c
- * @provides xsh_test.
  *
- * $Id: xsh_test.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 
 
 /**
+ * @ingroup shell
+ *
  * Shell command (test) provides a mechanism for testing Xinu features.  The
  * action and output varies depending on the feature currently being tested.
  * This is not meant to serve as a permanent shell command for a particular

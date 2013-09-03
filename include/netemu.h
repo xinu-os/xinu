@@ -1,7 +1,6 @@
 /**
  * @file netemu.h
  *
- * $Id: netemu.h 2126 2009-11-12 07:23:04Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

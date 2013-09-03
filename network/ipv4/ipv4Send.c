@@ -1,8 +1,6 @@
 /**
  * file ipv4Send.c
- * @provides ipv4Send
  * 
- * $Id: ipv4Send.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <route.h>
 
 /**
+ * @ingroup ipv4
+ *
  * Send an outgoing IPv4 packet.
  * @param packet packet being sent
  * @param src source IP address

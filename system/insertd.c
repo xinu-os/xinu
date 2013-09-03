@@ -1,8 +1,6 @@
 /**
  * @file insertd.c
- * @provides insertd.
  *
- * $Id: insertd.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <queue.h>
 
 /**
+ * @ingroup threads
+ *
  * Insert a thread in delta queue in ascending order
  * @param tid    thread id to insert
  * @param q      queue in which thread should be inserted

@@ -1,8 +1,6 @@
 /**
  * @file     telnetWrite.c
- * @provides telnetWrite.
  *
- * $Id: telnetWrite.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 #include <stdio.h>
 
 /**
+ * @ingroup telnet
+ *
  * Write a buffer to a telnet client
  * @param devptr TELNET device table entry
  * @param buf buffer of characters to output

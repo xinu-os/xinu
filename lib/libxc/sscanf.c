@@ -1,50 +1,76 @@
 /**
  * @file sscanf.c
- * @provides sscanf, sgetch, sungetch.
  *
- * $Id: sscanf.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
-#define EOF   (-2)
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdio.h>
 
-static int sgetch(int, char **);
-static int sungetch(int, char **);
-extern int _doscan(register char *, register int **,
-                   int (*getc) (int, char **),
-                   int (*ungetc) (int, char **), int, int);
+static int sgetch(int, int);
+static int sungetch(int, int);
 
 /**
- * Read from a string according to a format.
- * @param *str string to read from
- * @param *fmt format string
- * @param args number of arguments in format string
- * @return result of _doscan
+ * @ingroup libxc
+ *
+ * Scan values from a string according to the specified format.
+ *
+ * @param str
+ *      String from which to read input.
+ * @param format
+ *      Format string.  Not all standard format specifiers are supported by this
+ *      implementation.  See _doscan() for a description of supported conversion
+ *      specifications.
+ * @param ...
+ *      Additional arguments that match those specified in the format string.
+ *      Generally these need to be a @a pointer to the corresponding argument so
+ *      that the value can be set; for example, a <code>\%d</code> conversion
+ *      specifier needs to be matched with an <code>int *</code>.
+ *
+ * @return number of items successfully matched.
  */
-int sscanf(char *str, char *fmt, int args)
+int sscanf(const char *str, const char *format, ...)
 {
-    char *s;
+    va_list ap;
+    int ret;
 
-    s = str;
-    return (_doscan(fmt, (int **)&args, sgetch, sungetch, 0, (int)&s));
+    va_start(ap, format);
+    ret = _doscan(format, ap, sgetch, sungetch, 0, (int)&str);
+    va_end(ap);
+
+    return ret;
 }
 
-/**
- * Get the next character from a string.
- * @param dummy unused variable
- * @param cpp string to read next character from
- */
-static int sgetch(int dummy, char **cpp)
+/* The first argument to the below functions is ignored, as we only need one
+ * argument to specify the current position in the string.  */
+
+static int sgetch(int _ignored, int _str_p)
 {
-    return (*(*cpp) == '\0' ? EOF : *(*cpp)++);
+    const char **str_p = (const char **)_str_p;
+    const char *str = *str_p;
+    int c;
+
+    if (*str == '\0')
+    {
+        c = EOF;
+    }
+    else
+    {
+        c = (unsigned char)(*str);
+        *str_p = ++str;
+    }
+    return c;
 }
 
-/**
- * Pushback a character in a string.
- * @param dummy unused variable
- * @param cpp string to pushback character to
- */
-static int sungetch(int dummy, char **cpp)
+static int sungetch(int _ignored, int _str_p)
 {
-    return (*(*cpp)--);
+    const char **str_p = (const char**)_str_p;
+    const char *str = *str_p;
+    int c;
+
+    str--;
+    c = (unsigned char)(*str);
+    *str_p = str;
+    return c;
 }

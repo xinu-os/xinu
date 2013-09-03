@@ -1,8 +1,6 @@
 /**
  * @file bfpalloc.c
- * @provides bfpalloc.
  *
- * $Id: bfpalloc.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,10 +10,19 @@
 #include <bufpool.h>
 
 /**
- * Acquire heap storage and subdivide into buffers
- * @param bufsize size of individual buffers in bytes
- * @param nbuf count of bufsize buffers in pool
- * @return index into bfptab of initialized pool, SYSERR on failure
+ * @ingroup memory_mgmt
+ *
+ * Acquire heap storage and subdivide into buffers.
+ *
+ * @param bufsize
+ *      Size of individual buffers, in bytes.
+ *
+ * @param nbuf
+ *      Number of buffers in the pool.
+ *
+ * @return
+ *      On success, returns an identifier for the buffer pool that can be passed
+ *      to bufget() or bfpfree().  On failure, returns ::SYSERR.
  */
 int bfpalloc(uint bufsize, uint nbuf)
 {
@@ -47,17 +54,24 @@ int bfpalloc(uint bufsize, uint nbuf)
         return SYSERR;
     }
     bfpptr->state = BFPUSED;
+    restore(im);
+
     bfpptr->freebuf = semcreate(0);
     if (SYSERR == (int)bfpptr->freebuf)
     {
-        restore(im);
+        bfpptr->state = BFPFREE;
         return SYSERR;
     }
-    restore(im);
 
     bfpptr->nbuf = nbuf;
     bfpptr->bufsize = bufsize;
     bufptr = (struct poolbuf *)memget(nbuf * bufsize);
+    if ((void *)SYSERR == bufptr)
+    {
+        semfree(bfpptr->freebuf);
+        bfpptr->state = BFPFREE;
+        return SYSERR;
+    }
     bfpptr->next = bufptr;
     bfpptr->head = bufptr;
     for (buffer = 0; buffer < nbuf; buffer++)

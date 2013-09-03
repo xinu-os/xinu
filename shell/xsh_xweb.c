@@ -1,8 +1,6 @@
 /**
  * @file     xsh_webserver.c
- * @provides xsh_xweb
  *
- * $Id: xsh_xweb.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,7 +12,10 @@
 #include <string.h>
 #include <thread.h>
 
+#if NETHER
 /**
+ * @ingroup shell
+ *
  * Shell command (webserver).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -116,3 +117,4 @@ shellcmd xsh_xweb(int nargs, char *args[])
     return 1;
 #endif
 }
+#endif /* NETHER */

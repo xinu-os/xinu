@@ -1,8 +1,6 @@
 /**
  * @file     xsh_sleep.c
- * @provides xsh_sleep.
  *
- * $Id: xsh_sleep.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (sleep DELAY) delay for a given number of seconds.
  * @param nargs number of arguments
  * @param args  array of arguments

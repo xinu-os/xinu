@@ -1,8 +1,6 @@
 /**
  * @file telnetAlloc.c
- * @provides telnetAlloc.
  *
- * $Id: telnetAlloc.c 2112 2009-11-02 22:15:54Z kthurow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <telnet.h>
 
 /**
+ * @ingroup telnet
+ *
  * Allocate an available telnet device.
  * @return device number for a telnet device, SYSERR if none are free
  */

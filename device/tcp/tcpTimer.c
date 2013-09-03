@@ -1,8 +1,6 @@
 /**
  * @file tcpTimer.c
- * @provides tcpTimer
  *
- * $Id: tcpTimer.c 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -20,6 +18,8 @@ semaphore tcpmutex;
 static int calcElapsed(int, int);
 
 /**
+ * @ingroup tcp
+ *
  * TCP timer process to manage timeout and retransmit events.
  */
 thread tcpTimer(void)
@@ -32,8 +32,6 @@ thread tcpTimer(void)
     irqmask ps;
     uchar type;
     struct tcb *tcbptr = NULL;
-
-    enable();
 
     /* Setup timer event delta queue */
     bzero(tcptimertab, sizeof(struct tcpEvent) * TCP_NEVENTS);

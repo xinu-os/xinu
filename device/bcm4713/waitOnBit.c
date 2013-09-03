@@ -1,8 +1,6 @@
 /**
  * @file waitOnBit.c
- * @provides waitOnBit.
  *
- * $Id: waitOnBit.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <ether.h>
 
 /**
+ * @ingroup etherspecific
+ *
  * Wait on a bit in a device's control and status register.
  * @param reg   pointer to device status register
  * @param mask  bit to wait on

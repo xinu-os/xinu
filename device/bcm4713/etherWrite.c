@@ -1,8 +1,6 @@
 /**
  * @file etherWrite.c
- * @provides etherWrite.
  *
- * $Id: etherWrite.c 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -18,14 +16,9 @@
 #include <mips.h>
 #include <network.h>
 
-/**
- * Write a packet to the ethernet device
- * @param devptr device table entry
- * @param buf packet buffer
- * @param len size of the buffer
- * @return number of bytes sent from input buffer
- */
-devcall etherWrite(device *devptr, void *buf, uint len)
+/* Implementation of etherWrite() for the bcm4713; see the documentation for
+ * this function in ether.h.  */
+devcall etherWrite(device *devptr, const void *buf, uint len)
 {
     struct ether *ethptr;
     struct bcm4713 *nicptr;
@@ -34,7 +27,7 @@ devcall etherWrite(device *devptr, void *buf, uint len)
     struct ether *phyptr;
     irqmask im;
     ulong entry = 0, control = 0;
-    uchar *buffer = buf;
+    const uchar *buffer = buf;
     uint outlen;
 
     ethptr = &ethertab[devptr->minor];

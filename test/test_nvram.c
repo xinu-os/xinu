@@ -12,18 +12,16 @@
  */
 thread test_nvram(bool verbose)
 {
+#if NVRAM
     char *str;
     uint value, temp;
     irqmask im;
     bool passed;
 
-    enable();
-
     passed = TRUE;
 
     /* make sure we are initialized properly */
     testPrint(verbose, "initialization");
-    value = SYSERR;
     value = nvramInit();
     failif(((OK != value)
             || (nvram_header == NULL)
@@ -80,6 +78,8 @@ thread test_nvram(bool verbose)
     {
         testFail(TRUE, "");
     }
-
+#else /* NVRAM */
+    testSkip(TRUE, "");
+#endif /* !NVRAM */
     return OK;
 }

@@ -1,10 +1,8 @@
 /**
  * @file syscall_dispatch.c
- * @provides syscall_dispatch, user_*, sc_*.
  * Translate user_* functions to system calls, dispatch to proper sc_*
  * functions, and complete.
  *
- * $Id: syscall_dispatch.c 2086 2009-10-06 22:24:27Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

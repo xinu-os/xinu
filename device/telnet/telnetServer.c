@@ -1,8 +1,6 @@
 /**
  * @file telnetServer.c
- * @provides telnetServer
  *
- * $Id: telnetServer.c 2116 2009-11-03 20:55:05Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,6 +15,8 @@
 thread telnetServerKiller(ushort, ushort);
 
 /**
+ * @ingroup telnet
+ *
  * Start telnet server
  * @param ethdev  interface on which telnet server will listen
  * @param port  port on which to start the server
@@ -44,8 +44,6 @@ thread telnetServer(int ethdev, int port, ushort telnetdev,
         return SYSERR;
     }
     host = &(interface->ip);
-
-    enable();
 
     while (TRUE)
     {
@@ -139,6 +137,8 @@ thread telnetServer(int ethdev, int port, ushort telnetdev,
 }
 
 /**
+ * @ingroup telnet
+ *
  * Kills telnet server that was spawned 
  * @param telnetdev telnet device to close
  * @param tcpdev tcp device to close
@@ -147,8 +147,6 @@ thread telnetServer(int ethdev, int port, ushort telnetdev,
 thread telnetServerKiller(ushort telnetdev, ushort tcpdev)
 {
     int minor, sem;
-
-    enable();
 
     minor = devtab[telnetdev].minor;
     sem = telnettab[minor].killswitch;

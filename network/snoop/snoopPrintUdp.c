@@ -1,8 +1,6 @@
 /**
  * @file snoopPrintUdp.c
- * @provides snoopPrintUdp
  * 
- * $Id: snoopPrintUdp.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -35,6 +33,8 @@ static void snoopPrintUdpPort(ushort port, char *descrp)
 }
 
 /**
+ * @ingroup snoop
+ *
  * Print contents of an UDP packet
  * @param pkt the packet
  * @return OK if print successful, SYSERR if error occurs

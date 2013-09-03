@@ -3,7 +3,6 @@
  * 
  * PC-style i8259 programmable interrupt controller.
  *
- * $Id: pic8259.h 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

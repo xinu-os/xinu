@@ -1,9 +1,7 @@
 /**
  * @file     flashRead.c
- * @provides flashRead
  * A simple, high-level interface to read from flash.
  *
- * $Id: flashRead.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 #include <kernel.h>

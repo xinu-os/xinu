@@ -1,8 +1,6 @@
 /**
  * @file tcpSendPersist.c
- * @provides tcpSendPersist
  *
- * $Id: tcpSendPersist.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Send a segment to probe a receiver who advertised a window size of 0.
  * @param tcpptr pointer to the transmission control block for connection
  * @return number of octets sent

@@ -1,26 +1,31 @@
 /**
  * @file fputs.c
- * @provides fputs.
- *
- * $Id: fputs.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-extern int putc(int, char);
+#include <stdio.h>
 
 /**
- * Write a null-terminated string to a device (file)
- * @param dev device to write to
- * @param *s string to write
- * @return result of last putc
+ * @ingroup libxc
+ *
+ * Writes a null-terminated string to a device.
+ *
+ * @param s
+ *      The null terminated string to write.
+ * @param dev
+ *      The device to write the string to.
+ *
+ * @return
+ *      A non-negative number on success, or @c EOF on error.
  */
-int fputs(char *s, int dev)
+int fputs(const char *s, int dev)
 {
-    int r = 0, c;
-
-    while ((c = (*s++)))
+    for (; *s; s++)
     {
-        r = putc(dev, c);
+        if (fputc(*s, dev) == EOF)
+        {
+            return EOF;
+        }
     }
-    return r;
+    return 0;
 }

@@ -1,8 +1,6 @@
 /**
  * @file tcpTimerSched.c
- * @provides tcpTimerSched
  *
- * $Id: tcpTimerSched.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 static int allocEvent(void);
 
 /**
+ * @ingroup tcp
+ *
  * Schedule TCP timer events.
  * @param time milliseconds before timer triggers
  * @param tcbptr TCB with which event is associated

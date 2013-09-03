@@ -1,40 +1,29 @@
 /**
  * @file atol.c
- * @provides atol.
- *
- * $Id: atol.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <stdlib.h>
+#include <stdio.h>
 
 /**
- * Converts an ascii value to a long.
- * @param *p pointer to ascii string
- * @return long
+ * @ingroup libxc
+ *
+ * Converts the initial portion of an ASCII null-terminated string into a long
+ * integer.  Leading whitespace is skipped and an optional <code>+</code> or
+ * <code>-</code> character is allowed to indicate sign.  Parsing otherwise
+ * stops once the first nondigit character is encountered.  If no digits have
+ * been encountered at that point, 0 shall be returned.
+ *
+ * @param nptr
+ *      Pointer to the string to convert.
+ *
+ * @return
+ *      The resulting long integer.
  */
-long atol(char *p)
+long atol(const char *nptr)
 {
-    long n;
-    int f;
-
-    n = 0;
-    f = 0;
-    for (;; p++)
-    {
-        switch (*p)
-        {
-        case ' ':
-        case '\t':
-            continue;
-        case '-':
-            f++;
-        case '+':
-            p++;
-        }
-        break;
-    }
-    while (*p >= '0' && *p <= '9')
-    {
-        n = n * 10 + *p++ - '0';
-    }
-    return (f ? -n : n);
+    long n = 0;
+    sscanf(nptr, "%ld", &n);
+    return n;
 }

@@ -1,6 +1,5 @@
 /**
  * @file unistd.c
- * @provides getnum, printnum.
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

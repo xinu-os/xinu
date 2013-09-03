@@ -1,8 +1,6 @@
 /**
  * @file queue.c
- * @provides enqueue, dequeue.
  *
- * $Id: queue.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 struct queent quetab[NQENT];    /**< global thread queue table       */
 
 /**
+ * @ingroup threads
+ *
  * Insert a thread at the tail of a queue
  * @param  tid  thread ID to enqueue
  * @param  q    target queue
@@ -38,6 +38,8 @@ tid_typ enqueue(tid_typ tid, qid_typ q)
 }
 
 /**
+ * @ingroup threads
+ *
  * Remove and return the first thread on a list
  * @param  q  target queue
  * @return thread id of removed thread, or EMPTY

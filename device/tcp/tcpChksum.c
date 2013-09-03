@@ -1,8 +1,6 @@
 /**
  * @file tcpChksum.c
- * @provides tcpChcksum
  *
- * $Id: tcpChksum.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,9 @@
 #include <network.h>
 #include <tcp.h>
 
+/**
+ * @ingroup tcp
+ */
 ushort tcpChksum(struct packet *pkt, ushort len, struct netaddr *src,
                  struct netaddr *dst)
 {

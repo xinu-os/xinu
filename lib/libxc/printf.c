@@ -1,22 +1,35 @@
 /**
  * @file printf.c
- * @provides printf.
- *
- * $Id: printf.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stdio.h>
 #include <stdarg.h>
 
-int printf(const char *fmt, ...)
+/**
+ * @ingroup libxc
+ *
+ * Print a formatted message to standard output.
+ *
+ * @param format
+ *      The format string.  Not all standard format specifiers are supported by
+ *      this implementation.  See _doprnt() for a description of supported
+ *      conversion specifications.
+ * @param ...
+ *      Arguments matching those in the format string.
+ *
+ * @return
+ *      On success, returns the number of characters written.  On write error,
+ *      returns a negative value.
+ */
+int printf(const char *format, ...)
 {
     va_list ap;
-    int putc(int, int);
+    int ret;
 
-    va_start(ap, fmt);
-    _doprnt((char *)fmt, ap, putc, stdout);
+    va_start(ap, format);
+    ret = _doprnt(format, ap, fputc, stdout);
     va_end(ap);
 
-    return 0;
+    return ret;
 }

@@ -12,7 +12,7 @@ LDFLAGS =
 CONFIG  = config
 OBJECTS = scan.o parse.o config.o
 
-${CONFIG}: ${OBJECTS}
+$(CONFIG): $(OBJECTS)
 
 scan.o: scan.l parse.c
 
@@ -23,4 +23,4 @@ y.tab.h: parse.o
 config.o: config.c y.tab.h
 
 clean:
-	rm -f ${CONFIG} *.o y.tab.h parse.c
+	rm -f $(CONFIG) *.o y.tab.h parse.c

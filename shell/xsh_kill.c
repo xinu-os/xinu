@@ -1,8 +1,6 @@
 /**
  * @file     xsh_kill.c
- * @provides xsh_kill.
  *
- * $Id: xsh_kill.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (kill) terminates a thread.
  * @param nargs number of arguments in args array
  * @param args  array of arguments

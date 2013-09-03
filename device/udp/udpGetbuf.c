@@ -1,8 +1,6 @@
 /**
  * @file     udpGetbuf.c
- * @provides udpGetbuf
  *
- * $Id: udpGetbuf.c 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,9 @@
 #include <stdlib.h>
 #include <udp.h>
 
+/**
+ * @ingroup udpinternal
+ */
 struct udpPkt *udpGetbuf(struct udp *udpptr)
 {
     struct udpPkt *udppkt = NULL;

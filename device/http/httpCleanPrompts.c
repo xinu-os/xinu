@@ -1,8 +1,6 @@
 /**
  * @file httpCleanPrompts.c
- * @provides cleanPrompts.
  *
- * $Id: httpCleanPrompts.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -18,7 +16,7 @@
  * @param len length of provided buffer
  * @param webptr http device struct if applicable, NULL if generic buffer
  * @return the updated length of the buffer
- **/
+ */
 int cleanPrompts(device *devptr, char *buf, int len, struct http *webptr)
 {
     char *found, *end;

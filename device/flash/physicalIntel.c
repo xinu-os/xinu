@@ -1,12 +1,10 @@
 /**
  * @file     physical.c
- * @provides physicalIntelWrite, physicalIntelRead, physicalIntelErase, 
- * physicalIntelControl
+ *
  * Functions in this file communicate directly with the hardware to achieve
  * their goals. This file acts like the BIOS in older computers (by
  * providing calls to to the physical work to the O/S).
  *
- * $Id: physicalIntel.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 
@@ -156,7 +154,6 @@ devcall physicalIntelWrite(struct flash *flash, struct flash_block *block)
     /* if it was locked, re-lock it */
     if (wasLocked)
     {
-        wasLocked = FALSE;
         if (physicalControl(flash, block, FLASH_LOCK, NULL) != OK)
         {
             restore(ps);

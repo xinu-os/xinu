@@ -1,8 +1,6 @@
 /**
  * @file rtSend.c
- * @provides rtSend
  *
- * $Id: rtSend.c 2118 2009-11-05 05:22:51Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <icmp.h>
 
 /**
+ * @ingroup route
+ *
  * Attempt to route a packet.
  * @param pkt incoming packet to route
  * @return OK if packet is routed successfully, otherwise SYSERR

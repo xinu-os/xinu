@@ -1,0 +1,35 @@
+#
+# Platform-specific Makefile definitions for the ASUS WL-330gE port of Embedded
+# Xinu.
+#
+
+PLATFORM_NAME := ASUS WL-330gE
+
+# Include default mipsel definitions
+MIPS_ENDIANNESS := little
+MIPS_REVISION   := 1
+include templates/mips/platformVars
+
+# Embedded Xinu components to build into kernel image
+APPCOMPS := apps        \
+            mailbox     \
+	    network     \
+	    shell       \
+	    test
+
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES := bcm4713      \
+           bcmbus       \
+           ethloop      \
+           flash        \
+           http         \
+           loopback     \
+           raw          \
+           tcp          \
+           telnet       \
+           tty          \
+           uart-ns16550 \
+           udp
+
+# Extra defines
+DEFS += -DFLASH_ASUS

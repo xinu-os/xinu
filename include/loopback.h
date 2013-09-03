@@ -1,7 +1,6 @@
 /**
  * @file loopback.h
  *
- * $Id: loopback.h 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -34,7 +33,7 @@ struct loopback
     int index;                  /**< index of first char in buffer      */
     int flags;                      /**< loopback control flags             */
     semaphore sem;              /**< number of characters in buffer     */
-    char buffer[LOOP_BUFFER];   /**< input buffer                       */
+    uchar buffer[LOOP_BUFFER];   /**< input buffer                       */
 };
 
 extern struct loopback looptab[];
@@ -44,7 +43,7 @@ devcall loopbackInit(device *);
 devcall loopbackOpen(device *);
 devcall loopbackClose(device *);
 devcall loopbackRead(device *, void *, uint);
-devcall loopbackWrite(device *, void *, uint);
+devcall loopbackWrite(device *, const void *, uint);
 devcall loopbackGetc(device *);
 devcall loopbackPutc(device *, char);
 devcall loopbackControl(device *, int, long, long);

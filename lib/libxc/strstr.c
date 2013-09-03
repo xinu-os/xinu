@@ -1,43 +1,35 @@
 /**
  * @file strstr.c
- * @provides strstr.
- *
- * $Id: strstr.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
+#include <stddef.h>
 
 /** 
- * Returns a pointer to the location in a string at which a particular
- * string appears.
- * @param cs string to search
- * @param ct string to locate
- * @return the pointer in the string, NULL if string not found
+ * @ingroup libxc
+ *
+ * Returns a pointer to the first location in a null-terminated string at which
+ * a particular substring appears.
+ *
+ * @param haystack
+ *      The string to search.
+ * @param needle
+ *      The string to locate.
+ *
+ * @return
+ *      The pointer in the string, or @c NULL if the string was not found.
  */
-char *strstr(const char *cs, const char *ct)
+char *strstr(const char *haystack, const char *needle)
 {
-    char *cq;
-    char *cr;
-
-    for (; *cs != '\0'; cs++)
+    size_t needle_len = strlen(needle);
+    for (; *haystack != '\0'; haystack++)
     {
-        if (*cs == *ct)
+        if (strncmp(haystack, needle, needle_len) == 0)
         {
-            cq = (char *)cs;
-            cr = (char *)ct;
-            while ((*cq != '\0') && (*cr != '\0'))
-            {
-                if (*cq != *cr)
-                {
-                    break;
-                }
-                cq++;
-                cr++;
-            }
-            if ('\0' == *cr)
-            {
-                return (char *)cs;
-            }
+            return (char*)haystack; /* Cast away const. */
         }
     }
-    return 0;
+    return NULL;
 }

@@ -1,9 +1,7 @@
 /**
  * @file     debug.c
- * @provides hexdump.
  * This file provides various debug utilities for development.
  *
- * $Id: debug.c 2092 2009-10-07 23:08:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -35,6 +33,8 @@ static void hexdump_print(uchar data, uchar mode)
 }
 
 /**
+ * @ingroup misc
+ *
  * Dump a buffer of given length to the to a device.
  * @param *buffer buffer to print out data in
  * @param length  length of buffer to print

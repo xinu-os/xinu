@@ -1,17 +1,18 @@
 /**
  * @file xsh_vlanstat.c
- * @provides xsh_vlanstat.
  *
- * $Id: xsh_vlanstat.c 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <stdio.h>
 #include <string.h>
 
+#if NETHER
 int vlanStat(void);
 
 /**
+ * @ingroup shell
+ *
  * Provides info about the current status of VLAN switch.
  * @param nargs number of arguments in args array
  * @param args  array of arguments
@@ -43,3 +44,4 @@ shellcmd xsh_vlanstat(int nargs, char *args[])
         return 1;
     }
 }
+#endif /* NETHER */

@@ -1,8 +1,6 @@
 /**
  * @file tcpRead.c
- * @provides tcpRead
  *
- * $Id: tcpRead.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 static int stateCheck(struct tcb *);
 
 /**
+ * @ingroup tcp
+ *
  * Read into a buffer from TCP.
  * @param devptr TCP device table entry
  * @param buf buffer to read octets into

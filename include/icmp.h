@@ -1,7 +1,6 @@
 /*
  * @file icmp.h
  *
- * $Id: icmp.h 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -162,7 +161,7 @@ extern mailbox icmpqueue;
 thread icmpDaemon(void);
 syscall icmpInit(void);
 syscall icmpRecv(struct packet *);
-syscall icmpDestUnreach(struct packet *, int);
+syscall icmpDestUnreach(const struct packet *, int);
 syscall icmpEchoReply(struct packet *, struct netif *);
 syscall icmpEchoRequest(struct netaddr *dst, ushort id, ushort seq);
 syscall icmpRedirect(struct packet *, int code, struct rtEntry *);

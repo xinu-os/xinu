@@ -1,8 +1,6 @@
 /*
  * @file emuDrop.c
- * @provides emuDrop
  *
- * $Id: emuDrop.c 2122 2009-11-11 01:06:21Z kthurow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -15,6 +13,8 @@
 #include <udp.h>
 
 /**
+ * @ingroup netemu
+ *
  * Drop packets based on user settings
  * @param pkt pointer to the incoming packet
  * @return OK if packet was processed succesfully, otherwise SYSERR

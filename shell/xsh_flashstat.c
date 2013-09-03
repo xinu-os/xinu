@@ -1,8 +1,6 @@
 /**
  * @file     xsh_flashstat.c
- * @provides xsh_flashstat.
  *
- * $Id: xsh_flashstat.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,6 +15,8 @@
 static void flashStat(ushort);
 
 /**
+ * @ingroup shell
+ *
  * Shell command (flashstat) provides information about the flash device
  * @param nargs number of arguments in args array
  * @param args  array of arguments

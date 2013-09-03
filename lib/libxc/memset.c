@@ -1,27 +1,33 @@
 /**
  * @file memset.c
- * @provides memset.
- *
- * $Id: memset.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
 
 /** 
- * Place a character into first n characters.
- * @param s memory to place character into
- * @param c character to place
- * @param n number of times to place character
- * @return the pointer to memory
+ * @ingroup libxc
+ *
+ * Fills a region of memory with a byte.
+ *
+ * @param s
+ *      pointer to the memory to place byte into
+ * @param c
+ *      byte to place
+ * @param n
+ *      length of region to fill, in bytes
+ *
+ * @return
+ *      @p s
  */
-void *memset(void *s, int c, int n)
+void *memset(void *s, int c, size_t n)
 {
-    register int i;
-    char *cp = (char *)s;
+    unsigned char *p = s;
+    size_t i;
 
     for (i = 0; i < n; i++)
     {
-        *cp = (unsigned char)c;
-        cp++;
+        p[i] = c;
     }
     return s;
 }

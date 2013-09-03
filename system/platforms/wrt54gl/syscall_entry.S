@@ -1,9 +1,7 @@
 /**
  * @file syscall_entry.S
- * @provides syscall_entry.
  * Entry point for handling syscall exceptions.
  *
- * $Id: syscall_entry.S 2086 2009-10-06 22:24:27Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

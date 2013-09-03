@@ -1,32 +1,40 @@
 /**
  * @file strncat.c
- * @provides strncat.
- *
- * $Id: strncat.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
 
 /**
- * Concatenate s2 on the end of s1.  S1's space must be large enough.
- * At most n characters are moved.
- * @param *s1 first string
- * @param *s2 second string
- * @param n length to concatenate
- * @return s1
+ * @ingroup libxc
+ *
+ * Concatenate at most the specified number of characters from a possibly
+ * null-terminated string to another null-terminated string, always
+ * null-terminating the result.  The strings may not overlap.
+ *
+ * @param dest
+ *      Pointer to the null-terminated string to which to concatenate the
+ *      additional string or characters.
+ * @param src
+ *      Pointer to the source string.
+ *
+ * @param n
+ *      Maximum number of bytes of the @p src string to concatenate, excluding
+ *      the null terminator that will be appended.
+ *
+ * @return @p dest
  */
-char *strncat(char *s1, const char *s2, int n)
+char *strncat(char *dest, const char *src, size_t n)
 {
-    char *os1;
+    char *dest_save = dest;
+    size_t i;
 
-    os1 = s1;
-    while (*s1++)
-        ;
-    --s1;
-    while ((*s1++ = *s2++))
-        if (--n < 0)
-        {
-            *--s1 = '\0';
-            break;
-        }
-    return (os1);
+    dest = strchr(dest, '\0');
+
+    for (i = 0; i < n && src[i] != '\0'; i++)
+    {
+        dest[i] = src[i];
+    }
+    dest[i] = '\0';
+    return dest_save;
 }

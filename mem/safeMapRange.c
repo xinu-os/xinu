@@ -1,9 +1,7 @@
 /**
  * @file safeMapRange.c
- * @provides safeMapRange.
  * Map a range of pages to a page table.
  *
- * $Id: safeMapRange.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

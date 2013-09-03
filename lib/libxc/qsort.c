@@ -1,144 +1,105 @@
 /**
  * @file qsort.c
- * @provides qsort, qs1, qsexc, qstexc.
- *
- * $Id: qsort.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-static int (*qscmp) (char *, char *);
-static int qses;
-static void qs1(char *, char *);
-static void qsexc(char *, char *);
-static void qstexc(char *, char *, char *);
+#include <stdlib.h>
+
+static size_t partition(void *base, size_t nmemb, size_t size,
+                        int (*compar)(const void *, const void*));
+
+static void swap_elements(void *p1, void *p2, size_t size);
 
 /**
- * Performs a quick sort
- * @param *a array to sort
- * @param n length of the array
- * @param es pivot
- * @param (*fc)() comparison function
+ * @ingroup libxc
+ *
+ * Sorts an array of data using quicksort.  The average-case running time is O(n
+ * log n) but the worst case running time is O(n^2).
+ *
+ * @param base
+ *      Pointer to the array of data to sort.
+ * @param nmemb
+ *      Number of elements in the array.
+ * @param size
+ *      Size of each element in the array, in bytes.
+ * @param compar
+ *      Comparison callback function that is passed pointers to two elements in
+ *      the array.  It must return a negative value, 0, or a positive value if
+ *      the first element is less than, equal to, or greater than the second
+ *      element, respectively.
  */
-void qsort(char *a, unsigned n, int es, int (*fc) (char *, char *))
+void qsort(void *base, size_t nmemb, size_t size,
+           int (*compar)(const void *, const void *))
 {
-    qscmp = fc;
-    qses = es;
-    qs1(a, a + n * es);
-}
-
-static void qs1(char *a, char *l)
-{
-    register char *i, *j;
-    register int es;
-    char *lp, *hp;
-    int c;
-    unsigned n;
-
-    es = qses;
-
-  start:
-    if ((n = l - a) <= es)
+    if (nmemb > 1)
     {
-        return;
-    }
-    n = es * (n / (2 * es));
-    hp = lp = a + n;
-    i = a;
-    j = l - es;
-    for (;;)
-    {
-        if (i < lp)
-        {
-            if ((c = (*qscmp) (i, lp)) == 0)
-            {
-                qsexc(i, lp -= es);
-                continue;
-            }
-            if (c < 0)
-            {
-                i += es;
-                continue;
-            }
-        }
-
-      loop:
-        if (j > hp)
-        {
-            if ((c = (*qscmp) (hp, j)) == 0)
-            {
-                qsexc(hp += es, j);
-                goto loop;
-            }
-            if (c > 0)
-            {
-                if (i == lp)
-                {
-                    qstexc(i, hp += es, j);
-                    i = lp += es;
-                    goto loop;
-                }
-                qsexc(i, j);
-                j -= es;
-                i += es;
-                continue;
-            }
-            j -= es;
-            goto loop;
-        }
-
-        if (i == lp)
-        {
-            if (lp - a >= l - hp)
-            {
-                qs1(hp + es, l);
-                l = lp;
-            }
-            else
-            {
-                qs1(a, lp);
-                a = hp + es;
-            }
-            goto start;
-        }
-
-        qstexc(j, lp -= es, i);
-        j = hp -= es;
+        /* Partition the array around a pivot element, then recurse on parts of
+         * the array before and after the pivot.  */
+        size_t pivot_index = partition(base, nmemb, size, compar);
+        qsort(base, pivot_index, size, compar);
+        qsort(base + (pivot_index + 1) * size, nmemb - (pivot_index + 1),
+              size, compar);
     }
 }
 
-static void qsexc(char *i, char *j)
+/*
+ * Does quicksort partitioning on an array of length 2 or greater.  The first
+ * element is taken to be the pivot.  The array is re-arranged so that all
+ * elements before the pivot compare less than or equal to it and all elements
+ * after the pivot compare greater than or equal to it.  The return value is the
+ * resulting 0-based index of the pivot.
+ */
+static size_t partition(void *base, size_t nmemb, size_t size,
+                        int (*compar)(const void *, const void*))
 {
-    register char *ri, *rj, c;
-    int n;
+    void *p1, *p2;
+    size_t p1_index = 1;
 
-    n = qses;
-    ri = i;
-    rj = j;
+    /* Pivot is at @base.  */
+    p1 = base + size;
+    p2 = base + (nmemb * size);
     do
     {
-        c = *ri;
-        *ri++ = *rj;
-        *rj++ = c;
-    }
-    while (--n);
+        if ((*compar)(p1, base) <= 0)
+        {
+            /* Element at @p1 can go before pivot.  Continue onto next element.
+             * */
+            p1 += size;
+            p1_index++;
+        }
+        else
+        {
+            /* Element at @p1 must go after pivot.  Swap it with the element at
+             * @p2, after decrementing @p2 so it points to the next element on
+             * the right end of the array.  Then, @p1 will be left unmodified so
+             * it points to the element that was previously at @p2.  */
+            p2 -= size;
+            swap_elements(p1, p2, size);
+        }
+    } while (p1 != p2);
+
+    /* Now, p1 == p2, and all elements left of @p1 compare less than or equal to
+     * the pivot, while all elements right of or at @p1 compare greater than or
+     * equal to the pivot.  Finish by swapping the pivot into its final position
+     * and returning its index.  */
+    p1 -= size;
+    p1_index--;
+    swap_elements(p1, base, size);
+    return p1_index;
 }
 
-static void qstexc(char *i, char *j, char *k)
+/* Swaps the two elements of the specified size, pointed to by @p1 and @p2.  */
+static void swap_elements(void *_p1, void *_p2, size_t size)
 {
-    register char *ri, *rj, *rk;
-    int c;
-    int n;
+    unsigned char *p1 = _p1;
+    unsigned char *p2 = _p2;
+    size_t i;
+    unsigned char tmp;
 
-    n = qses;
-    ri = i;
-    rj = j;
-    rk = k;
-    do
+    for (i = 0; i < size; i++)
     {
-        c = *ri;
-        *ri++ = *rk;
-        *rk++ = *rj;
-        *rj++ = c;
+        tmp = p1[i];
+        p1[i] = p2[i];
+        p2[i] = tmp;
     }
-    while (--n);
 }

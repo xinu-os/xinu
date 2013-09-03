@@ -1,10 +1,8 @@
 /**
  * @file     physical.c
- * @provides physicalWrite, physicalRead, physicalErase, physicalControl
  * A function from this file calls the proper function of the specific 
  * command set if it is supported.
  *
- * $Id: physical.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded XINU, Copyright (C) 2009.  All rights reserved. */
 

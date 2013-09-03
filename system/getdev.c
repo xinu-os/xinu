@@ -1,8 +1,6 @@
 /**
  * @file     getdev.c
- * @provides getdev.
  *
- * $Id: getdev.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,11 +9,17 @@
 #include <string.h>
 
 /**
- * Returns the numerical identifier for the given device.
- * @param *dev device name
- * @return device number
+ * @ingroup devcalls
+ *
+ * Translates a device name into a device number.
+ *
+ * @param dev
+ *      Name of the device.
+ *
+ * @return
+ *      The number of the device, or ::SYSERR if the device was not found.
  */
-syscall getdev(char *dev)
+syscall getdev(const char *dev)
 {
     int devnum;
 

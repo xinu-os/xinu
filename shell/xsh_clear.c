@@ -1,8 +1,6 @@
 /**
  * @file     xsh_clear.c
- * @provides xsh_clear.
  *
- * $Id: xsh_clear.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <string.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (clear) clears the terminal using vt100 terminal control.
  * @param nargs number of arguments
  * @param args  array of arguments

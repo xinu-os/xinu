@@ -1,9 +1,7 @@
 /**
  * @file     xsh_nvram.c
- * @provides xsh_nvram.
  * Shell function wrapper to lower level nvram settings.
  *
- * $Id: xsh_nvram.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,11 +10,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#if NVRAM
 static void xsh_nvramHelp(char *command);
 static void xsh_nvramList(void);
 static int xsh_nvramSet(char *pair);
 
 /**
+ * @ingroup shell
+ *
  * Command 'nvram', allows shell access to nvram variables
  * @param nargs number of arguments
  * @param args  array of arguments
@@ -141,3 +142,4 @@ static int xsh_nvramSet(char *pair)
 
     return nvramSet(name, value);
 }
+#endif /* NVRAM */

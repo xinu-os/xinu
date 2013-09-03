@@ -1,8 +1,6 @@
 /**
  * @file snoopPrintTcp.c
- * @provides snoopPrintTcp
  * 
- * $Id: snoopPrintTcp.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -29,6 +27,8 @@ static void snoopPrintTcpPort(ushort port, char *descrp)
 }
 
 /**
+ * @ingroup snoop
+ *
  * Print contents of an TCP packet
  * @param tcp TCP packet
  * @return OK if print successful, SYSERR if error occurs

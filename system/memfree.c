@@ -1,8 +1,6 @@
 /**
  * @file memfree.c
- * @provides memfree.
  *
- * $Id: memfree.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,10 +9,19 @@
 #include <interrupt.h>
 
 /**
- * Free a memory block, returning it to free list.
- * @param *memptr pointer to memory block
- * @param nbytes length of region in bytes
- * @return OK on success, SYSERR on failure
+ * @ingroup memory_mgmt
+ *
+ * Frees a block of heap-allocated memory.
+ *
+ * @param memptr
+ *      Pointer to memory block allocated with memget().
+ *
+ * @param nbytes
+ *      Length of memory block, in bytes.  (Same value passed to memget().)
+ *
+ * @return
+ *      ::OK on success; ::SYSERR on failure.  This function can only fail
+ *      because of memory corruption or specifying an invalid memory block.
  */
 syscall memfree(void *memptr, uint nbytes)
 {

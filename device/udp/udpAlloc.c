@@ -1,8 +1,6 @@
 /**
  * @file udpAlloc.c
- * @provides udpAlloc.
  *
- * $Id: udpAlloc.c 2114 2009-11-03 01:13:43Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,8 +9,12 @@
 #include <udp.h>
 
 /**
- * Allocate an available udp device.
- * @return device number for a udp device, SYSERR if none are free
+ * @ingroup udpexternal
+ *
+ * Allocate an available UDP device.
+ *
+ * @return
+ *      Device number for a UDP device, or ::SYSERR if none are free.
  */
 ushort udpAlloc(void)
 {

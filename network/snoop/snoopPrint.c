@@ -1,8 +1,6 @@
 /**
  * @file snoopPrint.c
- * @provides snoopPrint
  * 
- * $Id: snoopPrint.c 2074 2009-09-21 23:37:28Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -19,6 +17,8 @@
 #include <udp.h>
 
 /**
+ * @ingroup snoop
+ *
  * Outputs snoop information for a packet.
  * @param pkt packet
  * @param dump dump level
@@ -159,7 +159,7 @@ int snoopPrint(struct packet *pkt, char dump, char verbose)
                 for (j = i; (j < i + 16 && j < pkt->len); j++)
                 {
                     ch = pkt->data[j];
-                    if (!isascii(ch) || !(isprint(ch) || isspace(ch)))
+                    if (!isascii(ch) || iscntrl(ch))
                     {
                         ch = '.';
                     }

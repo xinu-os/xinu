@@ -1,10 +1,7 @@
 /**
  * @file kill.c
- * Provides: kill
  *
- * $Id: kill.c 2020 2009-08-13 17:50:08Z mschul $
  */
-
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <thread.h>
@@ -15,6 +12,8 @@
 extern void xdone(void);
 
 /**
+ * @ingroup threads
+ *
  * Kill a thread and remove it from the system
  * @param tid target thread
  * @return OK on success, SYSERR otherwise
@@ -49,8 +48,8 @@ syscall kill(tid_typ tid)
     switch (thrptr->state)
     {
     case THRSLEEP:
-        thrptr->state = THRFREE;
         unsleep(tid);
+        thrptr->state = THRFREE;
         break;
     case THRCURR:
         thrptr->state = THRFREE;        /* suicide */

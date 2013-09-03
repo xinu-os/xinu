@@ -14,14 +14,12 @@
  */
 thread test_ttydriver(bool verbose)
 {
-#if LOOP
-#if TTYLOOP
+#if LOOP && TTYLOOP
     char str[MAX_STR];
     uchar iflags, oflags;
     int i, max;
     bool passed = TRUE;
 
-    enable();
     open(LOOP);
     open(TTYLOOP, LOOP);
 
@@ -156,7 +154,8 @@ thread test_ttydriver(bool verbose)
 
     close(TTYLOOP);
     close(LOOP);
-#endif
-#endif
+#else /* LOOP && TTYLOOP */
+    testSkip(TRUE, "");
+#endif /* !(LOOP && TTYLOOP) */
     return OK;
 }

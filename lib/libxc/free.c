@@ -1,29 +1,28 @@
 /**
  * @file free.c
- * @provides free.
  * This file is deprecated in favor of mem/free.c and the user heap
  * allocator.  However, it remains here for backup purposes.
- *
- * $Id: free.c 2065 2009-09-04 21:44:36Z brylow $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
 #include <memory.h>
+#include <stdlib.h>
 
 /**
- * Attempt to free block of memory based on malloc() accounting
- * information stored in preceding two words.
- * @param *pmem pointer to memory block
- * @return OK on success, SYSERR on failure
+ * @ingroup libxc
+ *
+ * Attempt to free a block of memory based on malloc() accounting information
+ * stored in preceding two words.
+ *
+ * @param ptr
+ *      A pointer to the memory block to free.
  */
-__attribute__ ((deprecated))
-void free(void *pmem)
+void free(void *ptr)
 {
     struct memblock *block;
 
     /* block points at the memblock we want to free */
-    block = (struct memblock *)pmem;
+    block = (struct memblock *)ptr;
 
     /* back up to accounting information */
     block--;

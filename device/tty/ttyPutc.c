@@ -1,8 +1,6 @@
 /**
  * @file ttyPutc.c
- * @provides ttyPutc.
  *
- * $Id: ttyPutc.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tty.h>
 
 /**
+ * @ingroup tty
+ *
  * Write a single character to a TTY.
  * @param devptr TTY device table entry
  * @param ch character to output

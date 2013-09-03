@@ -1,8 +1,6 @@
 /**
  * @file     xsh_telnet.c
- * @provides xsh_telnet
  *
- * $Id: xsh_telnet.c 2108 2009-10-29 05:07:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -19,6 +17,7 @@
 #include <tty.h>
 #include <ether.h>
 
+#if NETHER
 static void usage(char *command);
 thread telnetRecv(ushort);
 thread telnetSend(ushort);
@@ -26,6 +25,8 @@ static int echoNegotiation(int, int, ushort);
 static void sendOption(ushort, uchar, uchar);
 
 /**
+ * @ingroup shell
+ *
  * Shell command (telnet).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -43,9 +44,6 @@ shellcmd xsh_telnet(int nargs, char *args[])
     tid_typ sendthr;
     int msg = 0;
     int dev;
-
-    /* Enable interrupts */
-    enable();
 
     for (i = 1; i < nargs; i++)
     {
@@ -199,8 +197,6 @@ thread telnetRecv(ushort dev)
     bool sgaLocalEnabled = FALSE;
     int echoState = TELNET_ECHO_NO_ECHO;
 
-    enable();
-
     /* read until connection closed */
     while (read(dev, &ch, 1) != SYSERR)
     {
@@ -324,9 +320,7 @@ thread telnetRecv(ushort dev)
 
 thread telnetSend(ushort dev)
 {
-    char ch;
-
-    enable();
+    int ch;
 
     while (SYSERR != (ch = getc(stdin)))
     {
@@ -414,3 +408,4 @@ static void sendOption(ushort dev, uchar command, uchar option)
     cmdbuf[2] = option;
     write(dev, (void *)cmdbuf, 3);
 }
+#endif /* NETHER */

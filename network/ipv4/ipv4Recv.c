@@ -1,8 +1,6 @@
 /* 
  * file ipv4Recv.c
- * @provides ipv4Recv
  * 
- * $Id: ipv4Recv.c 2119 2009-11-05 07:23:02Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,6 +15,8 @@
 #include <netemu.h>
 
 /**
+ * @ingroup ipv4
+ *
  * Process an incoming IPv4 packet.
  * @param pkt pointer to the incoming packet
  * @return OK if packet was processed succesfully, otherwise SYSERR
@@ -102,25 +102,27 @@ syscall ipv4Recv(struct packet *pkt)
         icmpRecv(pkt);
         break;
 
+#if NUDP
         /* UDP Packet */
     case IPv4_PROTO_UDP:
-#if NUDP
         udpRecv(pkt, &src, &dst);
-#endif                          /* NUDP */
         break;
+#endif
 
+#if NTCP
         /* TCP Packet */
     case IPv4_PROTO_TCP:
-#if NTCP
         tcpRecv(pkt, &src, &dst);
-#endif                          /* NTCP */
         break;
+#endif
 
         /* Unknown IP packet protocol */
     default:
 #if NRAW
         rawRecv(pkt, &src, &dst, ip->proto);
-#endif                          /* NRAW */
+#else
+        netFreebuf(pkt);
+#endif
         break;
     }
 

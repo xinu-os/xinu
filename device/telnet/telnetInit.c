@@ -1,8 +1,6 @@
 /**
  * @file telnetInit.c
- * @provides telnetInit
  *
- * $Id: telnetInit.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 struct telnet telnettab[NTELNET];
 
 /**
+ * @ingroup telnet
+ *
  * Initialize TELNET structures.
  * @param devptr TELNET device table entry
  * @return OK if device is initialized

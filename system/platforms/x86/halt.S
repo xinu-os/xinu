@@ -1,8 +1,6 @@
 /**
  * @file halt.s
- * @provides halt
  *
- * $Id: halt.S 2361 2011-02-22 20:13:36Z mziwisky $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 
@@ -18,4 +16,5 @@
  * reasons)
  */
 halt:
+	hlt
 	jmp halt

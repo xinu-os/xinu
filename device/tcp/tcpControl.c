@@ -5,6 +5,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Control function for TCP devices.
  * @param devptr ethernet device table entry
  * @param func control function to execute

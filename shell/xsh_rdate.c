@@ -1,8 +1,6 @@
 /*
  * @file     xsh_rdate.c
- * @provides xsh_rdate
  *
- * $Id: xsh_rdate.c 2126 2009-11-12 07:23:04Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -12,7 +10,10 @@
 #include <date.h>
 #include <ipv4.h>
 
+#if NETHER
 /**
+ * @ingroup shell
+ *
  * Shell command (rdate).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -30,7 +31,7 @@ shellcmd xsh_rdate(int nargs, char *args[])
         printf("Options:\n");
         printf("\t<host>\tremote machine from which to get the time.\n");
         printf
-            ("\t\tIf none specified, defaults to value set at compile time.\nm");
+            ("\t\tIf none specified, defaults to value set at compile time.\n");
         printf("\t--help\tdisplay this help and exit\n");
         return OK;
     }
@@ -71,3 +72,4 @@ shellcmd xsh_rdate(int nargs, char *args[])
 
     return OK;
 }
+#endif /* NETHER */

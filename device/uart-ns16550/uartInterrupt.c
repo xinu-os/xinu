@@ -1,8 +1,5 @@
 /**
  * @file uartInterrupt.c
- * @provides uartInterrupt.
- *
- * $Id: uartInterrupt.c 2102 2009-10-26 20:36:13Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,14 +11,16 @@
 extern int resdefer;
 
 /**
+ * @ingroup uarthardware
+ *
  * Decode hardware interrupt request from UART device.
  */
 interrupt uartInterrupt(void)
 {
-    int u = 0, iir = 0, count = 0;
+    int u = 0, iir = 0, lsr = 0, count = 0;
     char c;
     struct uart *uartptr = NULL;
-    struct uart_csreg *regptr = NULL;
+    struct ns16550_uart_csreg *regptr = NULL;
 
     resdefer = 1;               /* deferral rescheduling. */
 
@@ -32,7 +31,7 @@ interrupt uartInterrupt(void)
         {
             continue;
         }
-        regptr = (struct uart_csreg *)uartptr->csr;
+        regptr = (struct ns16550_uart_csreg *)uartptr->csr;
         if (NULL == regptr)
         {
             continue;
@@ -58,6 +57,7 @@ interrupt uartInterrupt(void)
         {
             /* Receiver line status interrupt */
         case UART_IIR_RLSI:
+            lsr = regptr->lsr;
             uartptr->lserr++;
             break;
 
@@ -84,10 +84,14 @@ interrupt uartInterrupt(void)
             }
             uartptr->cin += count;
             signaln(uartptr->isema, count);
-            break;
+
+            /* Fall through -- Rx status trumps Tx status on Qemu. */
 
             /* Transmitter holding register empty */
         case UART_IIR_THRE:
+            lsr = regptr->lsr;  /* Read from LSR to clear interrupt */
+            if (!(lsr & UART_LSR_THRE))
+                break;
             uartptr->oirq++;
             count = 0;
             if (uartptr->ocount > 0)

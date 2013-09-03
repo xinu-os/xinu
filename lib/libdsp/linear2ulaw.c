@@ -1,8 +1,6 @@
 /**
  * @file     linear2ulaw.c
- * @provides linear2ulaw.
  *
- * $Id: linear2ulaw.c 2111 2009-10-30 19:24:43Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

@@ -1,8 +1,6 @@
 /**
  * @file     netRecv.c
- * @provides netRecv
  *
- * $Id: netRecv.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -18,8 +16,15 @@
 #include <thread.h>
 
 /**
+ * @ingroup network
+ *
  * Receive thread to handle one incoming packet at a time
- * @param network interface device to open netRecv on
+ *
+ * @param netptr
+ *      network interface device to open netRecv on
+ *
+ * @return
+ *      This thread never returns.
  */
 thread netRecv(struct netif *netptr)
 {
@@ -29,11 +34,11 @@ thread netRecv(struct netif *netptr)
     struct etherPkt *ether;
     struct netaddr dst;
 
-    enable();
-
     /* Processing incoming packets */
     while (TRUE)
     {
+        int len;
+
         /* Get a buffer for incoming packet */
         pkt = netGetbuf();
         if (SYSERR == (int)pkt)
@@ -41,17 +46,19 @@ thread netRecv(struct netif *netptr)
             continue;
         }
 
-        /* Read in packet from the underlying network device. 
+        /* Read in packet from the underlying network device.
          * This thread will wait until there is a packet to read.
          * It is the responsibility of the network driver to tell this
          * thread to run, signifying that there is a packet to read
          */
-        pkt->len = read(netptr->dev, pkt->data, maxlen);
-        if (0 == pkt->len || SYSERR == (short)pkt->len)
+        len = read(netptr->dev, pkt->data, maxlen);
+        if (ETH_HDR_LEN > len || SYSERR == len)
         {
+            netFreebuf(pkt);
             continue;
         }
 
+        pkt->len = len;
         pkt->curr = pkt->data;
         pkt->nif = netptr;
         netptr->nin++;
@@ -103,9 +110,14 @@ thread netRecv(struct netif *netptr)
 
                 /* Unknown ether packet type */
             default:
+                netFreebuf(pkt);
                 break;
             }
 
+        }
+        else
+        {
+            netFreebuf(pkt);
         }
     }
 

@@ -1,8 +1,6 @@
 /**
  * @file httpHtmlBegin.c
- * @provides httpHtmlBeginPage httpHtmlNavigation.
  *
- * $Id: httpHtmlBegin.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

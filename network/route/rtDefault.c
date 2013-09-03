@@ -1,8 +1,6 @@
 /** 
  * @file rtDefault.c
- * @provides rtDefault
  *
- * $Id: rtDefault.c 2118 2009-11-05 05:22:51Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,12 +10,14 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup route
+ *
  * Set the default route.
  * @param gate gateway for default route
  * @param nif network interface for default route
  * @return OK if added/updated successfully, otherwise SYSERR
  */
-syscall rtDefault(struct netaddr *gate, struct netif *nif)
+syscall rtDefault(const struct netaddr *gate, struct netif *nif)
 {
     struct rtEntry *rtptr;
     int i;

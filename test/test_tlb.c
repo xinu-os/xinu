@@ -5,6 +5,8 @@
 #include <safemem.h>
 #include <stdlib.h>
 
+#if USE_TLB
+
 /* Known values to use */
 #define TEST_LENGTH (4*PAGE_SIZE)
 
@@ -23,7 +25,6 @@ thread tlb_violator(int *address)
     /* conceal error output */
     thrtab[thrcurrent].fdesc[2] = CONSOLE;
 
-    enable();
     *address = FAULT_DATA;
 
     /* Don't do anything */
@@ -32,6 +33,8 @@ thread tlb_violator(int *address)
     return OK;
 }
 
+#endif
+
 /**
  * Testsuite to make sure the TLB is working "as expected."  By "as
  * expected," this means that the mapping is 1:1 between kernel and user
@@ -39,6 +42,7 @@ thread tlb_violator(int *address)
  */
 thread test_tlb(bool verbose)
 {
+#if USE_TLB
     /* the failif macro depends on 'passed' and 'verbose' vars */
     bool passed = TRUE;
 
@@ -115,5 +119,8 @@ thread test_tlb(bool verbose)
         testFail(TRUE, "");
     }
 
+#else /* USE_TLB */
+    testSkip(TRUE, "");
+#endif /* !USE_TLB */
     return OK;
 }

@@ -1,8 +1,6 @@
 /**
  * @file     flashClose.c
- * @provides flashClose
  *
- * $Id: flashClose.c 2077 2009-09-24 23:58:54Z mschul $
  */
 #include <flash.h>
 #include <stdarg.h>

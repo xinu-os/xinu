@@ -1,8 +1,6 @@
 /**
  * @file syscall.h
  * System call interface and handlers for user to kernel switches.
- *
- * $Id: syscall.h 2072 2009-09-21 22:26:50Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

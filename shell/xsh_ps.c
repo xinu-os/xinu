@@ -1,8 +1,6 @@
 /**
  * @file     xsh_ps.c 
- * @provides xsh_ps.
  *
- * $Id: xsh_ps.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <string.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (ps) outputs thread table information.
  * @param nargs number of arguments in args array
  * @param args  array of arguments

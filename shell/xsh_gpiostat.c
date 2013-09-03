@@ -1,8 +1,6 @@
 /**
  * @file     xsh_gpiostat.c
- * @provides xsh_gpiostat.
  *
- * $Id: xsh_gpiostat.c 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <string.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (gpiostat) provides information about the current status
  * of the GPIO pins.
  * @param nargs number of arguments in args array
@@ -56,8 +56,6 @@ shellcmd xsh_gpiostat(int nargs, char *args[])
     }
 
     /* Output GPIO pin status */
-    offset = 0;
-
     printf("PIN MODE   INPUT   OUTPUT  CONTROL\n");
     printf("--- ------ ------- ------- -------\n");
     for (p = 0; p < GPIO_PIN_COUNT; p++)

@@ -1,8 +1,6 @@
 /**
  * @file arpDaemon.c
- * @provides arpDaemon
  *
- * $Id: arpDaemon.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <mailbox.h>
 
 /**
+ * @ingroup arp
+ *
  * ARP daemon to manage the ARP table.
  */
 thread arpDaemon(void)

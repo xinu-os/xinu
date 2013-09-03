@@ -1,8 +1,6 @@
 /**
  * @file     loopbackWrite.c
- * @provides loopbackWrite.
  *
- * $Id: loopbackWrite.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,17 +9,28 @@
 #include <loopback.h>
 
 /**
- * Write a character to the loopback. 
+ * @ingroup loopback
+ *
+ * Write data to the loopbock device.
+ *
  * @param devptr 
- * @param buf buffer of characters to output
- * @param len size of the buffer
- * @return count of characters output
+ *      Pointer to the loopback device to write to.
+ * @param buf
+ *      Buffer of data to write.
+ * @param len
+ *      Number of bytes of data to write.
+ *
+ * @return
+ *      On success, returns the number of bytes written, which may be less than
+ *      @p len in the event of a write error.  Alternatively, @c SYSERR is
+ *      returned if the loopback device is not open or if a write error occurred
+ *      before any data at all was successfully written.
  */
-devcall loopbackWrite(device *devptr, void *buf, uint len)
+devcall loopbackWrite(device *devptr, const void *buf, uint len)
 {
     struct loopback *lbkptr = NULL;
     uint i;
-    char *buffer = buf;
+    const uchar *buffer = buf;
 
     lbkptr = &looptab[devptr->minor];
 
@@ -33,10 +42,13 @@ devcall loopbackWrite(device *devptr, void *buf, uint len)
 
     for (i = 0; i < len; i++)
     {
-        /* If char wasn't put into buffer return SYSERR */
         if (SYSERR == loopbackPutc(devptr, buffer[i]))
         {
-            return i;
+            if (i == 0)
+            {
+                i = SYSERR;
+            }
+            break;
         }
     }
 

@@ -1,8 +1,6 @@
 /**
  * @file ttyGetc.c
- * @provides ttyGetc.
  *
- * $Id: ttyGetc.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,13 +10,15 @@
 #include <tty.h>
 
 /**
+ * @ingroup tty
+ *
  * Read a single character from a TTY.
  * @param devptr TTY device table entry
  * @return character read from TTY, or EOF
  */
 devcall ttyGetc(device *devptr)
 {
-    char ch;
+    uchar ch;
     int result = NULL;
 
     result = ttyRead(devptr, &ch, 1);

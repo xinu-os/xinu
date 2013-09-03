@@ -1,8 +1,6 @@
 /**
  * @file vlanClose.c
- * @provides vlanClose.
  *
- * $Id: vlanClose.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup etherspecific
+ *
  * Close a virtual ethernet device.
  * @param devptr ether device table entry
  * @return OK if device is closed properly

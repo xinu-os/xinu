@@ -1,27 +1,37 @@
 /**
  * @file strncmp.c
- * @provides sstrncmp.
- *
- * $Id: strncmp.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
 
 /**
- * Compare strings (at most n bytes).
- * @param *s1 first memory location
- * @param *s2 second memory location
- * @param n length to compare
- * @return s1>s2: >0  s1==s2: 0  s1<s2: <0
+ * @ingroup libxc
+ *
+ * Compare two null-terminated strings, examining at most the specified number
+ * of bytes.
+ *
+ * @param s1
+ *      Pointer to the first string.
+ * @param s2
+ *      Pointer to the second string.
+ * @param n
+ *      Maximum number of bytes to compare before returning 0.
+ *
+ * @return
+ *      A negative value, 0, or a positive value if the @p s1 string is less
+ *      than, equal to, or greater than the @p s2 string, respectively.
  */
-int strncmp(char *s1, char *s2, int n)
+int strncmp(const char *s1, const char *s2, size_t n)
 {
+    size_t i;
 
-    while (--n >= 0 && *s1 == *s2++)
+    for (i = 0; i < n; i++)
     {
-        if (*s1++ == '\0')
+        if (s1[i] == '\0' || s1[i] != s2[i])
         {
-            return 0;
+            return (int)(unsigned char)s1[i] - (int)(unsigned char)s2[i];
         }
     }
-    return (n < 0 ? 0 : *s1 - *--s2);
+    return 0;
 }

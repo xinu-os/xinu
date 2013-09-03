@@ -1,8 +1,6 @@
 /**
  * @file create.c
- * @provides create, newtid
  *
- * $Id: create.c 2361 2011-02-22 20:13:36Z mziwisky $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
   
@@ -14,95 +12,88 @@
 
 static int thrnew(void);
 
-/**
- * Create a thread to start running a procedure.
- * @param procaddr procedure address
- * @param ssize stack stack size in words
- * @param priority thread priority, must be > 0
- * @param name name of the thread, used for debugging
- * @param nargs, number of arguments that follow
- * @return new thread id
- */
-tid_typ	create(void *procaddr, uint ssize, int priority,
-	       char *name, int nargs, ...)
+/* create() implementation for x86 platform.  See thread.h for generic
+ * documentation.  */
+tid_typ create(void *procaddr, uint ssize, int priority,
+	       const char *name, int nargs, ...)
 {
-	register struct thrent *thrptr;	/* thread control block    */
-	ulong   *saddr;         /* stack address                   */
-	tid_typ tid;            /* stores new thread id            */
-	ulong   savsp;          /* for remembering stack pointer   */
-	ulong   *ap;            /* points to list of var args      */
-	void	INITRET(void);
-	irqmask im;
+    register struct thrent *thrptr;    /* thread control block    */
+    ulong   *saddr;         /* stack address                   */
+    tid_typ tid;            /* stores new thread id            */
+    ulong   savsp;          /* for remembering stack pointer   */
+    ulong   *ap;            /* points to list of var args      */
+    void    INITRET(void);
+    irqmask im;
 
-	im = disable();
-	if (ssize < MINSTK)
-	{
-		ssize = MINSTK;
-	}
-	saddr = stkget(ssize);     /* allocate new stack     */
-	tid   = thrnew();          /* allocate new thread ID */
-	                                 
-	if ((SYSERR == (int)saddr) || (SYSERR == tid))
-	{
-		restore(im);
-		return SYSERR;
-	}
+    im = disable();
+    if (ssize < MINSTK)
+    {
+        ssize = MINSTK;
+    }
+    saddr = stkget(ssize);     /* allocate new stack     */
+    tid   = thrnew();          /* allocate new thread ID */
+                                     
+    if ((SYSERR == (int)saddr) || (SYSERR == tid))
+    {
+        restore(im);
+        return SYSERR;
+    }
 
-	thrcount++;
-	thrptr = &thrtab[tid];
-	
-	/* setup thread control block for new thread    */	
-	thrptr->state   = THRSUSP;
-	thrptr->prio    = priority;
-	thrptr->stkbase = saddr;
-	thrptr->stklen  = ssize;
-	thrptr->stkptr  = saddr;
-	strncpy(thrptr->name, name, TNMLEN);
-	thrptr->parent  = gettid();
-	thrptr->hasmsg = FALSE;
-	thrptr->memlist.next = NULL;
-	thrptr->memlist.length = 0;
+    thrcount++;
+    thrptr = &thrtab[tid];
+    
+    /* setup thread control block for new thread    */    
+    thrptr->state   = THRSUSP;
+    thrptr->prio    = priority;
+    thrptr->stkbase = saddr;
+    thrptr->stklen  = ssize;
+    thrptr->stkptr  = saddr;
+    strlcpy(thrptr->name, name, TNMLEN);
+    thrptr->parent  = gettid();
+    thrptr->hasmsg = FALSE;
+    thrptr->memlist.next = NULL;
+    thrptr->memlist.length = 0;
 
-	/* set up default file descriptors */
-	thrptr->fdesc[0] = CONSOLE; /* stdin  is console */
-	thrptr->fdesc[1] = CONSOLE; /* stdout is console */
-	thrptr->fdesc[2] = CONSOLE; /* stderr is console */
+    /* set up default file descriptors */
+    thrptr->fdesc[0] = CONSOLE; /* stdin  is console */
+    thrptr->fdesc[1] = CONSOLE; /* stdout is console */
+    thrptr->fdesc[2] = CONSOLE; /* stderr is console */
 
-	/* Initialize stack with accounting block. */
-	*saddr   = STACKMAGIC;
-	*--saddr = tid;
-	*--saddr = thrptr->stklen;
-	*--saddr = (ulong)thrptr->stkbase - thrptr->stklen + sizeof(int);
-	savsp    = (ulong)saddr;
-	
-	/* push arguments */
-	ap = (ulong *)(&nargs + 1) + (nargs - 1);
-	while ( nargs > 0 ) 
-	{ 
-		*--saddr =  *ap--;
-		nargs--;
-	}
+    /* Initialize stack with accounting block. */
+    *saddr   = STACKMAGIC;
+    *--saddr = tid;
+    *--saddr = thrptr->stklen;
+    *--saddr = (ulong)thrptr->stkbase - thrptr->stklen + sizeof(int);
+    savsp    = (ulong)saddr;
+    
+    /* push arguments */
+    ap = (ulong *)(&nargs + 1) + (nargs - 1);
+    while ( nargs > 0 ) 
+    { 
+        *--saddr =  *ap--;
+        nargs--;
+    }
 
-	*--saddr     = (ulong)INITRET;
-	*--saddr     = (ulong)procaddr;
-	*--saddr     = savsp;
-	savsp        = (ulong)saddr;
+    *--saddr     = (ulong)INITRET;
+    *--saddr     = (ulong)procaddr;
+    *--saddr     = savsp;
+    savsp        = (ulong)saddr;
 
-	/* now we must emulate what ctxsw expects: flags, regs, and old SP */
-	/* emulate 386 "pushal" instruction */
-	*--saddr     = 0;
-	*--saddr     = 0; /* %eax */
-	*--saddr     = 0; /* %ecx */
-	*--saddr     = 0; /* %edx */
-	*--saddr     = 0; /* %ebx */
-	*--saddr     = 0; /* %esp; "popal" doesn't actually pop it, so 0 is ok */
-	*--saddr     = savsp; /* %ebp */
-	*--saddr     = 0; /* %esi */
-	*--saddr     = 0; /* %edi */
-	thrptr->stkptr = (void *)saddr;
+    /* now we must emulate what ctxsw expects: flags, regs, and old SP */
+    /* emulate 386 "pushal" instruction */
+    *--saddr     = 0;
+    *--saddr     = 0; /* %eax */
+    *--saddr     = 0; /* %ecx */
+    *--saddr     = 0; /* %edx */
+    *--saddr     = 0; /* %ebx */
+    *--saddr     = 0; /* %esp; "popal" doesn't actually pop it, so 0 is ok */
+    *--saddr     = savsp; /* %ebp */
+    *--saddr     = 0; /* %esi */
+    *--saddr     = 0; /* %edi */
+    thrptr->stkptr = (void *)saddr;
 
-	restore(im);
-	return tid;
+    restore(im);
+    return tid;
 }
 
 /**
@@ -111,17 +102,17 @@ tid_typ	create(void *procaddr, uint ssize, int priority,
  */
 static int thrnew(void)
 {
-	int	tid;			/* thread id to return     */
-	static int nexttid = 0;
+    int    tid;            /* thread id to return     */
+    static int nexttid = 0;
 
-	/* check all NTHREAD slots    */
-	for (tid = 0 ; tid < NTHREAD ; tid++) 
-	{
-		nexttid = (nexttid + 1) % NTHREAD;
-	    if (THRFREE == thrtab[nexttid].state)
-		{
-			return nexttid;
-		}
-	}
-	return SYSERR;
+    /* check all NTHREAD slots    */
+    for (tid = 0 ; tid < NTHREAD ; tid++) 
+    {
+        nexttid = (nexttid + 1) % NTHREAD;
+        if (THRFREE == thrtab[nexttid].state)
+        {
+            return nexttid;
+        }
+    }
+    return SYSERR;
 }

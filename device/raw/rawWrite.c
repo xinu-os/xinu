@@ -1,8 +1,6 @@
 /**
  * @file     rawWrite.c
- * @provides rawWrite
  *
- * $Id: rawWrite.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <raw.h>
 
 /**
+ * @ingroup raw
+ *
  * Write a packet to a raw socket.
  * @param devptr pointer to RAW device
  * @param buf buffer to write

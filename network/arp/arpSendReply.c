@@ -1,8 +1,6 @@
 /**
  * @file arpSendReply.c
- * @provides arpSendReply
  *
- * $Id: arpSendReply.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <network.h>
 
 /**
+ * @ingroup arp
+ *
  * Sends an ARP reply for an ARP request over a network interface. 
  * @param pkt ARP packet to reply to
  * @return OK if packet was sent, otherwise SYSERR

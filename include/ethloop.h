@@ -1,7 +1,6 @@
 /**
  * @file ethloop.h
  *
- * $Id: ethloop.h 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -63,7 +62,7 @@ devcall ethloopInit(device *);
 devcall ethloopOpen(device *);
 devcall ethloopClose(device *);
 devcall ethloopRead(device *, void *, uint);
-devcall ethloopWrite(device *, void *, uint);
+devcall ethloopWrite(device *, const void *, uint);
 devcall ethloopControl(device *, int, long, long);
 
 #endif                          /* _ETHLOOP_H_ */

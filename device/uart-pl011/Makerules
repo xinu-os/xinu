@@ -1,0 +1,25 @@
+
+# Name of this component (the directory this file is stored in)
+COMP = device/uart-pl011
+
+# Source files for this component
+C_FILES = kgetc.c                \
+          kputc.c                \
+          ../uart/uartControl.c  \
+          ../uart/uartGetc.c     \
+          uartHwInit.c           \
+          uartHwPutc.c           \
+          uartHwStat.c           \
+          ../uart/uartInit.c     \
+          uartInterrupt.c        \
+          ../uart/uartPutc.c     \
+          ../uart/uartRead.c     \
+          ../uart/uartWrite.c    \
+          ../uart/uartStat.c     \
+	  ../uart/kprintf.c      \
+	  ../uart/kvprintf.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

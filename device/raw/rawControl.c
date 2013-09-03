@@ -1,8 +1,6 @@
 /**
  * @file rawControl.c
- * @provides rawControl
  *
- * $Id: rawControl.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup raw
+ *
  * Control function for raw sockets.
  * @param devptr RAW device table entry
  * @param func control function to execute

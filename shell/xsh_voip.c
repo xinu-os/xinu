@@ -1,8 +1,6 @@
 /**
  * @file     xsh_voip.c
- * @provides xsh_voip.
  *
- * $Id: xsh_voip.c 2116 2009-11-03 20:55:05Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -19,18 +17,24 @@
 #include <thread.h>
 #include <clock.h>
 #include <dsp.h>
+#include <uart.h>
+#include <rtp.h>
 
+#if NETHER
 #define UDP_PORT 22020
 
-#define BUF_SIZE     1024
+#define BUF_SIZE     160
 #define SEQ_BUF_SIZE 800
 
-#define MODE_SERIAL 1
-#define MODE_LOCAL 2
-#define MODE_IP 3
-#define CHECK_BASIC 1
-#define CHECK_SEQ 2
-
+#define MODE_SERIAL   1
+#define MODE_LOCAL    2
+#define MODE_IP       3
+#define CHECK_BASIC   1
+#define CHECK_SEQ     2
+#define NCTRLCHAR     3
+#define TOG_SAMP      1
+#define T_NAME_SEND   "voip-send"
+#define T_NAME_RECV   "voip-receive"
 /* Returns a timespan in ms */
 #define timespan(curtime, curticks, oldtime, oldticks) \
     ((curtime * CLKTICKS_PER_SEC + curticks) - \
@@ -49,8 +53,11 @@ thread basic_send(ushort uart, ushort udp);
 thread basic_receive(ushort uart, ushort udp);
 thread seq_send(ushort uart, ushort udp);
 thread seq_receive(ushort uart, ushort udp);
+int toggle_sampling(ushort);
 
 /**
+ * @ingroup shell
+ *
  * Shell command for VoIP functionality.
  * @param nargs number of arguments
  * @param args  array of arguments
@@ -61,13 +68,14 @@ shellcmd xsh_voip(int nargs, char *args[])
     int i, rxPort = UDP_PORT, txPort = UDP_PORT;
     ushort uart = NULL, udpRx = NULL, udpTx = NULL;
     ushort mode = MODE_SERIAL, check = CHECK_BASIC;
+    register struct thrent *thrptr;
     struct netaddr *localhost;
     struct netaddr host;
 #ifdef ELOOP
     struct netaddr mask;
 #endif
     struct netif *netptr;
-    struct thrent *thrptr;
+    irqmask im;
 
     if (nargs < 2)
     {
@@ -85,6 +93,7 @@ shellcmd xsh_voip(int nargs, char *args[])
         printf("\tUses the second serial port and the network to ");
         printf("transmit and receive audio.\n");
         printf("Options:\n");
+        printf("\t-t\t\tToggle external sampling device on/off.\n");
         printf
             ("\t-p\t\tSpecify UDP receive and transmit port numbers.\n");
         printf("\t-s\t\tEmbed sequence information in each packet.\n");
@@ -100,6 +109,27 @@ shellcmd xsh_voip(int nargs, char *args[])
             if (strncmp(args[i], "-s", 2) == 0)
             {
                 check = CHECK_SEQ;
+            }
+            else if (strncmp(args[i], "-t", 2) == 0)
+            {
+                im = disable();
+                /* Scan threadtab for voip process */
+                for (i = 0; i < NTHREAD; i++)
+                {
+                    thrptr = &thrtab[i];
+
+                    if (THRFREE == thrptr->state)
+                    {
+                        continue;
+                    }
+                    if (strncmp(thrptr->name, T_NAME_SEND, 9) == 0)
+                    {
+                        printf("Signaling voip thread at tid %d.\n", i);
+                        send(i, TOG_SAMP);
+                    }
+                }
+                restore(im);
+                return OK;
             }
             else if (strncmp(args[i], "-p", 2) == 0)
             {
@@ -137,8 +167,6 @@ shellcmd xsh_voip(int nargs, char *args[])
             }
         }
     }
-
-    enable();
 
 #ifdef TTY1
     /* Kill the SHELL1 thread */
@@ -261,14 +289,19 @@ shellcmd xsh_voip(int nargs, char *args[])
         printf("Opened two UDP devices.\n");
     }
 
+    control(uart, UART_CTRL_SET_IFLAG, UART_IFLAG_NOBLOCK, NULL);
+
+    /* Signal the sampling device to start sending data */
+    toggle_sampling(uart);
+
     switch (check)
     {
     case CHECK_BASIC:
         ready(create
-              ((void *)basic_send, INITSTK, 20, "voip-send", 2, uart,
+              ((void *)basic_send, INITSTK, 20, T_NAME_SEND, 2, uart,
                udpTx), RESCHED_YES);
         ready(create
-              ((void *)basic_receive, INITSTK, 20, "voip-receive", 2,
+              ((void *)basic_receive, INITSTK, 20, T_NAME_RECV, 2,
                uart, udpRx), RESCHED_YES);
         break;
     case CHECK_SEQ:
@@ -277,10 +310,10 @@ shellcmd xsh_voip(int nargs, char *args[])
         control(udpTx, UDP_CTRL_SETFLAG, UDP_FLAG_NOBLOCK, NULL);
 #endif                          /* NUDP */
         ready(create
-              ((void *)seq_send, INITSTK, 20, "voip-send", 2, uart,
+              ((void *)seq_send, INITSTK, 20, T_NAME_SEND, 2, uart,
                udpTx), RESCHED_YES);
         ready(create
-              ((void *)seq_receive, INITSTK, 20, "voip-receive", 2, uart,
+              ((void *)seq_receive, INITSTK, 20, T_NAME_RECV, 2, uart,
                udpRx), RESCHED_YES);
         break;
     }
@@ -292,9 +325,6 @@ thread serial_loop(ushort uart)
     uint len = 0;
     uchar buf[BUF_SIZE];
 
-    /* Enable all interrupts */
-    enable();
-
     while (TRUE)
     {
         len = read(uart, buf, BUF_SIZE);
@@ -303,27 +333,48 @@ thread serial_loop(ushort uart)
             write(uart, buf, len);
         }
     }
+
+    return OK;
 }
 
 thread basic_send(ushort uart, ushort udp)
 {
-    uint len = 0;
+    int len = 0;
     uchar buf[BUF_SIZE];
-
-    /* Enable all interrupts */
-    enable();
+    message togglemesg;
 
     while (TRUE)
     {
-        /* Read from the serial device */
-        len = read(uart, buf, BUF_SIZE);
+        togglemesg = recvclr();
 
-        if (len > 0)
+        if (NOMSG == togglemesg)
         {
-            /* Write to the UDP device */
-            write(udp, buf, len);
+            /* Read from the serial device */
+            len = read(uart, buf, BUF_SIZE);
+
+            if (len > 0)
+            {
+                /* Write to the UDP device */
+                write(udp, buf, len);
+            }
+            else
+            {
+                sleep(3);
+            }
+        }
+        else if (TOG_SAMP == togglemesg)
+        {
+            fprintf(CONSOLE, "Received toggle message.\n");
+            toggle_sampling(uart);
+        }
+        else
+        {
+            fprintf(CONSOLE, "Invalid message sent to voip-send.\n");
+            return SYSERR;
         }
     }
+
+    return OK;
 }
 
 //#define ECHO
@@ -335,9 +386,6 @@ thread basic_receive(ushort uart, ushort udp)
     int i, j = 0;
     uint value[5 * BUF_SIZE];
 #endif
-
-    /* Enable all interrupts */
-    enable();
 
     while (TRUE)
     {
@@ -362,6 +410,8 @@ thread basic_receive(ushort uart, ushort udp)
             write(uart, buf, len);
         }
     }
+
+    return OK;
 }
 
 //#define DROP
@@ -373,7 +423,6 @@ thread seq_send(ushort uart, ushort udp)
     struct voipPkt *voip;
     voip = malloc(sizeof(struct voipPkt));
 
-    enable();
     voip->seq = 0;
 
 #ifdef DROP
@@ -412,18 +461,18 @@ thread seq_send(ushort uart, ushort udp)
         }
         resched();
     }
+
+    return OK;
 }
 
 thread seq_receive(ushort uart, ushort udp)
 {
     uint len, seq = 0;
-    ulong ticks, time;
+    ulong ticks = 0, time = 0;
     struct voipPkt *voip;
     voip = malloc(sizeof(struct voipPkt));
 
     voip->len = 0;
-
-    enable();
 
     while (TRUE)
     {
@@ -458,4 +507,20 @@ thread seq_receive(ushort uart, ushort udp)
         }
         resched();
     }
+
+    return OK;
 }
+
+int toggle_sampling(ushort uart)
+{
+    int i;
+    uchar ctrlchar = '0';
+
+    for (i = 0; i < NCTRLCHAR; i++)
+    {
+        write(uart, &ctrlchar, 1);
+    }
+
+    return OK;
+}
+#endif /* NETHER */

@@ -1,13 +1,10 @@
 /**
  * @file initialize.c
- * @provides nulluser, sysinit.
  * The system begins intializing after the C environment has been
  * established.  After intialization, the null thread remains always in
  * a ready (THRREADY) or running (THRCURR) state.
- *
- * $Id: initialize.c 2115 2009-11-03 02:31:19Z brylow $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <kernel.h>
 #include <backplane.h>
@@ -22,6 +19,7 @@
 #include <tlb.h>
 #include <queue.h>
 #include <semaphore.h>
+#include <monitor.h>
 #include <mailbox.h>
 #include <network.h>
 #include <nvram.h>
@@ -30,6 +28,11 @@
 #include <string.h>
 #include <syscall.h>
 #include <safemem.h>
+#include <version.h>
+
+#ifdef WITH_USB
+#  include <usb_subsystem.h>
+#endif
 
 /* Linker provides start and end of image */
 extern void _start(void);       /* start of Xinu code                  */
@@ -39,11 +42,11 @@ extern void main(void);         /* main is the first thread created    */
 extern void xdone(void);        /* system "shutdown" procedure         */
 extern int platforminit(void);  /* determines platform settings        */
 static int sysinit(void);       /* intializes system structures        */
-static int userheapinit(void);  /* initialize user heap (if needed)    */
 
 /* Declarations of major kernel variables */
 struct thrent thrtab[NTHREAD];  /* Thread table                   */
 struct sement semtab[NSEM];     /* Semaphore table                */
+struct monent montab[NMON];     /* Monitor table                  */
 qid_typ readylist;              /* List of READY threads          */
 struct memblock memlist;        /* List of free memory blocks     */
 struct bfpentry bfptab[NPOOL];  /* List of memory buffer pools    */
@@ -68,12 +71,13 @@ struct platform platform;       /* Platform specific configuration     */
  * for a semaphore, or put to sleep, or exit.  In particular, it must not 
  * do I/O unless it uses kprintf for synchronous output.
  */
-int nulluser(void)
+void nulluser(void)
 {
+    platforminit();
+    sysinit();
+
     kprintf(VERSION);
     kprintf("\r\n\r\n");
-
-    platforminit();
 
 #ifdef DETAIL
     /* Output detected platform. */
@@ -82,20 +86,18 @@ int nulluser(void)
             platform.family, platform.name);
 #endif
 
-    sysinit();
-
     /* Output Xinu memory layout */
     kprintf("%10d bytes physical memory.\r\n",
-            (ulong)platform.maxaddr & 0x7FFFFFFF);
+            (ulong)platform.maxaddr - (ulong)platform.minaddr);
 #ifdef DETAIL
     kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)KSEG0_BASE, (ulong)(platform.maxaddr - 1));
+            (ulong)platform.minaddr, (ulong)(platform.maxaddr - 1));
 #endif
     kprintf("%10d bytes reserved system area.\r\n",
-            (ulong)_start - KSEG0_BASE);
+            (ulong)_start - (ulong)platform.minaddr);
 #ifdef DETAIL
     kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)KSEG0_BASE, (ulong)_start - 1);
+            (ulong)platform.minaddr, (ulong)_start - 1);
 #endif
 
     kprintf("%10d bytes Xinu code.\r\n", (ulong)&_end - (ulong)_start);
@@ -119,7 +121,6 @@ int nulluser(void)
     kprintf("\r\n");
 
     open(CONSOLE, SERIAL0);
-
     /* enable interrupts here */
     enable();
 
@@ -133,7 +134,6 @@ int nulluser(void)
         pause();
 #endif                          /* DEBUG */
     }
-    return OK;
 }
 
 /**
@@ -146,6 +146,7 @@ static int sysinit(void)
     struct thrent *thrptr;      /* thread control block pointer  */
     device *devptr;             /* device entry pointer          */
     struct sement *semptr;      /* semaphore entry pointer       */
+    struct monent *monptr;      /* monitor entry pointer         */
     struct memblock *pmblock;   /* memory block pointer          */
     struct bfpentry *bfpptr;
 
@@ -171,7 +172,7 @@ static int sysinit(void)
     thrptr = &thrtab[NULLTHREAD];
     thrptr->state = THRCURR;
     thrptr->prio = 0;
-    strncpy(thrptr->name, "prnull", 7);
+    strlcpy(thrptr->name, "prnull", TNMLEN);
     thrptr->stkbase = (void *)&_end;
     thrptr->stklen = (ulong)memheap - (ulong)&_end;
     thrptr->stkptr = 0;
@@ -186,6 +187,16 @@ static int sysinit(void)
         semptr->state = SFREE;
         semptr->count = 0;
         semptr->queue = queinit();
+    }
+
+    /* Initialize monitors */
+    for (i = 0; i < NMON; i++)
+    {
+        monptr = &montab[i];
+        monptr->state = SFREE;
+        monptr->count = 0;
+        monptr->owner = NOOWNER;
+        monptr->sem = NULL;
     }
 
     /* Initialize buffer pools */
@@ -207,8 +218,24 @@ static int sysinit(void)
     clkinit();
 #endif                          /* RTCLOCK */
 
-    /* initialize user heap (if needed) */
-    userheapinit();
+#ifdef UHEAP_SIZE
+    /* Initialize user memory manager */
+    {
+        void *userheap;             /* pointer to user memory heap   */
+        userheap = stkget(UHEAP_SIZE);
+        if (SYSERR != (int)userheap)
+        {
+            userheap = (void *)((uint)userheap - UHEAP_SIZE + sizeof(int));
+            memRegionInit(userheap, UHEAP_SIZE);
+
+            /* initialize memory protection */
+            safeInit();
+
+            /* initialize kernel page mappings */
+            safeKmapInit();
+        }
+    }
+#endif
 
 #if USE_TLB
     /* initialize TLB */
@@ -233,6 +260,10 @@ static int sysinit(void)
     }
 #endif
 
+#ifdef WITH_USB
+    usbinit();
+#endif
+
 #if NVRAM
     nvramInit();
 #endif
@@ -245,29 +276,4 @@ static int sysinit(void)
     gpioLEDOn(GPIO_LED_CISCOWHT);
 #endif
     return OK;
-}
-
-static int userheapinit(void)
-{
-#ifdef UHEAP_SIZE
-    void *userheap;             /* pointer to user memory heap   */
-
-    /* Initialize user memory manager */
-    userheap = stkget(UHEAP_SIZE);
-    if (SYSERR != (int)userheap)
-    {
-        userheap = (void *)((uint)userheap - UHEAP_SIZE + sizeof(int));
-        memRegionInit(userheap, UHEAP_SIZE);
-
-        /* initialize memory protection */
-        safeInit();
-
-        /* initialize kernel page mappings */
-        safeKmapInit();
-    }
-
-    return (int)userheap;
-#else
-    return SYSERR;
-#endif
 }

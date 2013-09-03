@@ -1,8 +1,6 @@
 /**
  * @file etherInit.c
- * @provides etherInit.
  *
- * $Id: etherInit.c 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -21,11 +19,8 @@
 /* Global table of ethernet devices */
 struct ether ethertab[NETHER];
 
-/**
- * Initialize ethernet device structures.
- * @param devptr ETH device table entry
- * @return OK if device is intialized successfully, otherwise SYSERR
- */
+/* Implementation of etherInit() for the bcm4713; see the documentation for this
+ * function in ether.h.  */
 devcall etherInit(device *devptr)
 {
     struct ether *ethptr;

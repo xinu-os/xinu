@@ -4,14 +4,17 @@
 #include <stdio.h>
 #include <testsuite.h>
 
+#if NSEM
 extern bool test_checkSemCount(semaphore s, short c);
 extern bool test_checkProcState(tid_typ tid, uchar state);
 extern bool test_checkResult(uchar testResult, uchar expected);
 
 extern void test_semWaiter(semaphore s, int times, uchar *testResult);
+#endif
 
 thread test_semaphore4(bool verbose)
 {
+#if NSEM
     tid_typ atid;
     bool passed = TRUE;
     semaphore s;
@@ -74,5 +77,8 @@ thread test_semaphore4(bool verbose)
 
     semfree(s);
 
+#else /* NSEM */
+    testSkip(TRUE, "");
+#endif /* NSEM == 0 */
     return OK;
 }

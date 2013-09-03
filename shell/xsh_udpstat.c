@@ -1,8 +1,6 @@
 /*
- * @file     xsh_tcpstat.c
- * @provides xsh_tcpstat
+ * @file     xsh_udpstat.c
  *
- * $Id: xsh_udpstat.c 2132 2009-11-17 23:22:38Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,9 +10,12 @@
 #include <network.h>
 #include <udp.h>
 
+#if NETHER
 static void udpStat(struct udp *);
 
 /**
+ * @ingroup shell
+ *
  * Shell command (udpstat).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -85,3 +86,4 @@ static void udpStat(struct udp *udpptr)
     netaddrsprintf(strA, &udpptr->remoteip);
     printf("Remote Port: %-5d IP: %-15s\n", udpptr->remotept, strA);
 }
+#endif /* NETHER */

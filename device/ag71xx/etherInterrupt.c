@@ -1,8 +1,6 @@
 /**
  * @file etherInterrupt.c
- * @provides etherInterrupt.
  *
- * $Id: etherInterrupt.c 2128 2009-11-17 01:38:29Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -21,6 +19,8 @@
 extern int resdefer;
 
 /**
+ * @ingroup etherspecific
+ *
  * Receive packet interrupt handler.
  */
 void rxPackets(struct ether *ethptr, struct ag71xx *nicptr)
@@ -65,6 +65,8 @@ void rxPackets(struct ether *ethptr, struct ag71xx *nicptr)
 }
 
 /**
+ * @ingroup etherspecific
+ *
  * Transmit packet interrupt handler
  */
 void txPackets(struct ether *ethptr, struct ag71xx *nicptr)
@@ -107,6 +109,8 @@ void txPackets(struct ether *ethptr, struct ag71xx *nicptr)
 }
 
 /**
+ * @ingroup etherspecific
+ *
  * Decode and handle hardware interrupt request from ethernet device.
  */
 interrupt etherInterrupt(void)

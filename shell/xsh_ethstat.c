@@ -1,8 +1,6 @@
 /**
  * @file     xsh_ethstat.c
- * @provides xsh_ethstat.
  *
- * $Id: xsh_ethstat.c 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (ethstat ETHNUM) provides information about the current
  * status of an Ethernet device.
  * @param nargs number of arguments in args array
@@ -23,9 +23,8 @@
 shellcmd xsh_ethstat(int nargs, char *args[])
 {
     ushort dev, throughput = FALSE;
-    char n;
+    int n;
 
-    n = 0;
     /* Output help, if '--help' argument was supplied */
     if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
     {

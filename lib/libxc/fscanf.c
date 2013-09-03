@@ -1,65 +1,81 @@
 /**
  * @file fscanf.c
- * @provides fscanf, getch, ungetch.
- *
- * $Id: fscanf.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#define EMPTY (-1)
-#define EOF   (-2)
-
-extern int getc(int);
+#include <stdarg.h>
+#include <stdio.h>
 
 static int getch(int, int);
 static int ungetch(int, int);
-extern int _doscan(register char *, register int **,
-                   int (*getc) (int, int), int (*ungetc) (int, int), int,
-                   int);
+
+struct ch_buf
+{
+    bool ch_avail;
+    uchar c;
+};
 
 /**
- * Read from a device (file) according to a format.
- * @param dev device to read from
- * @param *fmt format string
- * @param args number of arguments in format string
- * @return result of _doscan
- */
-int fscanf(int dev, char *fmt, int args)
-{
-    int buf;
+ * @ingroup libxc
+ *
+ * Scan input from a device according to the specified format string.
+ *
+ * @param dev
+ *      Index of the device from which to scan input.
+ * @param format
+ *      Format string.  Not all standard format specifiers are supported by this
+ *      implementation.  See _doscan() for a description of supported conversion
+ *      specifications.
 
-    buf = EMPTY;
-    return (_doscan
-            (fmt, (int **)&args, getch, ungetch, dev, (int)(int)&buf));
+ * @param ...
+ *      Additional arguments that match those specified in the format string.
+ *      Generally these need to be a @a pointer to the corresponding argument so
+ *      that the value can be set; for example, a <code>\%d</code> conversion
+ *      specifier needs to be matched with an <code>int *</code>.
+ *
+ * @return
+ *      The number of items successfully matched and assigned.
+ */
+int fscanf(int dev, const char *format, ...)
+{
+    va_list ap;
+    struct ch_buf buf;
+    int ret;
+
+    buf.ch_avail = FALSE;
+    va_start(ap, format);
+    ret = _doscan(format, ap, getch, ungetch, dev, (int)&buf);
+    va_end(ap);
+    return ret;
 }
 
-/** 
- * Get a character from a device with pushback.
- * @param dev device to read from
- * @param abuf buffer for reading into
- */
-static int getch(int dev, int abuf)
+/* Get a character from the device, storing it in the character buffer in case
+ * an unget is requested.  */
+static int getch(int dev, int _ch_buf)
 {
-    int *buf = (int *)abuf;
+    struct ch_buf *buf = (struct ch_buf *)_ch_buf;
+    int c;
 
-    if (*buf != EOF && *buf != EMPTY)
+    if (buf->ch_avail)
     {
-        *buf = getc(dev);
+        /* Use character that was put back with ungetch(). */
+        buf->ch_avail = FALSE;
+        return buf->c;
     }
-/* 	if( *buf != EOF ) */
-/* 	{ *buf = control(dev, TTY_IOC_NEXTC, 0, 0); } */
-    return (*buf);
+
+    c = fgetc(dev);
+    if (c != EOF)
+    {
+        buf->c = c;
+    }
+    return c;
 }
 
-/**
- * Pushback a character for getch.
- * @param dev device to push back to
- * @param abuf buffer for pushing back from
- */
-static int ungetch(int dev, int abuf)
+/* Put back a character.  */
+static int ungetch(int dev, int _chbuf)
 {
-    int *buf = (int *)abuf;
+    struct ch_buf *buf = (struct ch_buf *)_chbuf;
 
-    *buf = EMPTY;
-    return (*buf);
+    buf->ch_avail = TRUE;
+    return buf->c;
 }

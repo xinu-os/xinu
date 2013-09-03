@@ -1,0 +1,23 @@
+#
+# Makefile definitions for Embedded Xinu shared between all supported x86
+# platforms.
+#
+
+TEMPLATE_ARCH := x86
+
+# Architecture root and prefix (ignored if user overrides COMPILER_ROOT from the
+# toplevel Makefile).
+ARCH_ROOT     :=
+ARCH_PREFIX   :=
+
+# Flag for producing GDB debug information.
+BUGFLAG       := -gstabs+
+
+# Objcopy flags, used for including data files in the resulting binary.
+OCFLAGS       := -I binary -O elf32-i386 -B i386
+
+# Add a way to test for any x86 platform in C code.
+DEFS          += -D_XINU_ARCH_X86_
+
+$(BOOTIMAGE): xinu.elf
+	$(OBJCOPY) -O binary $^ $@

@@ -1,37 +1,63 @@
 /**
  * @file doprnt.c
- * @provides  _doprnt, _prtl2, _prtl8, _prtl10, _prtX16, _prtl16.
- *
- * $Id: doprnt.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 
-#define	MAXSTR	80
-#define NULL    0
+/* Number of bits in an 'unsigned long'.  */
+#define LONG_BITS (8 * sizeof(unsigned long))
 
-static void _prtl10(long num, char *str);
-static void _prtl8(long num, char *str);
-static void _prtX16(long num, char *str);
-static void _prtl16(long num, char *str);
-static void _prtl2(long num, char *str);
+static void ulong_to_string(unsigned long num, char *str,
+                            unsigned int base, bool alt_digits);
 
 /**
- * Format and write output using 'func' to write characters. (Patched 
- * for Sun3 by Shawn Ostermann.)  All arguments passed as 4 bytes, long==int.
- * @param *fmt format string
- * @param ap list of values
- * @param *func character output function
- * @param farg argument for character output function
+ * @ingroup libxc
+ *
+ * Write formatted output.
+ *
+ * This is a minimal implementation and not all standard features are supported.
+ * The supported conversion specifications include:
+ *
+ * - @c \%d to print an <code>int</code> in decimal.
+ * - @c \%b to print an <code>unsigned int</code> in binary.
+ * - @c \%o to print an <code>unsigned int</code> in octal.
+ * - @c \%u to print an <code>unsigned int</code> in decimal.
+ * - @c \%x to print an <code>unsigned int</code> in lower case hex.
+ * - @c \%X to print an <code>unsigned int</code> in upper case hex.
+ * - @c \%c to print a single character.
+ * - @c \%s to print a null-terminated string, or "(null)" for a @c NULL pointer.
+ * - @c \%\% to print a literal percent sign.
+ * - @c '-' flag to specify left-justification.
+ * - @c '0' flag to specify zero padding.
+ * - Minimum field width specification.
+ * - @c '.PREC' optional precision to set maximum field length.
+ * - @c '*' flag to specify that the minimum field width or precision is specified
+ *   as an @c int argument rather than literally in the format string.
+ *
+ * If a feature is not mentioned above, assume it is not supported.
+ *
+ * @param fmt
+ *      Format string.
+ * @param ap
+ *      Variable-length list of values that will be formatted.
+ * @param putc_func
+ *      Character output function.  It is passed two arguments; the first will
+ *      be the character to output, and the second will be @p putc_arg.  It is
+ *      expected to return @c EOF on failure.
+ * @param putc_arg
+ *      Second argument to @p putc_func.
+ *
+ * @return
+ *      number of characters written on success, or @c EOF on failure
  */
-void _doprnt(char *fmt, va_list ap, int (*func) (int, int), int farg)
+int _doprnt(const char *fmt, va_list ap,
+            int (*putc_func) (int, int), int putc_arg)
 {
-    int c;
     int i;
-    int f;                      /* The format character (comes after %) */
     char *str;                  /* Running pointer in string            */
-    char string[20];            /* The string str points to this output */
+    char string[LONG_BITS + 1]; /* The string str points to this output */
 
     /*  from number conversion              */
     int length;                 /* Length of string "str"               */
@@ -40,325 +66,308 @@ void _doprnt(char *fmt, va_list ap, int (*func) (int, int), int farg)
     int fmax, fmin;             /* Field specifications % MIN . MAX s   */
     int leading;                /* No. of leading/trailing fill chars   */
     char sign;                  /* Set to '-' for negative decimals     */
-    char digit1;                /* Offset to add to first numeric digit */
     long larg;
+    int chars_written = 0;      /* Number of characters written so far  */
+    const char *spec_start;     /* Start of this format specifier.      */
+    bool alt_digits;            /* Use alternate digits?                */
+    unsigned int base;          /* Base to use for printing.            */
 
-    for (;;)
+    while (*fmt != '\0')
     {
-        /* Echo characters until '%' or end of fmt string */
-        while ((c = *fmt++) != '%')
+        if (*fmt == '%' && *++fmt != '%')
         {
-            if (c == '\0')
-            {
-                return;
-            }
-            (*func) (farg, c);
-        }
-        /* Echo "...%%..." as '%' */
-        if (*fmt == '%')
-        {
-            (*func) (farg, *fmt++);
-            continue;
-        }
-        /* Check for "%-..." == Left-justified output */
-        if ((leftjust = ((*fmt == '-')) ? 1 : 0))
-        {
-            fmt++;
-        }
-        /* Allow for zero-filled numeric outputs ("%0...") */
-        fill = (*fmt == '0') ? *fmt++ : ' ';
-        /* Allow for minimum field width specifier for %d,u,x,o,c,s */
-        /* Also allow %* for variable width (%0* as well)       */
-        fmin = 0;
-        if (*fmt == '*')
-        {
-            fmin = va_arg(ap, int);
+            /* Conversion specification.  */
+            spec_start = fmt - 1;
 
-            ++fmt;
-        }
-        else
-        {
-            while ('0' <= *fmt && *fmt <= '9')
+            /* Check for "%-..." == Left-justified output */
+            leftjust = 0;
+            if (*fmt == '-')
             {
-                fmin = fmin * 10 + *fmt++ - '0';
+                leftjust = 1;
+                fmt++;
             }
-        }
-        /* Allow for maximum string width for %s */
-        fmax = 0;
-        if (*fmt == '.')
-        {
-            if (*(++fmt) == '*')
+
+            /* Allow for zero-filled numeric outputs ("%0...") */
+            fill = ' ';
+            if (*fmt == '0')
             {
-                fmax = va_arg(ap, int);
-                ++fmt;
+                /* '-' overrides '0' */
+                if (!leftjust)
+                {
+                    fill = '0';
+                }
+                fmt++;
+            }
+
+            /* Allow for minimum field width specifier for %d,u,x,o,c,s */
+            /* Also allow %* for variable width (%0* as well)       */
+            fmin = 0;
+            if (*fmt == '*')
+            {
+                fmin = va_arg(ap, int);
+                fmt++;
             }
             else
             {
                 while ('0' <= *fmt && *fmt <= '9')
                 {
-                    fmax = fmax * 10 + *fmt++ - '0';
+                    fmin *= 10;
+                    fmin += (*fmt - '0');
+                    fmt++;
                 }
             }
-        }
 
-        str = string;
-        if ((f = *fmt++) == '\0')
-        {
-            (*func) (farg, '%');
-            return;
-        }
-        sign = '\0';            /* sign == '-' for negative decimal */
-
-        switch (f)
-        {
-        case 'c':
-            string[0] = va_arg(ap, int);
-            string[1] = '\0';
+            /* Allow optional precision (e.g. maximum string width for %s) */
             fmax = 0;
-            fill = ' ';
-            break;
-
-        case 's':
-            str = va_arg(ap, char *);
-
-            if (NULL == str)
+            if (*fmt == '.')
             {
-                str = "(null)";
-            }
-            fill = ' ';
-            break;
-
-        case 'd':
-            larg = va_arg(ap, long);
-
-            if (larg < 0)
-            {
-                sign = '-';
-                larg = -larg;
-            }
-            _prtl10(larg, str);
-            break;
-
-        case 'u':
-            digit1 = '\0';
-            /* "negative" longs in unsigned format  */
-            /* can't be computed with long division */
-            /* convert *args to "positive", digit1  */
-            /* = how much to add back afterwards    */
-            larg = va_arg(ap, long);
-
-            while (larg < 0)
-            {
-                larg -= 1000000000L;
-                ++digit1;
-            }
-            _prtl10(larg, str);
-            str[0] += digit1;
-            fmax = 0;
-            break;
-
-        case 'o':
-            larg = va_arg(ap, long);
-
-            _prtl8(larg, str);
-            fmax = 0;
-            break;
-
-        case 'X':
-            larg = va_arg(ap, long);
-
-            _prtX16(larg, str);
-            fmax = 0;
-            break;
-
-        case 'x':
-            larg = va_arg(ap, long);
-
-            _prtl16(larg, str);
-            fmax = 0;
-            break;
-
-        case 'b':
-            larg = va_arg(ap, long);
-
-            _prtl2(larg, str);
-            fmax = 0;
-            break;
-
-        default:
-            (*func) (farg, f);
-            break;
-        }
-        for (length = 0; str[length] != '\0'; length++)
-        {;
-        }
-        if (fmin > MAXSTR || fmin < 0)
-        {
-            fmin = 0;
-        }
-        if (fmax > MAXSTR || fmax < 0)
-        {
-            fmax = 0;
-        }
-        leading = 0;
-        if (fmax != 0 || fmin != 0)
-        {
-            if (fmax != 0)
-            {
-                if (length > fmax)
+                fmt++;
+                if (*fmt == '*')
                 {
-                    length = fmax;
+                    fmax = va_arg(ap, int);
+                    fmt++;
+                }
+                else
+                {
+                    while ('0' <= *fmt && *fmt <= '9')
+                    {
+                        fmax *= 10;
+                        fmax += (*fmt - '0');
+                        fmt++;
+                    }
                 }
             }
-            if (fmin != 0)
+
+            str = string;
+            sign = '+';    /* sign == '-' for negative decimal */
+            alt_digits = FALSE;
+            base = 0;
+            switch (*fmt++) /* Switch on the format specifier character. */
             {
-                leading = fmin - length;
+            case 'c':
+                string[0] = va_arg(ap, int);
+                string[1] = '\0';
+                fmax = 0;
+                fill = ' ';
+                break;
+
+            case 's':
+                str = va_arg(ap, char *);
+                if (NULL == str)
+                {
+                    str = "(null)";
+                }
+                fill = ' ';
+                break;
+
+            case 'd':
+                larg = va_arg(ap, int);
+                if (larg < 0)
+                {
+                    sign = '-';
+                    larg = -larg;
+                }
+                base = 10;
+                break;
+
+            case 'u':
+                larg = va_arg(ap, unsigned int);
+                base = 10;
+                break;
+
+            case 'o':
+                larg = va_arg(ap, unsigned int);
+                base = 8;
+                break;
+
+            case 'X':
+                larg = va_arg(ap, unsigned int);
+                base = 16;
+                alt_digits = TRUE;
+                break;
+
+            case 'x':
+                larg = va_arg(ap, unsigned int);
+                base = 16;
+                break;
+
+            case 'b':
+                larg = va_arg(ap, unsigned int);
+                base = 2;
+                break;
+
+            default:
+                /* Unknown format specifier; this also includes the case where
+                 * we encounted the end of the format string prematurely.  Write
+                 * the '%' literally and continue parsing from the next
+                 * character.  */
+                fmt = spec_start;
+                goto literal;
             }
-            if (sign == '-')
+
+            if (base != 0)
             {
-                --leading;
+                /* Print a number to the temporary buffer.  */
+                ulong_to_string(larg, str, base, alt_digits);
+                fmax = 0;
             }
-        }
-        if (sign == '-' && fill == '0')
-        {
-            (*func) (farg, sign);
-        }
-        if (leftjust == 0)
-        {
-            for (i = 0; i < leading; i++)
+
+            length = strlen(str);
+
+            leading = 0;
+            if (fmax != 0 || fmin != 0)
             {
-                (*func) (farg, fill);
+                if (fmax != 0)
+                {
+                    if (length > fmax)
+                    {
+                        length = fmax;
+                    }
+                }
+                if (fmin != 0)
+                {
+                    leading = fmin - length;
+                }
+                if (sign == '-')
+                {
+                    --leading;
+                }
+            }
+            if (sign == '-' && fill == '0')
+            {
+                if ((*putc_func) (sign, putc_arg) == EOF)
+                {
+                    return EOF;
+                }
+                chars_written++;
+            }
+            if (leftjust == 0)
+            {
+                for (i = 0; i < leading; i++)
+                {
+                    if ((*putc_func) (fill, putc_arg) == EOF)
+                    {
+                        return EOF;
+                    }
+                    chars_written++;
+                }
+            }
+            if (sign == '-' && fill == ' ')
+            {
+                if ((*putc_func) (sign, putc_arg) == EOF)
+                {
+                    return EOF;
+                }
+                chars_written++;
+            }
+            for (i = 0; i < length; i++)
+            {
+                if ((*putc_func) (str[i], putc_arg) == EOF)
+                {
+                    return EOF;
+                }
+                chars_written++;
+            }
+            if (leftjust != 0)
+            {
+                for (i = 0; i < leading; i++)
+                {
+                    if ((*putc_func) (fill, putc_arg) == EOF)
+                    {
+                        return EOF;
+                    }
+                    chars_written++;
+                }
             }
         }
-        if (sign == '-' && fill == ' ')
+        else
         {
-            (*func) (farg, sign);
-        }
-        for (i = 0; i < length; i++)
-        {
-            (*func) (farg, str[i]);
-        }
-        if (leftjust != 0)
-        {
-            for (i = 0; i < leading; i++)
-                (*func) (farg, fill);
+literal:
+            /* Literal character.  */
+            if ((*putc_func) (*fmt, putc_arg) == EOF)
+            {
+                return EOF;
+            }
+            chars_written++;
+            fmt++;
         }
     }
-
+    return chars_written;
 }
 
-/**
- * Prints
- * @param num
- * @param *str
- */
-static void _prtl10(long num, char *str)
-{
-    int i;
-    char temp[11];
+static const char digits_lc[16] = "0123456789abcdef";
+static const char digits_uc[16] = "0123456789ABCDEF";
+static const unsigned char base_to_nbits[17] = {
+    [2]  = 1,
+    [4]  = 2,
+    [8]  = 3,
+    [16] = 4,
+};
 
-    temp[0] = '\0';
-    for (i = 1; i <= 10; i++)
-    {
-        temp[i] = num % 10 + '0';
-        num /= 10;
-    }
-    for (i = 10; temp[i] == '0'; i--);
-    if (i == 0)
-        i++;
-    while (i >= 0)
-        *str++ = temp[i--];
-}
+/* When this is not defined, special code is used to speed up
+ * converting numbers to a a string with power-of-two base.  */
+/*#define ALWAYS_USE_DIVISION*/
 
 /**
- * Prints 
+ * Convert an unsigned long integer to a string.
+ *
  * @param num
- * @param *str
+ *      Number to convert.
+ * @param str
+ *      Buffer into which to write the string.
+ * @param base
+ *      Base to use; must be less than or equal to 16.
+ * @param alt_digits
+ *      TRUE if hex digits should be upper case rather than lowercase.
  */
-static void _prtl8(long num, char *str)
+static void ulong_to_string(unsigned long num, char *str,
+                            unsigned int base, bool alt_digits)
 {
+    const char *digits = digits_lc;
+    char temp[LONG_BITS + 1];
     int i;
-    char temp[12];
 
+    /* Print the string to a temporary buffer in
+     * reverse order before copying it to @str.  */
+    digits = (alt_digits) ? digits_uc : digits_lc;
     temp[0] = '\0';
-    for (i = 1; i <= 11; i++)
+#ifdef ALWAYS_USE_DIVISION
+    if (TRUE)
+#else
+    if (base_to_nbits[base] == 0)
+#endif
     {
-        temp[i] = (num & 07) + '0';
-        num = num >> 3;
+        /* Use modulo operation and integral division.  */
+        for (i = 1; num != 0; i++)
+        {
+            temp[i] = digits[num % base];
+            num /= base;
+        }
     }
-    temp[11] &= '3';
-    for (i = 11; temp[i] == '0'; i--);
-    if (i == 0)
-        i++;
-    while (i >= 0)
-        *str++ = temp[i--];
-}
-
-/**
- * Prints 
- * @param num
- * @param *str
- */
-static void _prtl16(long num, char *str)
-{
-    int i;
-    char temp[9];
-
-    temp[0] = '\0';
-    for (i = 1; i <= 8; i++)
+    else
     {
-        temp[i] = "0123456789abcdef"[num & 0x0F];
-        num = num >> 4;
+        /* Use masking and shifting (works when base is a power of 2) */
+        unsigned char shift = base_to_nbits[base];
+        unsigned long mask = (1 << shift) - 1;
+        for (i = 1; num != 0; i++)
+        {
+            temp[i] = digits[num & mask];
+            num >>= shift;
+        }
     }
-    for (i = 8; temp[i] == '0'; i--);
+
+    /* Reverse string and copy it to @str.  */
+
+    i--;
     if (i == 0)
-        i++;
-    while (i >= 0)
-        *str++ = temp[i--];
-}
-
-/**
- * Prints 
- * @param num
- * @param *str
- */
-static void _prtX16(long num, char *str)
-{
-    int i;
-    char temp[9];
-
-    temp[0] = '\0';
-    for (i = 1; i <= 8; i++)
     {
-        temp[i] = "0123456789ABCDEF"[num & 0x0F];
-        num = num >> 4;
+        /* If no digits were printed, then the number was 0 and we should at
+         * least print a 0.  */
+        temp[++i] = '0';
     }
-    for (i = 8; temp[i] == '0'; i--);
-    if (i == 0)
-        i++;
+
     while (i >= 0)
-        *str++ = temp[i--];
-}
-
-/**
- * Prints 
- * @param num
- * @param *str
- */
-static void _prtl2(long num, char *str)
-{
-    int i;
-    char temp[35];
-
-    temp[0] = '\0';
-    for (i = 1; i <= 32; i++)
     {
-        temp[i] = ((num % 2) == 0) ? '0' : '1';
-        num = num >> 1;
-    }
-    for (i = 32; temp[i] == '0'; i--);
-    if (i == 0)
-        i++;
-    while (i >= 0)
         *str++ = temp[i--];
+    }
 }

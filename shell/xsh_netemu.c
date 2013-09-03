@@ -1,8 +1,6 @@
 /**
  * @file     xsh_netemu.c
- * @provides xsh_netemu.
  *
- * $Id: xsh_netemu.c 2126 2009-11-12 07:23:04Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <date.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (netemu). Allows user to set network emulator options.
  * @param nargs number of arguments
  * @param args  array of arguments

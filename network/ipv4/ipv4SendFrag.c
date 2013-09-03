@@ -1,8 +1,6 @@
 /**
  * file ipv4SendFrag.c
- * @provides ipv4SendFrag
  * 
- * $Id: ipv4SendFrag.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

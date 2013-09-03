@@ -1,8 +1,6 @@
 /**
  * @file stkget.c
- * @provides stkget.
  *
- * $Id: stkget.c 2074 2009-09-21 23:37:28Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,9 +10,18 @@
 #include <platform.h>
 
 /**
- * Allocate stack memory, returning address of topmost word.
- * @param nbytes bytes of memory to allocate
- * @return address of the topmost word
+ * @ingroup memory_mgmt
+ *
+ * Allocate stack memory.
+ *
+ * @param nbytes
+ *      Number of bytes requested.
+ *
+ * @return
+ *      ::SYSERR if @p nbytes was 0 or there is no memory to satisfy the
+ *      request; otherwise returns a pointer to the <b>topmost word</b> of the
+ *      allocated memory region.  The intention is that this is the base of a
+ *      stack growing down.  Free the stack with stkfree() when done with it.
  */
 void *stkget(uint nbytes)
 {

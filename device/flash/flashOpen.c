@@ -1,9 +1,7 @@
 /**
  * @file     flashOpen.c
- * @provides flashOpen
  * Open a flash device for reading and writing.
  *
- * $Id: flashOpen.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 

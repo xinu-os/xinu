@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# NOTE: this script is primarily intended to be an example; please modify it as
+# needed.
+#
+# This script compiles and installs a cross compiler for ARM.  Set the
+# installation location below with PREFIX.  Also set the binutils and gcc
+# versions below.  Note: as currently written, this script expects the
+# appropriate .tar.bz2 sources to be in the working directory.
+#
+
+set -e
+
+TARGET=arm-none-eabi
+
+PREFIX=/opt/${TARGET}
+BINUTILS_VERSION=2.22
+GCC_VERSION=4.7.3
+MAKEARGS="-j4"
+INSTALLPRIV="sudo"
+#INSTALLPRIV=
+
+# Compile and install binutils
+tar xf binutils-${BINUTILS_VERSION}.tar.bz2
+builddir=binutils-${BINUTILS_VERSION}-build.${TARGET}
+mkdir ${builddir}
+cd ${builddir}
+
+../binutils-${BINUTILS_VERSION}/configure --prefix=${PREFIX} \
+					  --target=${TARGET} \
+					  --disable-nls
+make ${MAKEARGS}
+${INSTALLPRIV} make install
+cd ..
+rm -rf ${builddir}
+
+# Compile and install gcc
+tar xf gcc-${GCC_VERSION}.tar.bz2
+builddir=gcc-${GCC_VERSION}-build.${TARGET}
+mkdir ${builddir}
+cd ${builddir}
+
+../gcc-${GCC_VERSION}/configure --prefix=${PREFIX} --target=${TARGET}	\
+				--disable-nls --enable-languages=c,c++	\
+				--without-headers
+make ${MAKEARGS} all-gcc all-target-libgcc
+${INSTALLPRIV} make install-gcc install-target-libgcc
+cd ..
+rm -rf ${builddir}

@@ -1,8 +1,6 @@
 /**
  * @file telnetControl.c
- * @provides telnetControl.
  *
- * $Id: telnetControl.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <tty.h>
 
 /**
+ * @ingroup telnet
+ *
  * Control function for TELNET pseudo devices.
  * @param devptr TELNET device table entry
  * @param func control function to execute

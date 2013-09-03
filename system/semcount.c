@@ -1,17 +1,22 @@
 /**
  * @file semcount.c
- * @provides semcount.
  *
- * $Id: semcount.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <semaphore.h>
 
 /**
- * Return a semaphore's count
- * @param sem    target semaphore
- * @return count from semtab entry on success, SYSERR on failure
+ * @ingroup semaphores
+ *
+ * Retrieve a semaphore's count.
+ *
+ * @param sem
+ *      Semaphore to get the count of.
+ *
+ * @return
+ *      On success, returns the semaphore's count; otherwise returns ::SYSERR.
+ *      This function can only fail if @p sem did not specify a valid semaphore.
  */
 syscall semcount(semaphore sem)
 {

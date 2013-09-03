@@ -2,7 +2,6 @@
  * @file test_ip.c
  * @ provides test_ip.c
  *
- * $Id: test_ip.c 2152 2010-01-07 02:43:18Z brylow $
  */
 
 #include <stddef.h>
@@ -31,6 +30,7 @@ extern int _binary_data_testip_pcap_start;
 
 thread test_ip(bool verbose)
 {
+#if NETHER
     struct netaddr dst;
     struct netaddr src;
     struct netaddr mask;
@@ -195,6 +195,8 @@ thread test_ip(bool verbose)
     {
         testFail(TRUE, "");
     }
-
+#else /* NETHER */
+    testSkip(TRUE, "");
+#endif /* NETHER == 0 */
     return OK;
 }

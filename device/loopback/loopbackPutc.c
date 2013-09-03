@@ -1,10 +1,7 @@
 /**
  * @file     loopbackPutc.c
- * @provides loopbackPutc.
- *
- * $Id: loopbackPutc.c 2077 2009-09-24 23:58:54Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stddef.h>
 #include <device.h>
@@ -13,10 +10,18 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup loopback
+ *
  * Put a character onto the loopback buffer
- * @param devptr Loopback device
- * @param ch character to output
- * @return OK if character was written successfully
+ *
+ * @param devptr
+ *      Loopback device
+ * @param ch
+ *      character to output
+ *
+ * @return
+ *      @p ch as an <code>unsigned char</code> cast to an @c int on success; @c
+ *      SYSERR if there is no room in the buffer.
  */
 devcall loopbackPutc(device *devptr, char ch)
 {
@@ -43,5 +48,5 @@ devcall loopbackPutc(device *devptr, char ch)
 
     restore(im);
 
-    return OK;
+    return (uchar)ch;
 }

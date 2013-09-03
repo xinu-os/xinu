@@ -1,8 +1,6 @@
 /**
  * file netSend.c
- * @provides netSend
  * 
- * $Id: netSend.c 2024 2009-08-13 18:50:40Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -15,6 +13,8 @@
 #include <string.h>
 
 /**
+ * @ingroup network
+ *
  * Appends the Link-Level header to a packet and writes to the 
  * underlying interface.
  * @param pkt packet to send
@@ -24,8 +24,8 @@
  * @return OK if packet was sent, TIMEOUT if ARP request timed out,
  * 	otherwise SYSERR
  */
-syscall netSend(struct packet *pkt, struct netaddr *hwaddr,
-                struct netaddr *praddr, ushort type)
+syscall netSend(struct packet *pkt, const struct netaddr *hwaddr,
+                const struct netaddr *praddr, ushort type)
 {
     struct netif *netptr = NULL;        /**< pointer to network interface */
     struct etherPkt *ether = NULL;      /**< pointer to Ethernet header   */
@@ -64,7 +64,7 @@ syscall netSend(struct packet *pkt, struct netaddr *hwaddr,
     {
         NET_TRACE("Hardware address lookup required");
         hwaddr = &addr;
-        result = arpLookup(netptr, praddr, hwaddr);
+        result = arpLookup(netptr, praddr, (struct netaddr*)hwaddr);
         if (result != OK)
         {
             return result;
@@ -75,7 +75,7 @@ syscall netSend(struct packet *pkt, struct netaddr *hwaddr,
     memcpy(ether->dst, hwaddr->addr, hwaddr->len);
 
     /* Write the packet to the underlying device */
-    if (SYSERR == write(netptr->dev, pkt->curr, pkt->len))
+    if (pkt->len != write(netptr->dev, pkt->curr, pkt->len))
     {
         return SYSERR;
     }

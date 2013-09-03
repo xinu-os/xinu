@@ -1,8 +1,6 @@
 /** 
  * @file rtAdd.c
- * @provides rtAdd
  *
- * $Id: rtAdd.c 2140 2009-12-10 02:06:20Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,8 +8,11 @@
 #include <network.h>
 #include <route.h>
 
-syscall rtAdd(struct netaddr *dst, struct netaddr *gate,
-              struct netaddr *mask, struct netif *nif)
+/**
+ * @ingroup route
+ */
+syscall rtAdd(const struct netaddr *dst, const struct netaddr *gate,
+              const struct netaddr *mask, struct netif *nif)
 {
     struct rtEntry *rtptr;
     uchar octet;

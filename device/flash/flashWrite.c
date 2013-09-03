@@ -1,9 +1,7 @@
 /**
  * @file     flashWrite.c
- * @provides flashWrite
  * A simple, high-level interface to write to flash.
  *
- * $Id: flashWrite.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 #include <kernel.h>

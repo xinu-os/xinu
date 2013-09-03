@@ -1,8 +1,6 @@
 /**
  * @file tcpSendWindow.c
- * @provides tcpSendWindow
  *
- * $Id: tcpSendWindow.c 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Calculates the window size to advertise in an outgoing TCP packet.
  * @param tcbptr pointer to transmission control block for connection
  * @pre-condition TCB mutex is already held

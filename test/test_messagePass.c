@@ -15,7 +15,6 @@ static thread recvthread(bool);
  */
 thread test_messagePass(bool verbose)
 {
-    enable();
     bool passed = TRUE;
     tid_typ recvtid;
 

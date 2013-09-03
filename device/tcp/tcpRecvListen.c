@@ -1,8 +1,6 @@
 /**
  * @file tcpRecvListen.c
- * @provides tcpRecvListen
  *
- * $Id: tcpRecvListen.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Processes an incoming packet for a TCP connection in the LISTEN state.
  * @param pkt incoming packet
  * @param tcbptr pointer to transmission control block for connection

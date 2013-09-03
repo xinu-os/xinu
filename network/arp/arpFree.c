@@ -1,8 +1,6 @@
 /**
  * @file arpFree.c
- * @provides arpFree
  *
- * $Id: arpFree.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup arp
+ *
  * Frees an entry from the ARP table.
  * @return SYSERR if error occurs, otherwise OK
  */

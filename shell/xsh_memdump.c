@@ -1,26 +1,41 @@
 /**
  * @file     xsh_memdump.c
- * @provides xsh_memdump.
- *
- * $Id: xsh_memdump.c 2065 2009-09-04 21:44:36Z brylow $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
-#include <string.h>
-#include <stdio.h>
+#include <ctype.h>
 #include <debug.h>
 #include <mips.h>
-#include <ctype.h>
+#include <platform.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
 
-#define DEC 10
-#define HEX 16
+static ulong string_to_addr(const char *s);
 
-static ulong parse(char *);
-static ulong parseBase(char *, ushort);
-static int digit(char);
+#define INVALID_ADDR (~(ulong)0)
+
+static bool address_range_sane(ulong start, ulong len)
+{
+    if (len == 0)
+    {
+        return TRUE;
+    }
+    if (start + len < start)
+    {
+        return FALSE;
+    }
+#ifdef _XINU_ARCH_MIPS_
+    return (KSEG0_BASE <= start && start + len <= KSEG2_BASE);
+#else
+    return ((ulong)platform.minaddr <= start &&
+            start + len <= (ulong)platform.maxaddr);
+#endif
+}
 
 /**
+ * @ingroup shell
+ *
  * Dump a region of memory to stdout.
  * @param nargs number of arguments
  * @param args  array of arguments
@@ -83,10 +98,10 @@ shellcmd xsh_memdump(int nargs, char *args[])
         return 1;
     }
 
-    start = parse(args[arg + 0]);
-    length = parse(args[arg + 1]);
+    start = string_to_addr(args[arg + 0]);
+    length = string_to_addr(args[arg + 1]);
 
-    if (0 == start || 0 == length)
+    if (INVALID_ADDR == start || INVALID_ADDR == length)
     {
         fprintf(stderr, "%s: invalid argument\n", args[0]);
         fprintf(stderr, "Try '%s --help' for more information\n",
@@ -95,7 +110,7 @@ shellcmd xsh_memdump(int nargs, char *args[])
     }
 
     /* make sure the memdump values are somewhat sane */
-    if ((TRUE == force) || (KSEG0_BASE <= start && start < KSEG2_BASE))
+    if ((TRUE == force) || address_range_sane(start, length))
     {
         hexdump((uchar *)start, length, canon);
     }
@@ -107,104 +122,23 @@ shellcmd xsh_memdump(int nargs, char *args[])
     return 0;
 }
 
-static ulong parse(char *string)
+static ulong string_to_addr(const char *string)
 {
-    switch (string[0])
+    ulong n;
+    const char *scan = string;
+    const char *format = "%lu";
+    if (string[0] == '0' && (string[1] == 'x' || string[1] == 'X'))
     {
-    case '0':
-        /* hex */
-        if ('x' == string[1])
-        {
-            return parseBase(string + 2, HEX);
-        }
-        break;
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-        /* dec */
-        return parseBase(string, DEC);
-        break;
-    default:
-        break;
+        scan += 2;
+        format = "%lx";
     }
-
-    /* error */
-    return 0;
-}
-
-static ulong parseBase(char *string, ushort base)
-{
-    ushort pos;
-    long sum;
-    char c;
-    long d;
-
-    sum = 0;
-    pos = 0;
-    while ((c = string[pos]) != '\0')
+    else if (string[0] == '0' && isdigit((uchar)string[1]))
     {
-        if ((d = digit(c)) == SYSERR)
-        {
-            return 0;
-        }
-
-        if (base == DEC && isdigit(c))
-        {
-            sum = sum * DEC + d;
-        }
-        else if (base == HEX && isxdigit(c))
-        {
-            sum = sum * HEX + d;
-        }
-        else
-        {
-            return 0;
-        }
-        pos++;
+        format = "%lo";
     }
-
-    return sum;
-}
-
-static int digit(char c)
-{
-    switch (c)
+    if (sscanf(scan, format, &n) != 1)
     {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-        return c - '0';
-        break;
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-        return c - 'A' + 10;
-        break;
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-        return c - 'a' + 10;
-        break;
+        n = INVALID_ADDR;
     }
-
-    return -1;
+    return n;
 }

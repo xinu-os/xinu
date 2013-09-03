@@ -1,20 +1,24 @@
 /**
  * @file semfree.c
- * @provides semfree.
  *
- * $Id: semfree.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <thread.h>
 
 /**
- * Deallocate a semaphore.
- * Reset the semaphore count, releasing any threads
- * in the waiting queue.  Deallocate entry in global
- * semaphore table.
- * @param sem  target semaphore
- * @return OK on success, SYSERR on failure
+ * @ingroup semaphores
+ *
+ * Frees a semaphore.  This can be done even if threads are waiting on it, in
+ * which case they will be released and able to run.  However, be careful, since
+ * such threads will return from wait()ing on a semaphore that no longer exists
+ * and there may be assumptions that no longer hold.
+ *
+ * @param sem
+ *      Semaphore to free (allocated by semcreate()).
+ *
+ * @return
+ *      ::SYSERR if @p sem did not specify a valid semaphore; otherwise ::OK.
  */
 syscall semfree(semaphore sem)
 {

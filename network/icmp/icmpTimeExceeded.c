@@ -1,8 +1,6 @@
 /**
  * @file icmpTimeExceeded.c
- * @provides icmpTimeExceeded
  *
- * $Id: icmpTimeExceeded.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup icmp
+ *
  * Compose ICMP Time Exceeded message.
  * @param unreached packet that could not be sent
  * @param code      ICMP destination unreachable code number

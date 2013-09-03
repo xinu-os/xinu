@@ -1,8 +1,6 @@
 /**
  * @file icmpEchoRequest.c
- * @provides icmpEchoRequest
  *
- * $Id: icmpEchoRequest.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup icmp
+ *
  * Send an ICMP Echo (Ping) Request.
  * @param dst destination address
  * @param id  ping stream identifier

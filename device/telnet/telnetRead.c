@@ -1,8 +1,6 @@
 /**
  * @file telnetRead.c
- * @provides telnetRead.
  *
- * $Id: telnetRead.c 2116 2009-11-03 20:55:05Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -20,6 +18,8 @@ static void telnetEcho(device *, int);
 static void telnetSendOption(device *, uchar, uchar);
 
 /**
+ * @ingroup telnet
+ *
  * Read characters from a telnet connection
  * @param devptr pointer to a telnet device
  * @param buf buffer for reading characters
@@ -34,6 +34,7 @@ devcall telnetRead(device *devptr, void *buf, uint len)
     int count = 0;
     int index = 0;
     bool willSga = FALSE;
+    bool recvSga = FALSE;
 
     uchar *buffer = buf;
     uchar cmdbuf[3] = { 0, 0, 0 };
@@ -177,6 +178,7 @@ devcall telnetRead(device *devptr, void *buf, uint len)
                     if (TELNET_SUPPRESS_GA == ch)
                     {
                         TELNET_TRACE("Recv WILL Suppress Go-Ahead");
+                        recvSga = TRUE;
                         cmdbuf[1] = TELNET_WILL;
                         if (FALSE == willSga)
                         {

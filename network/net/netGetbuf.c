@@ -1,8 +1,6 @@
 /**
  * file netGetbuf.c
- * @provides netGetbuf
  * 
- * $Id: netGetbuf.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup network
+ *
  * Provides a buffer for storing a packet.
  * @return pointer to a packet buffer, SYSERR if an error occured
  */

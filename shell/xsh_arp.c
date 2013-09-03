@@ -1,8 +1,6 @@
 /*
  * @file     xsh_arp.c
- * @provides xsh_arp.
  *
- * $Id: xsh_arp.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,7 +10,10 @@
 #include <network.h>
 #include <arp.h>
 
+#if NETHER
 /**
+ * @ingroup shell
+ *
  * Shell command (arp).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -66,3 +67,4 @@ shellcmd xsh_arp(int nargs, char *args[])
 
     return OK;
 }
+#endif /* NETHER */

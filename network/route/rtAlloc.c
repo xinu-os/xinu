@@ -1,8 +1,6 @@
 /**
  * @file rtAlloc.c
- * @provides rtAlloc
  *
- * $Id: rtAlloc.c 2118 2009-11-05 05:22:51Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,7 +8,10 @@
 #include <interrupt.h>
 #include <route.h>
 
-/* Allocates an entry from the route table.
+/**
+ * @ingroup route
+ *
+ * Allocates an entry from the route table.
  * @return entry in route table, NULL if all used, SYSERR if error occurs
  */
 struct rtEntry *rtAlloc(void)

@@ -1,18 +1,24 @@
 /**
  * @file getc.c
- * @provides getc.
- *
- * $Id: getc.c 2077 2009-09-24 23:58:54Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stddef.h>
 #include <device.h>
 
 /**
- * get one character from a device
- * @param descrp definition of device from which to acquire character
- * @return function to get character on success, SYSERR on failure
+ * @ingroup devcalls
+ *
+ * Read one character from a device.
+ *
+ * @param descrp
+ *      Index of device from which to read the character.
+ *
+ * @return
+ *      On success, returns the character read as an <code>unsigned char</code>
+ *      cast to an @c int.  On bad device descripter, returns ::SYSERR.  On
+ *      other failure, returns ::SYSERR or ::EOF depending on the specific
+ *      device driver it calls.
  */
 devcall getc(int descrp)
 {

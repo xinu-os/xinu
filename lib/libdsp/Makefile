@@ -1,37 +1,18 @@
 #
-#  Make the Xinu version of the C run-time support library
+# Make Xinu's digital signal processing library
 #
 
-INCLUDE	= -I../../include -I../../system/platforms/${PLATFORM}
-LIBDIR	= ..
+# Name of this library
+LIBNAME := libdsp
 
-LIBNAME = libdsp
+# C files to compile (.c)
+CFILES  := linear2ulaw.c ulaw2linear.c
 
-# Make sure the library is optimized for size, if we want any optimization
-CFLAGS := ${CFLAGS:-O%=-Os}
+# Assembly files to compile (.S)
+SFILES  :=
 
-# Update the include flag
-CFLAGS := ${CFLAGS:-I%=${INCLUDE}}
+# Directory in which to place the output library, and
+# location of common Makerules
+LIBDIR	:= ..
 
-.s.o:
-		${AS} -o $@ ${AFLAGS} $<
-
-.c.o:
-		${CC} ${CFLAGS} $<
-
-CFILES	= linear2ulaw.c ulaw2linear.c
-
-OFILE2 = ${CFILES:%.c=%.o}
-OFILES = ${OFILE2:%.s=%.o}
-
-all:		${LIBNAME}.a
-
-${LIBNAME}.a:	${OFILES}
-		rm -f ${LIBNAME}.a
-		${AR} cr ${LIBNAME}.a ${OFILES}
-
-install:	${LIBNAME}.a
-		cp ${LIBNAME}.a ${LIBDIR}/${LIBNAME}.a
-
-clean:
-		rm -f ${OFILES} ${LIBNAME}.a ${LIBDIR}/${LIBNAME}.a
+include $(LIBDIR)/Makerules

@@ -1,8 +1,6 @@
 /**
  * @file etherRead.c
- * @provides etherRead.
  *
- * $Id: etherRead.c 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,13 +15,8 @@
 #include <network.h>
 #include <vlan.h>
 
-/**
- * Read a packet from the ethernet device.
- * @param devptr pointer to ethernet device
- * @param buf buffer for read
- * @param len size of the buffer
- * @return number of bytes read
- */
+/* Implementation of etherRead() for the bcm4713; see the documentation for this
+ * function in ether.h.  */
 devcall etherRead(device *devptr, void *buf, uint len)
 {
     irqmask im;

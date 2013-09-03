@@ -1,8 +1,6 @@
 /**
  * @file xdone.c
- * @provides xdone.
  *
- * $Id: xdone.c 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 extern void halt(void);
 
 /**
+ * @ingroup misc
+ *
  * Print system completion message as last thread exits.
  */
 void xdone(void)

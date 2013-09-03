@@ -1,8 +1,6 @@
 /**
  * @file etherOpen.c
- * @provides etherOpen.
  *
- * $Id: etherOpen.c 2108 2009-10-29 05:07:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -16,11 +14,8 @@
 #include <interrupt.h>
 #include <mips.h>
 
-/**
- * Open an ethernet device for use.
- * @param  devptr ethernet device table entry
- * @return OK if opened properly, otherwise SYSERR
- */
+/* Implementation of etherOpen() for the bcm4713; see the documentation for this
+ * function in ether.h.  */
 devcall etherOpen(device *devptr)
 {
     int i;
@@ -50,7 +45,7 @@ devcall etherOpen(device *devptr)
     /* Request memory buffer pool for Tx DMA */
     ethptr->outPool =
         bfpalloc(ETH_TX_BUF_SIZE + sizeof(struct ethPktBuffer),
-                 ETH_TX_RING_ENTRIES);
+                 ETH_TX_RING_ENTRIES - 1);
     ETHER_TRACE("eth%d outPool has been assigned pool ID %d.\r\n",
                 devptr->minor, ethptr->outPool);
     if (SYSERR == ethptr->outPool)

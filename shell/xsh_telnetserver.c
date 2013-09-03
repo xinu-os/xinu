@@ -1,8 +1,6 @@
 /**
  * @file     xsh_telnetserver.c
- * @provides xsh_telnetserver
  *
- * $Id: xsh_telnetserver.c 2116 2009-11-03 20:55:05Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -18,7 +16,8 @@
 #include <network.h>
 #include <ether.h>
 
-int argErr(char *command, char *arg)
+#if NETHER
+static int argErr(char *command, char *arg)
 {
     fprintf(stderr, "%s: missing or invalid argument\n", command);
     fprintf(stderr, "Try %s --help for usage\n", command);
@@ -26,6 +25,8 @@ int argErr(char *command, char *arg)
 }
 
 /**
+ * @ingroup shell
+ *
  * Shell command (telnetserver).
  * @param nargs number of arguments in args array
  * @param args  array of arguments
@@ -37,7 +38,6 @@ shellcmd xsh_telnetserver(int nargs, char *args[])
     struct thrent *thrptr;
     char thrname[TNMLEN];
 
-    spawntelnet = 0;
     bzero(thrname, TNMLEN);
     /* parse arguments to find port number */
     if ((2 == nargs) && (strncmp(args[1], "--help", 7) == 0))
@@ -146,3 +146,4 @@ shellcmd xsh_telnetserver(int nargs, char *args[])
 
     return SHELL_OK;
 }
+#endif /* NETHER */

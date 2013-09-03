@@ -1,7 +1,6 @@
 /**
  * @file udp.h
  *
- * $Id: udp.h 2114 2009-11-03 01:13:43Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +12,9 @@
 #include <ipv4.h>
 #include <semaphore.h>
 #include <stdarg.h>
+
+/** @ingroup udpinternal
+ * @{ */
 
 /* Tracing macros */
 //#define TRACE_UDP     TTY1
@@ -28,33 +30,41 @@
 
 /* UDP definitions */
 #define UDP_HDR_LEN	        8
-#define UDP_PSEUDO_LEN      12
 #define UDP_MAX_PKTS        100
 #define UDP_MAX_DATALEN     1024
 #define UDP_TTL             64
+
+/** @}
+ *  @ingroup udpexternal
+ *  @{ */
 
 /* UDP standard ports */
 #define UDP_PORT_RDATE  	37
 #define UDP_PORT_DNS		53
 #define UDP_PORT_DHCPS  	67
 #define UDP_PORT_DHCPC  	68
+#define UDP_PORT_TFTP       69
 #define UDP_PORT_TRACEROUTE	33434
 
 /* UDP flags */
-#define UDP_FLAG_INCHDR     0x01
+#define UDP_FLAG_PASSIVE    0x01
 #define UDP_FLAG_NOBLOCK    0x02
 #define UDP_FLAG_BINDFIRST  0x04
-
-/* UDP state constants */
-#define UDP_FREE      0
-#define UDP_ALLOC     1
-#define UDP_OPEN      2
 
 /* UDP control functions */
 #define UDP_CTRL_ACCEPT     1   /**< Set the local port and ip address  */
 #define UDP_CTRL_BIND       2   /**< Set the remote port and ip address */
 #define UDP_CTRL_CLRFLAG    3   /**< Clear flag(s)                      */
 #define UDP_CTRL_SETFLAG    4   /**< Set flag(s)                        */
+
+/** @}
+ *  @ingroup udpinternal
+ *  @{ */
+
+/* UDP state constants */
+#define UDP_FREE      0
+#define UDP_ALLOC     1
+#define UDP_OPEN      2
 
 /* Local port allocation ranges */
 #define UDP_PSTART  10000   /**< start port for allocating */
@@ -134,18 +144,22 @@ struct udp
 
 extern struct udp udptab[];
 
+/** @} */
+
 /* Function Prototypes */
 devcall udpInit(device *);
 devcall udpOpen(device *, va_list);
 devcall udpClose(device *);
 devcall udpRead(device *, void *, uint);
-devcall udpWrite(device *, void *, uint);
+devcall udpWrite(device *, const void *, uint);
 ushort udpAlloc(void);
-ushort udpChksum(struct packet *, ushort, struct netaddr *,
-                 struct netaddr *);
-struct udp *udpDemux(ushort, ushort, struct netaddr *, struct netaddr *);
-syscall udpRecv(struct packet *, struct netaddr *, struct netaddr *);
-syscall udpSend(struct udp *, ushort, void *);
+ushort udpChksum(struct packet *, ushort, const struct netaddr *,
+                 const struct netaddr *);
+struct udp *udpDemux(ushort, ushort, const struct netaddr *,
+                     const struct netaddr *);
+syscall udpRecv(struct packet *, const struct netaddr *,
+                const struct netaddr *);
+syscall udpSend(struct udp *, ushort, const void *);
 devcall udpControl(device *, int, long, long);
 struct udpPkt *udpGetbuf(struct udp *);
 syscall udpFreebuf(struct udpPkt *);

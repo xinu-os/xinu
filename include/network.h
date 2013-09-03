@@ -1,7 +1,6 @@
 /*
  * @file network.h
  *
- * $Id: network.h 2109 2009-10-29 22:07:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +11,10 @@
 #include <conf.h>
 #include <ethernet.h>
 #include <string.h>
+
+/** @ingroup network
+ *  @{
+ */
 
 /* Tracing macros */
 //#define TRACE_NET     TTY1
@@ -42,7 +45,10 @@
 /* Maximum network address length */
 #define NET_MAX_ALEN    6
 
-/* Network address */
+/**
+ * @ingroup network
+ * Network address
+ */
 struct netaddr
 {
     ushort type;                      /**< Address type (NETADDR_*)     */
@@ -51,21 +57,25 @@ struct netaddr
 };
 
 /* Netwok address types */
+
+/** @ingroup network */
 #define NETADDR_ETHERNET    1
+/** @ingroup network */
 #define NETADDR_IPv4        ETHER_TYPE_IPv4
 
-extern struct netaddr NETADDR_GLOBAL_IP_BRC;
-extern struct netaddr NETADDR_GLOBAL_ETH_BRC;
+extern const struct netaddr NETADDR_GLOBAL_IP_BRC;
+extern const struct netaddr NETADDR_GLOBAL_ETH_BRC;
 
 /* Network address macros */
-bool netaddrequal(struct netaddr *, struct netaddr *);
-syscall netaddrmask(struct netaddr *, struct netaddr *);
-syscall netaddrhost(struct netaddr *, struct netaddr *);
-bool netaddrbcast(struct netaddr *, struct netaddr *, struct netaddr *);
+bool netaddrequal(const struct netaddr *, const struct netaddr *);
+syscall netaddrmask(struct netaddr *, const struct netaddr *);
+syscall netaddrhost(struct netaddr *, const struct netaddr *);
+/** @ingroup network */
 #define netaddrcpy(dst, src)     memcpy(dst, src, sizeof(struct netaddr))
-int netaddrsprintf(char *, struct netaddr *);
+int netaddrsprintf(char *, const struct netaddr *);
 
 /* Standard underlying network device driver control functions */
+
 #define NET_GET_MTU         200
 #define NET_GET_LINKHDRLEN  201
 #define NET_GET_HWADDR      203
@@ -90,7 +100,7 @@ int netaddrsprintf(char *, struct netaddr *);
 #define NET_FREE   0                  /**< Netif state free             */
 #define NET_ALLOC  1                  /**< Netif state allocated        */
 
-/* Net interface control block */
+/** Net interface control block */
 struct netif
 {
     int dev;                          /**< underlying device struct     */
@@ -111,15 +121,16 @@ struct netif
 
 extern struct netif netiftab[];
 
-/* Network packet buffer pool */
+/** Network packet buffer pool */
 extern int netpool;
-#define NET_MAX_PKTLEN		1598    /* Mod 4 of this constant must be 2 */
+
+#define NET_MAX_PKTLEN		1598    /**< Mod 4 of this constant must be 2 */
 /**
  * Poolsize should be >= ARP_NQUEUE + RT_NQUEUE + UDP_IBLEN + RAW_IBLEN 
  */
 #define NET_POOLSIZE		512
 
-/* Incoming packet structure       */
+/** Incoming packet structure       */
 struct packet
 {
     struct netif *nif;          /**< Interface for packet               */
@@ -139,8 +150,11 @@ struct packet *netGetbuf(void);
 syscall netInit(void);
 struct netif *netLookup(int);
 thread netRecv(struct netif *);
-syscall netSend(struct packet *, struct netaddr *, struct netaddr *,
+syscall netSend(struct packet *, const struct netaddr *, const struct netaddr *,
                 ushort);
-syscall netUp(int, struct netaddr *, struct netaddr *, struct netaddr *);
+syscall netUp(int, const struct netaddr *, const struct netaddr *,
+              const struct netaddr *);
+
+/**  @} */
 
 #endif                          /* _NETWORK_H_ */

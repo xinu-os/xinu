@@ -1,36 +1,42 @@
 /**
  * @file     netaddrhost.c
- * @provides netaddrhost
  *
- * $Id: netaddrhost.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stddef.h>
 #include <network.h>
 
 /**
- * Return host portion of network address
- * @param a network address
- * @param b mask
- * @return host portion of network address
- */
-syscall netaddrhost(struct netaddr *a, struct netaddr *mask)
-{
-    int i;
-    if (a->type != mask->type)
-    {
-        return SYSERR;
-    }
+ * @ingroup network
+ *
+ * Calculate the host portion of a network address, which is essentially the
+ * opposite of masking it with netaddrmask().  For example, with IPv4,
+ * extracting the host portion of 192.168.0.50 with a mask of 255.255.255.0 will
+ * produce 0.0.0.50.
 
-    if (a->len != mask->len)
+ * @param a
+ *      Network address from which to extract the host portion.
+ * @param mask
+ *      The netmask to use.
+ *
+ * @return
+ *      SYSERR if @p a and @p mask are not the same type of network address;
+ *      otherwise returns OK and modifies @p a in place to produce just the host
+ *      portion of the network address.
+ */
+syscall netaddrhost(struct netaddr *a, const struct netaddr *mask)
+{
+    uint i;
+
+    if (a->type != mask->type || a->len != mask->len)
     {
         return SYSERR;
     }
 
     for (i = 0; i < a->len; i++)
     {
-        a->addr[i] = a->addr[i] & ~mask->addr[i];
+        a->addr[i] &= ~mask->addr[i];
     }
 
     return OK;

@@ -1,8 +1,6 @@
 /**
  * @file allocRxBuffer.c
- * @provides allocRxBuffer.
  *
- * $Id: allocRxBuffer.c 2107 2009-10-28 23:12:53Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -15,6 +13,8 @@
 #include <mips.h>
 
 /**
+ * @ingroup etherspecific
+ *
  * Allocate an ethernet packet buffer structure
  * @param ethptr ethernet table entry
  * @param destIndex destination index in ethernet reciever ring

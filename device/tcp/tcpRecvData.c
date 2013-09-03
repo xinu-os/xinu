@@ -1,8 +1,6 @@
 /**
  * @file tcpRecvData.c
- * @provides tcpRecvData
  *
- * $Id: tcpRecvData.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Processes the data in an incoming packet for a TCP connection.
  * Function based on RFC 763, pg 73-76.
  * @param pkt incoming packet

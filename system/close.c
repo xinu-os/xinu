@@ -1,8 +1,6 @@
 /**
  * @file close.c
- * @provides close.
  *
- * $Id: close.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,9 +8,23 @@
 #include <device.h>
 
 /**
- * close a device
- * @param descrp definition of device to close
- * @return function to close device on success, SYSERR on failure
+ * @ingroup devcalls
+ *
+ * Close a device.
+ *
+ * @param descrp
+ *      Index of the device to close.
+ *
+ * @return
+ *      ::OK if device was successfully closed; ::SYSERR otherwise.
+ *
+ * Most device drivers will return ::SYSERR if the device is not open but
+ * otherwise will always be able to successfully close the device and return
+ * ::OK.
+ *
+ * Caveat:  You must not close the device while any threads are using it (e.g.
+ * for read() or write()), unless the corresponding device driver documents this
+ * as allowed.
  */
 devcall close(int descrp)
 {

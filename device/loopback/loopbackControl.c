@@ -1,8 +1,6 @@
 /**
  * @file     loopbackControl.c
- * @provides loopbackControl.
  *
- * $Id: loopbackControl.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,7 +9,9 @@
 #include <loopback.h>
 
 /**
-* Control function for loopback devices.
+ * @ingroup loopback
+ *
+ * Control function for loopback devices.
  * @param devptr device table entry
  * @param func control function to execute
  * @param arg1 first argument for the control function

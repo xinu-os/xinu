@@ -1,8 +1,6 @@
 /**
  * @file     tar.c
- * @provides tarGetData.
  *
- * $Id: tar.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 int tarFilesize(char *octalsize);
 
 /**
+ * @ingroup misc
+ *
  * Get a listing of filenames stored in a tar file.
  * @param archive pointer to archive data
  * @param filelist pointer to string array for list of files
@@ -53,6 +53,8 @@ int tarListFiles(struct tar *archive, char *filelist, int nentries)
 }
 
 /**
+ * @ingroup misc
+ *
  * Get a pointer to a specific file in a tar format file.
  * @param archive tar file to process
  * @param filename name of file
@@ -92,6 +94,8 @@ struct tar *tarGetFile(struct tar *archive, char *filename)
 }
 
 /**
+ * @ingroup misc
+ *
  * Given a pointer to the tar header of a file, get the size of the file.
  * @param file pointer to tar header of file
  * @return size of file
@@ -103,6 +107,8 @@ int tarGetFilesize(struct tar *file)
 }
 
 /**
+ * @ingroup misc
+ *
  * Given a pointer to the tar header of a file, fill buffer with data
  * stored in the file.
  * @param file pointer to tar header of file
@@ -141,6 +147,8 @@ int tarGetData(struct tar *file, char *buffer, uint size)
 }
 
 /**
+ * @ingroup misc
+ *
  * Decode the filesize of a tar file.  Filesize is stored as an octal
  * string.
  * @param octalsize string holding size stored in octal

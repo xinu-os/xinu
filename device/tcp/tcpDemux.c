@@ -4,6 +4,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Locate the TCP socket for a TCP packet
  * @param dstpt destination port of the TCP packet
  * @param srcpt source port of the TCP packet

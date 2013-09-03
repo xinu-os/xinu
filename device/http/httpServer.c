@@ -1,8 +1,6 @@
 /**
  * @file httpServer.c
- * @provides httpserver httpserverKickStart killHttpServer
  *
- * $Id: httpServer.c 2107 2009-10-28 23:12:53Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -29,8 +27,6 @@ thread httpServerKickStart(int netDescrp)
     char thrname[TNMLEN];
     int tid;
     int cursem;
-
-    enable();
 
     cursem = activeXWeb;
     /* Only one active web server at a time */
@@ -68,11 +64,11 @@ thread httpServer(int netDescrp, int gentcpdev)
     tid_typ shelltid, killtid;
     int tcpdev, httpdev;
     char thrname[TNMLEN];
+    bool noGenHTTP;
     struct netaddr *host;
     struct netif *nif;
 
-    enable();
-
+    noGenHTTP = FALSE;
     wait(maxhttp);              /* Make sure max HTTP threads not reached */
 
     /* Allocate HTTP device */
@@ -207,7 +203,6 @@ thread killHttpServer(uint httpdev, tid_typ shelltid, uint tcpdev)
 
     webptr = &httptab[devptr->minor];
 
-    enable();
     /* wait for the connection close flag */
     wait(webptr->closeall);
 

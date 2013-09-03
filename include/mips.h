@@ -5,7 +5,6 @@
  * cause and status register masks, memory segment addresses, context record
  * offsets, and cache functions and register offsets.
  *
- * $Id: mips.h 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

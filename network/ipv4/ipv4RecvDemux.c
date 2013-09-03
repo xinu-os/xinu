@@ -1,8 +1,6 @@
 /* 
  * file ipv4RecvDemux.c
- * @provides ipv4RecvDemux
  * 
- * $Id: ipv4RecvDemux.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

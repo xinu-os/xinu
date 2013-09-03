@@ -1,14 +1,14 @@
 /**
  * @file chprio.c
- * @provides chprio.
  *
- * $Id: chprio.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <thread.h>
 
 /**
+ * @ingroup threads
+ *
  * Change the scheduling priority of a thread
  * @param tid target thread
  * @param newprio new priority

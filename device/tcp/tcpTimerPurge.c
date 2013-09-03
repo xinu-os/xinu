@@ -1,8 +1,6 @@
 /**
  * @file tcpTimerPurge.c
- * @provides tcpTimerPurge
  *
- * $Id: tcpTimerPurge.c 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Remove all TCP timer events for a particular TCB.
  * @param tcbptr TCB for which to remove all events
  * @param type type of events to remove, all types are removed if NULL

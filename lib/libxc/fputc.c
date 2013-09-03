@@ -1,30 +1,37 @@
 /**
  * @file fputc.c
- * @provides fputc.
- *
- * $Id: fputc.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-extern int putc(int, char);
-
-#define	SYSERR   (-1)
-#define EOF      (-2)
+#include <stdio.h>
+#include <device.h>
 
 /**
- * Write a character string to a device (file)
- * @param c string to write
- * @param dev device to write to
- * @return character written, EOF if error
+ * @ingroup libxc
+ *
+ * Writes one character to a device.
+ *
+ * @param c
+ *      The character to write.
+ * @param dev
+ *      Index of the device to which to write the character.
+ *
+ * @return
+ *      On success, returns the character written as an <code>unsigned
+ *      char</code> cast to an @c int.  On write error or invalid device,
+ *      returns @c EOF.
  */
 int fputc(int c, int dev)
 {
-    if (SYSERR == (int)putc(dev, c))
+    int ret;
+
+    ret = putc(dev, c);
+    if (ret == SYSERR || ret == EOF)
     {
         return EOF;
     }
     else
     {
-        return c;
+        return (int)(unsigned char)ret;
     }
 }

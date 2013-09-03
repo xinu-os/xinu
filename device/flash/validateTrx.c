@@ -1,8 +1,6 @@
 /**
  * @file     validateTrx.c
- * @provides validateTrx
  *
- * $Id: validateTrx.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -28,7 +26,6 @@ bool validateTrx(struct file *f)
 
     struct file *checkme;
     struct trx_header *header;
-
 
     bool retVal;
     retVal = TRUE;

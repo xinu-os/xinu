@@ -1,8 +1,6 @@
 /*
  * @file     tcpStat.c
- * @provides tcpStat
  *
- * $Id: tcpStat.c 2135 2009-11-20 07:23:03Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,13 +11,22 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Transmission Control Protocol status command.
  * @param tcbptr pointer to transmission control block
  */
 void tcpStat(struct tcb *tcbptr)
 {
     device *pdev;
-    struct tcb copy;
+    uchar state, devstate, opentype;
+    struct netaddr localip, remoteip;
+    ushort localpt, remotept;
+    tcpseq rcvnxt, rcvwnd;
+    tcpseq snduna, sndnxt;
+    uint sndwnd;
+    uint istart, icount, ibytes;
+    uint ostart, ocount, obytes;
     char strA[20];
     char strB[20];
 
@@ -28,23 +35,45 @@ void tcpStat(struct tcb *tcbptr)
         return;
     }
 
+    /* Grab useful fields out of TCB -- atomically */
     wait(tcbptr->mutex);
-    /* Take atomic snapshot of control block */
-    memcpy(&copy, tcbptr, sizeof(struct tcb));
+
+    devstate = tcbptr->devstate;
+    pdev = (device *)&devtab[tcbptr->dev];
+    state = tcbptr->state;
+    opentype = tcbptr->opentype;
+
+    localip = tcbptr->localip;
+    remoteip = tcbptr->remoteip;
+    localpt = tcbptr->localpt;
+    remotept = tcbptr->remotept;
+
+    rcvnxt = tcbptr->rcvnxt;
+    rcvwnd = tcbptr->rcvwnd;
+    snduna = tcbptr->snduna;
+    sndnxt = tcbptr->sndnxt;
+    sndwnd = tcbptr->sndwnd;
+
+    istart = tcbptr->istart;
+    icount = tcbptr->icount;
+    ibytes = tcbptr->ibytes;
+    ostart = tcbptr->ostart;
+    ocount = tcbptr->ocount;
+    obytes = tcbptr->obytes;
+
     signal(tcbptr->mutex);
 
     /* Skip interface if not allocated */
-    if (copy.devstate != TCP_ALLOC)
+    if (devstate != TCP_ALLOC)
     {
         printf("BLOCK%-3d   Inactive\n", tcbptr - tcptab);
         return;
     }
 
-    /* Setup pointer to underlying device */
-    pdev = (device *)&devtab[copy.dev];
+    /* print out device name */
     printf("%-10s ", pdev->name);
 
-    switch (copy.state)
+    switch (state)
     {
     case TCP_CLOSED:
         sprintf(strA, "Closed");
@@ -83,7 +112,7 @@ void tcpStat(struct tcb *tcbptr)
         sprintf(strA, "Unknown");
         break;
     }
-    switch (copy.opentype)
+    switch (opentype)
     {
     case TCP_PASSIVE:
         sprintf(strB, "Passive");
@@ -99,27 +128,27 @@ void tcpStat(struct tcb *tcbptr)
     printf("           ");
 
     /* Connection details */
-    netaddrsprintf(strA, &copy.localip);
-    printf("Local  Port: %-5d    IP: %-15s\n", copy.localpt, strA);
+    netaddrsprintf(strA, &localip);
+    printf("Local  Port: %-5d    IP: %-15s\n", localpt, strA);
     printf("           ");
-    netaddrsprintf(strA, &copy.remoteip);
-    printf("Remote Port: %-5d    IP: %-15s\n", copy.remotept, strA);
+    netaddrsprintf(strA, &remoteip);
+    printf("Remote Port: %-5d    IP: %-15s\n", remotept, strA);
 
     /* Sequence numbers */
     printf("           ");
-    printf("Rcv Nxt: %-10u   Wnd: %-10u\n", copy.rcvnxt,
-           tcpSeqdiff(copy.rcvwnd, copy.rcvnxt));
+    printf("Rcv Nxt: %-10u   Wnd: %-10u\n", rcvnxt,
+           tcpSeqdiff(rcvwnd, rcvnxt));
     printf("           ");
     printf("Snd Una: %-10u   Nxt: %-10u   Wnd: %-10u\n",
-           copy.snduna, copy.sndnxt, copy.sndwnd);
+           snduna, sndnxt, sndwnd);
 
     /* Buffers */
     printf("           ");
     printf("In  Start: %-10u Count: %-10u Read %-10u\n",
-           copy.istart, copy.icount, copy.ibytes);
+           istart, icount, ibytes);
     printf("           ");
     printf("Out Start: %-10u Count: %-10u Read %-10u\n",
-           copy.ostart, copy.ocount, copy.obytes);
+           ostart, ocount, obytes);
     printf("\n");
 
     return;

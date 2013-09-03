@@ -1,7 +1,6 @@
 /**
  * @file arp.h
  *
- * $Id: arp.h 2037 2009-08-13 23:00:27Z agember $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -117,10 +116,10 @@ extern mailbox arpqueue;
 /* ARP Function Prototypes */
 struct arpEntry *arpAlloc(void);
 thread arpDaemon(void);
-struct arpEntry *arpGetEntry(struct netaddr *);
+struct arpEntry *arpGetEntry(const struct netaddr *);
 syscall arpFree(struct arpEntry *);
 syscall arpInit(void);
-syscall arpLookup(struct netif *, struct netaddr *, struct netaddr *);
+syscall arpLookup(struct netif *, const struct netaddr *, struct netaddr *);
 syscall arpNotify(struct arpEntry *, message);
 syscall arpRecv(struct packet *);
 syscall arpSendRqst(struct arpEntry *);

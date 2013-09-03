@@ -1,8 +1,6 @@
 /*
  * @file     xsh_ping.c
- * @provides xsh_ping
  *
- * $Id: xsh_ping.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -19,6 +17,7 @@
 #include <interrupt.h>
 #include <platform.h>
 
+#if NETHER
 static int echoQueueAlloc(void);
 static int echoQueueDealloc(int echoent);
 static struct packet *echoQueueGet(int echoent);
@@ -26,6 +25,8 @@ static void echoPrintPkt(struct packet *pkt, ulong elapsed);
 static ulong echoTripTime(struct packet *pkt);
 
 /**
+ * @ingroup shell
+ *
  * Shell command (ping).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -310,3 +311,4 @@ static ulong echoTripTime(struct packet *pkt)
     elapsed = elapsed / (platform.clkfreq / 1000000);
     return elapsed;
 }
+#endif /* NETHER */

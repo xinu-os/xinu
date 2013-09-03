@@ -1,8 +1,6 @@
 /**
  * @file ttyControl.c
- * @provides ttyControl.
  *
- * $Id: ttyControl.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tty.h>
 
 /**
+ * @ingroup tty
+ *
  * Control function for TTY pseudo devices.
  * @param devptr TTY device table entry
  * @param func control function to execute

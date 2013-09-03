@@ -1,8 +1,6 @@
 /**
  * @file     loopbackInit.c
- * @provides loopbackInit.
  *
- * $Id: loopbackInit.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 struct loopback looptab[NLOOPBACK];
 
 /**
+ * @ingroup loopback
+ *
  * Initialize loopback device
  * @param devptr 
  * @return OK on open

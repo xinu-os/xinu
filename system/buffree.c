@@ -1,8 +1,6 @@
 /**
  * @file buffree.c
- * @provides buffree.
  *
- * $Id: buffree.c 2079 2009-10-05 22:32:48Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,9 +10,17 @@
 #include <bufpool.h>
 
 /**
- * Return buffer to pool
- * @param buffer address of returning buffer
- * @return OK on success, SYSERR on failure
+ * @ingroup memory_mgmt
+ *
+ * Return a buffer to its buffer pool.
+ *
+ * @param buffer
+ *      Address of buffer to free, as returned by bufget().
+ *
+ * @return
+ *      ::OK if buffer was successfully freed; otherwise ::SYSERR.  ::SYSERR can
+ *      only be returned as a result of memory corruption or passing an invalid
+ *      @p buffer argument.
  */
 syscall buffree(void *buffer)
 {

@@ -21,6 +21,25 @@ static int qsort_callback(const char *left, const char *right)
     }
 }
 
+static int cmp_uints(const void *p1, const void *p2)
+{
+    uint u1 = *(const uint*)p1;
+    uint u2 = *(const uint*)p2;
+
+    if (u1 < u2)
+    {
+        return -1;
+    }
+    else if (u1 == u2)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
 /**
  * Tests the stdlib.h header in the Xinu Standard Library.
  * @return OK when testing is complete
@@ -30,6 +49,7 @@ thread test_libStdlib(bool verbose)
     int i;
     char list[10] = "BCADFEHGI";
     bool passed = TRUE;
+    bool all_sorted;
 
     /* atoi */
     testPrint(verbose, "ASCII to integer");
@@ -91,6 +111,36 @@ thread test_libStdlib(bool verbose)
            && (rand() == rand())
            && (rand() == rand())
            && (rand() == rand()), "that was unlikely");
+
+    /* Qucksort some random arrays to try to find bugs in qsort() that depend on
+     * particular inputs.  */
+    all_sorted = TRUE;
+    srand(1); /* Always use same "random" arrays. */
+    for (i = 0; i < 50; i++)
+    {
+        uint j;
+        uint len;
+
+        len = (uint)rand() % 100 + 1;
+
+        uint array[len];
+
+        for (j = 0; j < len; j++)
+        {
+            array[j] = rand();
+        }
+        qsort(array, len, sizeof(array[0]), cmp_uints);
+
+        for (j = 0; j < len - 1; j++)
+        {
+            if (array[j] > array[j + 1])
+            {
+                all_sorted = FALSE;
+            }
+        }
+    }
+    testPrint(verbose, "Quicksort (random arrays)");
+    failif(!all_sorted, "failed to sort random arrays");
 
     /* malloc (in test_umemory.c) */
 

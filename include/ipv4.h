@@ -1,7 +1,6 @@
 /*
  * @file ipv4.h
  *
- * $Id: ipv4.h 2037 2009-08-13 23:00:27Z agember $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -103,7 +102,7 @@ struct ipv4Pkt             /**< IPv4 Packet Variables                   */
 };
 
 /* Function prototypes */
-syscall dot2ipv4(char *, struct netaddr *);
+syscall dot2ipv4(const char *, struct netaddr *);
 syscall ipv4Recv(struct packet *);
 bool ipv4RecvValid(struct ipv4Pkt *);
 bool ipv4RecvDemux(struct netaddr *);

@@ -1,8 +1,6 @@
 /**
  * @file recvtime.c
- * @provides recvtime.
  *
- * $Id: recvtime.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <clock.h>
 
 /**
+ * @ingroup threads
+ *
  * wait to receive a message or timeout and return result
  * @param  maxwait ticks to wait before timeout
  * @return msg if becomes available, TIMEOUT if no message

@@ -1,9 +1,7 @@
 /**
  * @file malloc.c
- * @provides malloc.c.
  * Allocate memory to a user thread.
  *
- * $Id: malloc.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

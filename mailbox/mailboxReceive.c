@@ -1,8 +1,6 @@
 /**
  * @file mailboxReceive.c
- * @provides mailboxReceive.
  *
- * $Id: mailboxReceive.c 2021 2009-08-13 17:55:30Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <mailbox.h>
 
 /**
+ * @ingroup mailbox
+ *
  * Receive a mailmsg from a mailbox.
  * @param box the number of the mailbox to receive from
  * @return the mailmsg that was dequeued, otherwise SYSERR

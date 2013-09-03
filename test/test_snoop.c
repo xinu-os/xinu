@@ -10,6 +10,8 @@
 #include <string.h>
 #include <testsuite.h>
 
+#if NETHER
+
 #ifndef ELOOP
 #define ELOOP (-1)
 #endif
@@ -52,11 +54,15 @@ static uint filterTest(struct snoop *cap, struct packet *pktA)
     return nmatch;
 }
 
+#endif /* NETHER */
+
+
 /**
  * Test for snoop.
  */
 thread test_snoop(bool verbose)
 {
+#if NETHER
     bool passed = TRUE;
     struct snoop cap;
     struct netaddr dst;
@@ -112,7 +118,7 @@ thread test_snoop(bool verbose)
     failif((SYSERR != snoopOpen(NULL, NULL)), "");
 
     testPrint(verbose, "Open capture (bad device)");
-    failif((SYSERR != snoopOpen(&cap, "crap")), "");
+    failif((SYSERR != snoopOpen(&cap, "not-a-dev")), "");
 
     testPrint(verbose, "Open capture all (no netif)");
     failif((SYSERR != snoopOpen(&cap, "ALL")), "");
@@ -275,6 +281,8 @@ thread test_snoop(bool verbose)
     {
         testFail(TRUE, "");
     }
-
+#else /* NETHER */
+    testSkip(TRUE, "");
+#endif /* NETHER == 0 */
     return OK;
 }

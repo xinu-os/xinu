@@ -1,8 +1,6 @@
 /**
  * @file     xsh_snoop.c
- * @provides xsh_snoop
  *
- * $Id: xsh_snoop.c 2121 2009-11-06 00:28:33Z kthurow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -15,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if NETHER
 static void usage(char *command)
 {
     printf("Usage:\n");
@@ -81,6 +80,7 @@ static thread snoop(struct snoop *cap, uint count, char dump,
         {
             continue;
         }
+        cap->nprint++;
         snoopPrint(pkt, dump, verbose);
         netFreebuf(pkt);
         count--;
@@ -90,6 +90,8 @@ static thread snoop(struct snoop *cap, uint count, char dump,
 }
 
 /**
+ * @ingroup shell
+ *
  * Shell command (snoop).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -111,7 +113,7 @@ shellcmd xsh_snoop(int nargs, char *args[])
     char devname[DEVMAXNAME];
     tid_typ tid;
 
-    strncpy(devname, "ALL", DEVMAXNAME);
+    strlcpy(devname, "ALL", DEVMAXNAME);
 
     /* Output help, if '--help' argument was supplied */
     if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
@@ -186,7 +188,7 @@ shellcmd xsh_snoop(int nargs, char *args[])
                 error(args[a - 1]);
                 return 1;
             }
-            strncpy(devname, args[a], DEVMAXNAME);
+            strlcpy(devname, args[a], DEVMAXNAME);
             break;
             /* Capture size OR Filter src addr OR Filter dst addr */
         case 's':
@@ -256,6 +258,7 @@ shellcmd xsh_snoop(int nargs, char *args[])
     /* Set filter */
     cap.caplen = caplen;
     cap.promisc = FALSE;
+    cap.nprint = 0;
     if (NULL == type)
     {
         cap.type = SNOOP_FILTER_ALL;
@@ -366,3 +369,4 @@ shellcmd xsh_snoop(int nargs, char *args[])
     return 0;
 
 }
+#endif /* NETHER */

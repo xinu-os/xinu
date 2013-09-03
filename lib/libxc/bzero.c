@@ -1,28 +1,22 @@
 /**
  * @file bzero.c
- * @provides bzero.
- *
- * $Id: bzero.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <stdlib.h>
+#include <string.h>
 
 /**
- * Clears a block of characters to 0s
- * @param *p pointer to start of block
- * @param len length of the block
+ * @ingroup libxc
+ *
+ * Zeroes a block of memory.
+ *
+ * @param s
+ *      Pointer to the start of the block of memory to zero.
+ * @param n
+ *      Length of the block of memory, in bytes.
  */
-void bzero(void *p, int len)
+void bzero(void *s, size_t n)
 {
-    int n;
-    char *pch = (char *)p;
-
-    if ((n = len) <= 0)
-    {
-        return;
-    }
-    do
-    {
-        *pch++ = 0;
-    }
-    while (--n);
+    memset(s, 0, n);
 }

@@ -1,8 +1,6 @@
 /**
  * @file     loopbackRead.c
- * @provides loopbackRead.
  *
- * $Id: loopbackRead.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,17 +9,28 @@
 #include <loopback.h>
 
 /**
- * Read characters from a loopback.
+ * @ingroup loopback
+ *
+ * Read up to the specified number of characters from a loopback.
+ *
  * @param devptr 
- * @param buf buffer for read characters
- * @param len size of the buffer
- * @return number of characters read, SYSERR if closed
+ *      Loopback device to read from.
+ * @param buf
+ *      Buffer into which to place the read data.
+ * @param len
+ *      Maximum number of characters to read.
+ *
+ * @return
+ *      Returns the number of characters read, which may be less than @p len if
+ *      @c EOF or a read error occurs.   Alternatively, if the loopback device
+ *      is not open, returns @c SYSERR.
  */
 devcall loopbackRead(device *devptr, void *buf, uint len)
 {
     struct loopback *lbkptr = NULL;
     uint i;
-    char *buffer = buf;
+    unsigned char *buffer = buf;
+    int ret;
 
     lbkptr = &looptab[devptr->minor];
 
@@ -33,7 +42,12 @@ devcall loopbackRead(device *devptr, void *buf, uint len)
 
     for (i = 0; i < len; i++)
     {
-        buffer[i] = loopbackGetc(devptr);
+        ret = loopbackGetc(devptr);
+        if (ret == EOF)
+        {
+            break;
+        }
+        buffer[i] = ret;
     }
 
     return i;

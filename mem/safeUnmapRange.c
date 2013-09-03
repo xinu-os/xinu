@@ -1,9 +1,7 @@
 /**
  * @file  safeUnmapRange.c
- * @provides safeUnmapRange.
  * Remove a range of pages from page table.
  *
- * $Id: safeUnmapRange.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

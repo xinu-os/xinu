@@ -1,42 +1,54 @@
 /**
  * @file sprintf.c
- * @provides sprintf.
- *
- * $Id: sprintf.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stdarg.h>
+#include <stdio.h>
 
 static int sprntf(int, int);
-extern void _doprnt(char *, va_list, int (*func) (int, int), int);
 
 /**
- * Format arguments and place output in a string
- * @param *str output string
- * @param *fmt format string
+ * @ingroup libxc
+ *
+ * Write a formatted message to a null-terminated string.
+ *
+ * @param str
+ *      The output string, which must be large enough to store the formatted
+ *      result, including the null terminator.
+ * @param format
+ *      The format string.  Not all standard conversion specifications are
+ *      supported by this implementation.  See _doprnt() for a description of
+ *      supported conversion specifications.
+ * @param ...
+ *      Arguments matching those in the format string.
+ *
+ * @return
+ *      the number of characters written, excluding the null terminator.
  */
-int sprintf(char *str, char *fmt, ...)
+int sprintf(char *str, const char *format, ...)
 {
     va_list ap;
     char *s;
 
     s = str;
-    va_start(ap, fmt);
-    _doprnt(fmt, ap, sprntf, (int)&s);
+    va_start(ap, format);
+    _doprnt(format, ap, sprntf, (int)&s);
     va_end(ap);
-    *s++ = '\0';
+    *s = '\0';
 
-    return ((int)str);
+    return s - str;
 }
 
-/**
- * Routine called by _doprnt to handle each character
+/*
+ * Routine called by _doprnt() to output each character.
  */
-static int sprntf(int acpp, int ac)
+static int sprntf(int c, int _sptr)
 {
-    char **cpp = (char **)acpp;
-    char c = (char)ac;
+    char **sptr = (char **)_sptr;
+    char *s = *sptr;
 
-    return (*(*cpp)++ = c);
+    *s++ = c;
+    *sptr = s;
+    return (unsigned char)c;
 }

@@ -1,8 +1,6 @@
 /**
  * @file     xsh_uartstat.c
- * @provides xsh_uartstat.
  *
- * $Id: xsh_uartstat.c 2102 2009-10-26 20:36:13Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,9 +10,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+#if NUART
 static void uartThroughput(ushort);
 
 /**
+ * @ingroup shell
+ *
  * Shell command (uartstat UARTNUM) provides information about the current 
  * status of a UART.
  * @param nargs number of arguments in args array
@@ -111,3 +112,4 @@ static void uartThroughput(ushort uartnum)
         printf("Rx: %4d bytes/sec\n", uptr->cin - cin);
     }
 }
+#endif /* NUART */

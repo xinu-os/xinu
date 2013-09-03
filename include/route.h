@@ -1,7 +1,6 @@
 /**
  * @file route.h
  *
- * $Id: route.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -55,15 +54,15 @@ extern struct rtEntry rttab[RT_NENTRY];
 extern mailbox rtqueue;
 
 /* Function prototypes */
-syscall rtAdd(struct netaddr *dst, struct netaddr *gate,
-              struct netaddr *mask, struct netif *nif);
+syscall rtAdd(const struct netaddr *dst, const struct netaddr *gate,
+              const struct netaddr *mask, struct netif *nif);
 struct rtEntry *rtAlloc(void);
 thread rtDaemon(void);
-syscall rtDefault(struct netaddr *gate, struct netif *nif);
+syscall rtDefault(const struct netaddr *gate, struct netif *nif);
 syscall rtInit(void);
-struct rtEntry *rtLookup(struct netaddr *addr);
+struct rtEntry *rtLookup(const struct netaddr *addr);
 syscall rtRecv(struct packet *pkt);
-syscall rtRemove(struct netaddr *dst);
+syscall rtRemove(const struct netaddr *dst);
 syscall rtClear(struct netif *nif);
 syscall rtSend(struct packet *pkt);
 

@@ -1,8 +1,6 @@
 /**
  * @file rtRemove.c
- * @provides rtRemove
  * 
- * $Id: rtRemove.c 2118 2009-11-05 05:22:51Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,11 +10,13 @@
 #include <route.h>
 
 /**
+ * @ingroup route
+ *
  * Removes any entry based on its destination.
  * @param dst destination IP address
  * @return OK if the entry is removed successfully, otherwise SYSERR
  */
-syscall rtRemove(struct netaddr *dst)
+syscall rtRemove(const struct netaddr *dst)
 {
     int i;
     irqmask im;

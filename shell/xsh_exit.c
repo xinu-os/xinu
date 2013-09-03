@@ -1,8 +1,6 @@
 /**
  * @file     xsh_exit.c
- * @provides xsh_exit.
  *
- * $Id: xsh_exit.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <thread.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (exit) closes the shell.
  * @param nargs number of arguments in args array
  * @param args  array of arguments

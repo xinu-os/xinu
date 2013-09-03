@@ -1,24 +1,33 @@
 /**
  * @file     ethloopRead.c
- * @provides ethloopRead
- *
- * $Id: ethloopRead.c 2077 2009-09-24 23:58:54Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
 #include <bufpool.h>
 #include <device.h>
 #include <ethloop.h>
 #include <interrupt.h>
+#include <stddef.h>
 #include <string.h>
 
 /**
- * Read characters from an ethloop.
- * @param devptr 
- * @param buf buffer for read characters
- * @param len size of the buffer
- * @return number of characters read, SYSERR if an error occurs
+ * @ingroup ethloop
+ *
+ * Read data from an Ethernet Loopback device.  This will block until data has
+ * been made available by a call to ethloopWrite().
+ *
+ * @param devptr
+ *      Pointer to the device table entry for the ethloop.
+ *
+ * @param buf
+ *      Buffer into which to place the read data.
+ *
+ * @param len
+ *      Maximum length of the data to read, in bytes.
+ *
+ * @return
+ *      On success, returns the number of bytes read, which will be less than or
+ *      equal to @p len.  Otherwise returns SYSERR.
  */
 devcall ethloopRead(device *devptr, void *buf, uint len)
 {

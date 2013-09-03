@@ -1,8 +1,6 @@
 /**
  * @file resched.c
- * @provides resched.
  *
- * $Id: resched.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -15,6 +13,8 @@ extern void ctxsw(void *, void *, uchar);
 int resdefer;                   /* >0 if rescheduling deferred */
 
 /**
+ * @ingroup threads
+ *
  * Reschedule processor to highest priority ready thread.
  * Upon entry, thrcurrent gives current thread id.
  * Threadtab[thrcurrent].pstate gives correct NEXT state
@@ -55,8 +55,6 @@ int resched(void)
 
     /* change address space identifier to thread id */
     asid = thrcurrent & 0xff;
-
-    /* Note: only MIPS ctxsw actually uses asid */
     ctxsw(&throld->stkptr, &thrnew->stkptr, asid);
 
     /* old thread returns here when resumed */

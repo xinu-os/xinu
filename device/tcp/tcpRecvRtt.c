@@ -1,8 +1,6 @@
 /**
  * @file rcpRecvRtt.c
- * @provides tcpRecvRtt
  *
- * $Id: tcpRecvRtt.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Handle round trip time estimates based on an incoming acknowledgement.
  * @param tcbptr pointer to transmission control block for connection
  * @return OK

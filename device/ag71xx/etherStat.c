@@ -1,8 +1,6 @@
 /**
  * @file     etherStat.c
- * @provides etherStat.
  *
- * $Id: etherStat.c 2115 2009-11-03 02:31:19Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -181,6 +179,9 @@ void etherStat(ushort minor)
     fprintf(stdout, "\n");
 }
 
+/**
+ * @ingroup etherspecific
+ */
 void ethStat2(void)
 {
     struct ether *ethptr = NULL;        /* pointer to ether entry            */
@@ -207,7 +208,7 @@ void ethStat2(void)
 void etherThroughput(ushort minor)
 {
     struct ether *ethptr = NULL;        /* pointer to ether entry            */
-    struct bcm4713 *nicptr = NULL;      /* pointer to ether device registers */
+    struct ag71xx *nicptr = NULL;       /* pointer to ether device registers */
 
     /* Initialize pointers */
     ethptr = &ethertab[minor];

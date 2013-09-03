@@ -1,8 +1,6 @@
 /**
  * @file     ttyWrite.c
- * @provides ttyWrite.
  *
- * $Id: ttyWrite.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tty.h>
 
 /**
+ * @ingroup tty
+ *
  * Write a buffer to a tty
  * @param devptr TTY device table entry
  * @param buf buffer of characters to output

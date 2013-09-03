@@ -1,10 +1,8 @@
 /**
  * @file device.h 
- * @provides isbaddev.
  *
  * Contains all definitions relating to the Xinu device subsystem.
  *
- * $Id: device.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -26,11 +24,11 @@
 devcall open(int, ...);
 devcall close(int);
 devcall read(int, void *, uint);
-devcall write(int, void *, uint);
+devcall write(int, const void *, uint);
 devcall getc(int);
 devcall putc(int, char);
 devcall seek(int, uint);
 devcall control(int, int, long, long);
-syscall getdev(char *);
+syscall getdev(const char *);
 
 #endif                          /* _DEVICE_H_ */

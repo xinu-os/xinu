@@ -1,8 +1,6 @@
 /*
  * @file emuDuplicate.c
- * @provides emuDuplicate
  *
- * $Id: emuDuplicate.c 2126 2009-11-12 07:23:04Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 
 //int test(struct packet *pkt, int dupes);
 /**
+ * @ingroup netemu
+ *
  * Duplicate packets as specified by user
  * @param pkt pointer to the incoming packet
  * @return OK if packet was processed succesfully, otherwise SYSERR

@@ -4,14 +4,17 @@
 #include <stdio.h>
 #include <testsuite.h>
 
+#if NSEM
 extern bool test_checkSemCount(semaphore s, short c);
 extern bool test_checkProcState(tid_typ tid, uchar state);
 extern bool test_checkResult(uchar testResult, uchar expected);
 
 extern void test_semWaiter(semaphore s, int times, uchar *testResult);
+#endif
 
 thread test_semaphore3(bool verbose)
 {
+#if NSEM
     tid_typ atid, btid;
     bool passed = TRUE;
     semaphore s;
@@ -35,8 +38,10 @@ thread test_semaphore3(bool verbose)
         passed = FALSE;
     }
 
+    /* We use a higher priority for thread A to ensure it is not rescheduled to
+     * thread B before it is even able to wait on the semaphore.  */
     ready(atid =
-          create((void *)test_semWaiter, INITSTK, 31,
+          create((void *)test_semWaiter, INITSTK, 32,
                  "SEMAPHORE-A", 3, s, 1, &testResult), RESCHED_NO);
     ready(btid =
           create((void *)test_semWaiter, INITSTK, 31,
@@ -83,5 +88,8 @@ thread test_semaphore3(bool verbose)
     kill(btid);
     semfree(s);
 
+#else /* NSEM */
+    testSkip(TRUE, "");
+#endif /* NSEM == 0 */
     return OK;
 }

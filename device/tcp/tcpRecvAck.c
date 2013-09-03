@@ -1,8 +1,6 @@
 /**
  * @file tcpRecvAck.c
- * @provides tcpRecvAck
  *
- * $Id: tcpRecvAck.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Process an ackowledgement of data in an incoming TCP segment for a
  * connection which has been fully established.
  * @param pkt incoming packet

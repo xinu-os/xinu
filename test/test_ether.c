@@ -9,10 +9,6 @@
 #include <ether.h>
 #include <interrupt.h>
 
-#ifndef NETHER
-#define NETHER (-1)
-#endif
-
 static int ethn_test(bool verbose, int dev);
 
 #define ETH_ADDR_LEN 6
@@ -33,11 +29,10 @@ struct etherGram
  */
 thread test_ether(bool verbose)
 {
+#if NETHER
     /* the failif macro depends on 'passed' and 'verbose' vars */
     bool passed = TRUE;
     int i;
-
-    enable();
 
     for (i = 0; i < NETHER; i++)
     {
@@ -54,9 +49,13 @@ thread test_ether(bool verbose)
         testFail(TRUE, "");
     }
 
+#else /* NETHER */
+    testSkip(TRUE, "");
+#endif /* NETHER == 0 */
     return OK;
 }
 
+#ifdef NETHER
 static int ethn_test(bool verbose, int devminor)
 {
     bool passed = TRUE;
@@ -84,7 +83,7 @@ static int ethn_test(bool verbose, int devminor)
     outpkt->type_len = hs2net(ETH_TYPE_ARP);
 
     /* generate payload content */
-    for (i = 0; i < MAX_PAYLOAD + 1; i++)
+    for (i = 0; i < MAX_PAYLOAD; i++)
     {
         /* Cycle through 0x20 to 0x7d (range of 0x5e) */
         value = (i % 0x5e) + 0x20;
@@ -180,3 +179,4 @@ static int ethn_test(bool verbose, int devminor)
 
     return passed;
 }
+#endif /* NETHER */

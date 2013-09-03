@@ -1,16 +1,14 @@
 /**
  * @file uart.h
- *
- * $Id: uart.h 2102 2009-10-26 20:36:13Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #ifndef _UART_H_
 #define _UART_H_
 
-# include <device.h>
-# include <semaphore.h>
-# include <stddef.h>
+#include <device.h>
+#include <semaphore.h>
+#include <stddef.h>
 
 /* UART Buffer lengths */
 #define UART_IBLEN      1024
@@ -72,11 +70,32 @@ extern struct uart uarttab[];
 /* Driver functions */
 devcall uartInit(device *);
 devcall uartRead(device *, void *, uint);
-devcall uartWrite(device *, void *, uint);
+devcall uartWrite(device *, const void *, uint);
 devcall uartGetc(device *);
 devcall uartPutc(device *, char);
 devcall uartControl(device *, int, long, long);
 interrupt uartInterrupt(void);
 void uartStat(ushort);
+
+/**
+ * @ingroup uarthardware
+ *
+ * Initialize the UART hardware.
+ */
+devcall uartHwInit(device *);
+
+/**
+ * @ingroup uarthardware
+ *
+ * Immediately put a character to the UART.
+ */
+void uartHwPutc(void *, uchar);
+
+/**
+ * @ingroup uarthardware
+ *
+ * Print hardware-specific statistics about the UART.
+ */
+void uartHwStat(void *);
 
 #endif                          /* _UART_H_ */

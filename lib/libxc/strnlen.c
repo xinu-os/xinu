@@ -1,24 +1,34 @@
 /**
  * @file strnlen.c
- * @provides strnlen.
- *
- * $Id: strnlen.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
+#include <stddef.h>
 
 /**
- * Returns the number of non-NULL bytes in a string or len.
- * @param *s string
- * @param len length you wish to scan s too
- * @return length of the string up to user specified length
+ * @ingroup libxc
+ *
+ * Returns the length of a null-terminated string, but not more than the
+ * specified length.
+ *
+ * @param s
+ *      String to calculate the length of.
+ *
+ * @param maxlen
+ *      Maximum length to return.
+ *
+ * @return
+ *      Length of the string up to but not including the null terminator, or @p
+ *      maxlen if the string is longer than @p maxlen bytes.
  */
-int strnlen(const char *s, unsigned int len)
+size_t strnlen(const char *s, size_t maxlen)
 {
-    int n;
+    size_t n = 0;
 
-    n = 0;
-    while (*s++ && n < len)
+    while (s[n] != '\0' && n < maxlen)
+    {
         n++;
-
-    return (n);
+    }
+    return n;
 }

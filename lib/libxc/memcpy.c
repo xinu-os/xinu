@@ -1,27 +1,36 @@
 /**
  * @file memcpy.c
- * @provides memcpy.
- *
- * $Id: memcpy.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
 
 /**
- * Memory copy, copy a location in memory from src to dst.
- * @param s destination location
- * @param ct source location
- * @param n amount of data (in bytes) to copy
- * @return pointer to destination
+ * @ingroup libxc
+ *
+ * Copy the specified number of bytes of memory to another location.  The memory
+ * locations must not overlap.
+ *
+ * @param dest
+ *      Pointer to the destination memory.
+ * @param src
+ *      Pointer to the source memory.
+ * @param n
+ *      The amount of data (in bytes) to copy.
+ *
+ * @return
+ *      @p dest
  */
-void *memcpy(void *s, const void *ct, int n)
+void *memcpy(void *dest, const void *src, size_t n)
 {
-    register int i;
-    char *dst = (char *)s;
-    char *src = (char *)ct;
+    unsigned char *dest_p = dest;
+    const unsigned char *src_p = src;
+    size_t i;
 
     for (i = 0; i < n; i++)
     {
-        *dst++ = *src++;
+        dest_p[i] = src_p[i];
     }
-    return s;
+
+    return dest;
 }

@@ -1,8 +1,6 @@
 /**
  * @file     xsh_route.c
- * @provides xsh_route.
  *
- * $Id: xsh_route.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,7 +11,10 @@
 #include <network.h>
 #include <route.h>
 
+#if NETHER
 /**
+ * @ingroup shell
+ *
  * Shell command (route) displays routing information.
  * @param nargs number of arguments
  * @param args  array of arguments
@@ -159,3 +160,4 @@ shellcmd xsh_route(int nargs, char *args[])
 
     return 0;
 }
+#endif /* NETHER */

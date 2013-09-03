@@ -1,8 +1,6 @@
 /**
  * @file telnetOpen.c
- * @provides telnetOpen.
  *
- * $Id: telnetOpen.c 2116 2009-11-03 20:55:05Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -15,6 +13,8 @@
 #include <stdio.h>
 
 /**
+ * @ingroup telnet
+ *
  * Associate TELNET with a hardware device.
  * @param devptr TELNET device table entry
  * @param ap 2nd argument is the device number for the hardware device

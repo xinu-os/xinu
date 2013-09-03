@@ -4,12 +4,14 @@
  * Includes standard type definitions and primary constants used across
  * all aspects of Xinu.
  *
- * $Id: stddef.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #ifndef _STDDEF_H_
 #define _STDDEF_H_
+
+/* macro to get offset to struct members */
+#define offsetof(type, member) ((size_t)&(((type *)0)->member))
 
 /* Base type definitions */
 typedef unsigned char uchar;    /**< unsigned char type                 */
@@ -17,6 +19,7 @@ typedef unsigned short ushort;  /**< unsigned short type                */
 typedef unsigned int uint;      /**< unsigned int type                  */
 typedef unsigned long ulong;    /**< unsigned long type                 */
 typedef char bool;              /**< boolean type                       */
+typedef unsigned long size_t;   /**< size type                          */
 
 /* Function declaration return types */
 typedef int syscall;            /**< system call declaration            */

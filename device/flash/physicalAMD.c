@@ -1,11 +1,9 @@
 /**
  * @file     physical.c
- * @provides physicalAMDRead
  * Functions in this file communicate directly with the hardware to achieve
  * their goals. This file acts like the BIOS in older computers (by
  * providing calls to to the physical work to the O/S).
  *
- * $Id: physicalAMD.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 

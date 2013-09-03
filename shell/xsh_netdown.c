@@ -1,8 +1,6 @@
 /**
  * @file     xsh_netdown.c
- * @provides xsh_netdown
  *
- * $Id: xsh_netdown.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,7 +12,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if NETHER
 /**
+ * @ingroup shell
+ *
  * Shell command (netdown) to stop a network interface.
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -23,9 +24,6 @@
 shellcmd xsh_netdown(int nargs, char *args[])
 {
     int descrp;
-
-    /* Enable interrupts */
-    enable();
 
     /* Help */
     if ((2 == nargs) && (0 == strncmp(args[1], "--help", 7)))
@@ -66,3 +64,4 @@ shellcmd xsh_netdown(int nargs, char *args[])
 
     return SHELL_OK;
 }
+#endif /* NETHER */

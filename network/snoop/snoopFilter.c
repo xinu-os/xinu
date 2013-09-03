@@ -1,7 +1,5 @@
 /* @file snoopFilter.c
- * @provides snoopFilter
  *
- * $Id: snoopFilter.c 2074 2009-09-21 23:37:28Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <string.h>
 
 /**
+ * @ingroup snoop
+ *
  * Determine if a packet matches the filter.
  * @return TRUE if packet matches filter, otherwise FALSE
  */

@@ -1,8 +1,6 @@
 /** 
  * @file     xsh_help.c
- * @provides xsh_help.
  *
- * $Id: xsh_help.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <string.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (help) provides a list of commands recognized by the
  * shell, or displays help information for a particular command.
  * @param nargs number of arguments in args array

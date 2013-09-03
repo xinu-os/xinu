@@ -1,8 +1,6 @@
 /**
  * @file tcpOpenActive.c
- * @provides tcpOpenActive, tcpIss
  *
- * $Id: tcpOpenActive.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Actively opens a TCP connection.
  * @param tcbptr TCB for connection
  * @return OK if tcp is opened properly, otherwise SYSERR

@@ -1,8 +1,6 @@
 /**
  * @file platforminit.c
- * @provides platforminit.
  *
- * $Id: platforminit.c 2167 2010-02-11 00:34:32Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -32,12 +30,12 @@ extern struct idt idt[NID];
  * Determines and stores all platform specific information.
  * @return OK if everything is determined successfully
  */
-extern int platforminit(void)
+int platforminit(void)
 {
     int i;
 
     /* Setup platform data                                 */
-	strncpy(platform.name, "Intel x86", PLT_STRMAX);
+    strlcpy(platform.name, "Intel x86", PLT_STRMAX);
     platform.maxaddr = (void *)0x1000000;
     platform.clkfreq = 1190000;
     platform.uart_dll = 1;
@@ -62,7 +60,9 @@ extern int platforminit(void)
     /* Set initial interrupt entry vectors                 */
     /* Initialize interrupts variables                     */
     for (i = 0; i < NID; i++)
-    { set_evec(i, (long)defevec[i]); }
+    {
+        set_evec(i, (long)defevec[i]);
+    }
 
     /* girmask masks bus interrupts with default handler   */
     girmask = 0xfffb;

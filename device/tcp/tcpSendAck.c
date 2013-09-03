@@ -1,8 +1,6 @@
 /**
  * @file tcpSendAck.c
- * @provides tcpSendAck
  *
- * $Id: tcpSendAck.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Sends an ACK packet to ackowledge all received data for a TCP connection.
  * @param tcpptr pointer to the transmission control block for connection
  * @pre-condition TCB mutex is already held

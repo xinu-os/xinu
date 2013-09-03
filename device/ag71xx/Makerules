@@ -4,7 +4,7 @@
 COMP = device/ag71xx
 
 # Source files for this component
-C_FILES = etherInit.c etherOpen.c etherClose.c etherRead.c etherWrite.c etherControl.c etherInterrupt.c allocRxBuffer.c etherStat.c vlanStat.c
+C_FILES = etherInit.c etherOpen.c etherClose.c etherRead.c etherWrite.c etherControl.c etherInterrupt.c allocRxBuffer.c etherStat.c vlanStat.c colon2mac.c
 S_FILES =
 
 # Add the files to the compile source path

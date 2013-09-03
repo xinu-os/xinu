@@ -1,12 +1,10 @@
 /**
  * @file     logical.c
- * @provides logicalMap, logicalWrite, logicalRead
  * This provides a more proper interface between driver calls and the
  * physical layer of flash. It is possible to split the entire flash device
  * into logical blocks of n bytes and this file provides the mappings from
  * physical address to logical block.
  *
- * $Id: logical.c 2051 2009-08-27 20:55:09Z akoehler $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 
@@ -237,6 +235,7 @@ struct flash_block logicalMap(struct flash *flash, ulong block)
 
     /* not an allocated block, make sure it fails safety checks */
     f_block.state = FLASH_BLOCK_FREE;
+    f_block.buffer = NULL;
 
     return f_block;
 }

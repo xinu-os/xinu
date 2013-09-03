@@ -1,9 +1,7 @@
 /**
  * @file loopbackClose.c
- * @provides loopbackClose.
  *
- * $Id: loopbackClose.c 2077 2009-09-24 23:58:54Z mschul $
- **/
+ */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <stddef.h>
@@ -13,10 +11,12 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup loopback
+ *
  * Close a loopback device.
  * @param devptr loopback device table entry
  * @return OK if loopback is closed properly, otherwise SYSERR
- **/
+ */
 devcall loopbackClose(device *devptr)
 {
     struct loopback *lbkptr;

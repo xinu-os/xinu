@@ -1,7 +1,6 @@
 /*
  * @file date.h
  *
- * $Id: date.h 2126 2009-11-12 07:23:04Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -43,6 +42,7 @@ extern char *tz_names[24];
 #define SECS_IN_YEAR (365 * SECS_IN_DAY)
 
 #define RDATE_SERVER "192.168.6.10"     /* Default rdate server */
+#define TIMESERVER_BUFSIZE 1024
 
 uint get_datetime(void);
 uint set_datetime(uint dt);
@@ -52,5 +52,6 @@ void printDateTZ(uint dt, char timezone);
 void convertDate(struct time *time, uint seconds);
 syscall rdate(char *);
 long getRdate(char *);
+thread timeServer(int descrp, int localport);
 
 #endif                          /* _DATE_H_ */

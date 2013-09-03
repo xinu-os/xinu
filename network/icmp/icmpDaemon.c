@@ -1,8 +1,6 @@
 /**
  * @file icmpDaemon.c
- * @provides icmpDaemon
  *
- * $Id: icmpDaemon.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup icmp
+ *
  * ICMP daemon to manage ping replies.
  */
 thread icmpDaemon(void)
@@ -23,7 +23,6 @@ thread icmpDaemon(void)
     struct netaddr dst;
     int i = 0, match = -1;
 
-    enable();
     while (TRUE)
     {
         if (NULL != pkt)

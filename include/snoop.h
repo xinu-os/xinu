@@ -1,7 +1,6 @@
 /*
  * @file snoop.h
  *
- * $Id: snoop.h 2152 2010-01-07 02:43:18Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

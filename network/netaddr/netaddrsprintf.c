@@ -1,22 +1,28 @@
 /**
  * @file     netaddrsprintf.c
- * @provides netaddrsprintf
  *
- * $Id: netaddrsprintf.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
-#include <stddef.h>
 #include <network.h>
+#include <stddef.h>
 #include <stdio.h>
 
 /**
- * Format netaddr and place in a string
- * @param str output string
- * @param addr netaddr to format
- * @return pointer to string
+ * @ingroup network
+ *
+ * Format a network address and place in a null-terminated string.
+ *
+ * @param str
+ *      Pointer to the output string, which must have enough space for the
+ *      appropriate type of network address, including the null terminator.
+ * @param addr
+ *      Network address to format.
+ *
+ * @return
+ *      A pointer to the resulting string cast to an @c int.
  */
-int netaddrsprintf(char *str, struct netaddr *addr)
+int netaddrsprintf(char *str, const struct netaddr *addr)
 {
     switch (addr->type)
     {

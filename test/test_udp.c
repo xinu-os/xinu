@@ -1,8 +1,5 @@
 /**
  * @file     test_udp.c
- * @provides test_udp
- *
- * $Id:
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -20,13 +17,14 @@
 #include <thread.h>
 #include <udp.h>
 
-#if UDP1
+#ifdef UDP1
 //extern int _binary_data_testudp_pcap_start;
 static struct packet *makePkt(ushort, ushort, struct netaddr *,
                               struct netaddr *, ushort, void *);
-#endif
 
 #define MAX_WAIT 10
+
+#endif
 
 /**
  * Tests UDP
@@ -34,16 +32,20 @@ static struct packet *makePkt(ushort, ushort, struct netaddr *,
  */
 thread test_udp(bool verbose)
 {
-#if UDP1
+#ifdef UDP1
     struct udp *udpptr = NULL;
     ushort pta;
     ushort ptb;
     struct netaddr ipc;
     struct netaddr ipd;
     struct netaddr ipl;
+    struct netaddr src;
+    struct netaddr dst;
+    struct netaddr mask;
     struct netaddr ipzero;
     struct packet *pkt[10];
     struct udpPkt *udppkt;
+    struct udpPseudoHdr *pseudo;
     uchar buffera[12];
     uchar bufferb[12];
     uchar bufferc[12];
@@ -88,6 +90,30 @@ thread test_udp(bool verbose)
     ipl.addr[2] = 1;
     ipl.addr[3] = 8;
 
+    /* Source IP address */
+    src.type = NETADDR_IPv4;
+    src.len = IPv4_ADDR_LEN;
+    src.addr[0] = 192;
+    src.addr[1] = 168;
+    src.addr[2] = 1;
+    src.addr[3] = 6;
+
+    /* Destination IP address */
+    dst.type = NETADDR_IPv4;
+    dst.len = IPv4_ADDR_LEN;
+    dst.addr[0] = 192;
+    dst.addr[1] = 168;
+    dst.addr[2] = 1;
+    dst.addr[3] = 1;
+
+    /* Mask */
+    mask.type = NETADDR_IPv4;
+    mask.len = IPv4_ADDR_LEN;
+    mask.addr[0] = 255;
+    mask.addr[1] = 255;
+    mask.addr[2] = 255;
+    mask.addr[3] = 0;
+
     /* Empty address */
     ipzero.type = 0;
     ipzero.len = 0;
@@ -97,11 +123,6 @@ thread test_udp(bool verbose)
     ipzero.addr[3] = 0;
     ipzero.addr[4] = 0;
     ipzero.addr[5] = 0;
-
-    //struct ethloop *pelp;
-    //irqmask im;
-
-    enable();
 
     /* Test udpPkt structure */
     //testPrint(verbose, "Header structure");
@@ -206,11 +227,11 @@ thread test_udp(bool verbose)
 
     /* Test udpControl */
     testPrint(verbose, "UDP Control: Flags");
-    control(UDP0, UDP_CTRL_SETFLAG, UDP_FLAG_INCHDR | UDP_FLAG_NOBLOCK
+    control(UDP0, UDP_CTRL_SETFLAG, UDP_FLAG_PASSIVE | UDP_FLAG_NOBLOCK
             | UDP_FLAG_BINDFIRST, NULL);
     control(UDP0, UDP_CTRL_CLRFLAG, UDP_FLAG_NOBLOCK, NULL);
     /* At this point NOBLOCK should be the only flag that is off */
-    failif((FALSE == (udptab[0].flags & UDP_FLAG_INCHDR))
+    failif((FALSE == (udptab[0].flags & UDP_FLAG_PASSIVE))
            || (udptab[0].flags & UDP_FLAG_NOBLOCK)
            || (FALSE == (udptab[0].flags & UDP_FLAG_BINDFIRST)), "");
 
@@ -223,7 +244,7 @@ thread test_udp(bool verbose)
     /* Test udpRecv and udpRead */
     testPrint(verbose, "Receive and read UDP packets");
 
-    control(UDP0, UDP_CTRL_CLRFLAG, UDP_FLAG_INCHDR
+    control(UDP0, UDP_CTRL_CLRFLAG, UDP_FLAG_PASSIVE
             | UDP_FLAG_BINDFIRST, NULL);
 
     control(UDP0, UDP_CTRL_ACCEPT, pta, (long)&ipl);
@@ -235,19 +256,19 @@ thread test_udp(bool verbose)
     pkt[3] = makePkt(ptb, pta, &ipl, &ipc, 2, "MN");
     if (SYSERR == udpRecv(pkt[0], &ipc, &ipl))
     {
-        failif(TRUE, "");
+        failif(TRUE, "recva");
     }
     if (SYSERR == udpRecv(pkt[1], &ipc, &ipl))
     {
-        failif(TRUE, "");
+        failif(TRUE, "recvb");
     }
     if (SYSERR == udpRecv(pkt[2], &ipc, &ipl))
     {
-        failif(TRUE, "");
+        failif(TRUE, "recvc");
     }
     if (SYSERR == udpRecv(pkt[3], &ipc, &ipl))
     {
-        failif(TRUE, "");
+        failif(TRUE, "recvd");
     }
     if (SYSERR == read(UDP0, buffera, 5))
     {
@@ -259,11 +280,11 @@ thread test_udp(bool verbose)
     }
     if (SYSERR == read(UDP0, bufferc, 5))
     {
-        failif(TRUE, "readb");
+        failif(TRUE, "readc");
     }
     if (SYSERR == read(UDP0, bufferd, 5))
     {
-        failif(TRUE, "readb");
+        failif(TRUE, "readd");
     }
     failif((0 != strncmp((char *)buffera, "ABCDE", 5))
            || (0 != strncmp((char *)bufferb, "FGHI", 4))
@@ -280,7 +301,7 @@ thread test_udp(bool verbose)
     /* Test udpRecv and udpRead */
     testPrint(verbose, "Receive and read UDP packets (again)");
 
-    control(UDP0, UDP_CTRL_CLRFLAG, UDP_FLAG_INCHDR
+    control(UDP0, UDP_CTRL_CLRFLAG, UDP_FLAG_PASSIVE
             | UDP_FLAG_BINDFIRST, NULL);
 
     control(UDP0, UDP_CTRL_ACCEPT, pta, (long)&ipl);
@@ -304,11 +325,11 @@ thread test_udp(bool verbose)
     }
     if (SYSERR == read(UDP0, bufferc, 2))
     {
-        failif(TRUE, "readb");
+        failif(TRUE, "readc");
     }
     if (SYSERR == read(UDP0, bufferd, 2))
     {
-        failif(TRUE, "readb");
+        failif(TRUE, "readd");
     }
     failif(0 != strncmp((char *)buffera, "OPQRS", 5)
            || (0 != strncmp((char *)bufferb, "TUV", 3))
@@ -392,14 +413,17 @@ thread test_udp(bool verbose)
 
     /* Read entire UDP packet */
     testPrint(verbose, "Read entire UDP packet");
-    control(UDP0, UDP_CTRL_SETFLAG, UDP_FLAG_INCHDR, NULL);
-    pkt[0] = makePkt(ptb, pta, &ipc, &ipl, 6, "inchdr");
+    control(UDP0, UDP_CTRL_SETFLAG, UDP_FLAG_PASSIVE, NULL);
+    pkt[0] = makePkt(ptb, pta, &ipc, &ipl, 7, "passive");
     udpRecv(pkt[0], &ipc, &ipl);
-    read(UDP0, bufferp, UDP_HDR_LEN + 6);
-    udppkt = (struct udpPkt *)bufferp;
-    failif((udppkt->srcPort != ptb) || (udppkt->dstPort != pta)
-           || (udppkt->len != UDP_HDR_LEN + 6)
-           || (0 != strncmp((char *)udppkt->data, "inchdr", 6)), "");
+    read(UDP0, bufferp, UDP_HDR_LEN + 7 + sizeof(struct udpPseudoHdr));
+    pseudo = (struct udpPseudoHdr *)bufferp;
+    udppkt = (struct udpPkt *)(pseudo + 1);
+    failif((0 != memcmp(pseudo->srcIp, ipc.addr, IPv4_ADDR_LEN))
+           || (0 != memcmp(pseudo->dstIp, ipl.addr, IPv4_ADDR_LEN))
+           || (udppkt->srcPort != ptb) || (udppkt->dstPort != pta)
+           || (udppkt->len != UDP_HDR_LEN + 7)
+           || (0 != strncmp((char *)udppkt->data, "passive", 7)), "");
 
     /* Done testing, attempt to close all UDP devices (MAKE SURE BOTH
      * DEVICES ARE OPEN BEFORE YOU CLOSE THEM!!!) */
@@ -415,13 +439,15 @@ thread test_udp(bool verbose)
     {
         testFail(TRUE, "");
     }
-#endif                          /* UDP1 */
+#else /* UDP1 */
+    testSkip(TRUE, "");
+#endif /* !UDP1 */
     return OK;
 }
 
 /* Same code as udpSend except it returns the pointer to the packet
  * instead of sending the packet over IP */
-#if UDP1
+#ifdef UDP1
 static struct packet *makePkt(ushort localpt, ushort remotept,
                               struct netaddr *localip,
                               struct netaddr *remoteip, ushort datalen,
@@ -459,4 +485,4 @@ static struct packet *makePkt(ushort localpt, ushort remotept,
 
     return pkt;
 }
-#endif                          /* UDP1 */
+#endif  /* UDP1 */

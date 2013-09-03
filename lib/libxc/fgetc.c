@@ -1,30 +1,36 @@
 /**
  * @file fgetc.c
- * @provides fgetc.
- *
- * $Id: fgetc.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-extern int getc(int);
-
-#define EOF      (-2)
+#include <stdio.h>
+#include <device.h>
 
 /**
- * Read a character from a device (file)
- * @param dev device to read from
- * @return character read, EOF if error
+ * @ingroup libxc
+ *
+ * Reads a character from a device.
+ *
+ * @param dev
+ *      Index of device from which to read the character.
+ *
+ * @return
+ *      On success, returns the character read as an <code>unsigned char</code>
+ *      cast to an @c int.  On read error, invalid device, or end-of file,
+ *      returns @c EOF.
  */
 int fgetc(int dev)
 {
-    int result = (int)getc(dev);
+    int c;
 
-    if (0 > result)
+    c = getc(dev);
+
+    if (c == SYSERR || c == EOF)
     {
         return EOF;
     }
     else
     {
-        return result;
+        return (int)(unsigned char)c;
     }
 }

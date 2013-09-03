@@ -1,8 +1,6 @@
 /**
  * @file etherInterrupt.c
- * @provides etherInterrupt.
  *
- * $Id: etherInterrupt.c 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -20,6 +18,9 @@
 
 extern int resdefer;
 
+/**
+ * @ingroup etherspecific
+ */
 void rxPackets(struct ether *ethptr, struct bcm4713 *nicptr)
 {
     ulong head = 0, tail = 0;
@@ -81,7 +82,7 @@ void rxPackets(struct ether *ethptr, struct bcm4713 *nicptr)
 }
 
 /**
- * Describe function.
+ * @ingroup etherspecific
  */
 void txPackets(struct ether *ethptr, struct bcm4713 *nicptr)
 {
@@ -109,6 +110,8 @@ void txPackets(struct ether *ethptr, struct bcm4713 *nicptr)
 }
 
 /**
+ * @ingroup etherspecific
+ *
  * Decode and handle hardware interrupt request from ethernet device.
  */
 interrupt etherInterrupt(void)

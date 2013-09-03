@@ -1,8 +1,6 @@
 /**
  * @file etherWrite.c
- * @provides etherWrite.
  *
- * $Id: etherWrite.c 2147 2009-12-19 07:23:03Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -17,14 +15,9 @@
 #include <mips.h>
 #include <network.h>
 
-/**
- * Write a packet to the ethernet device
- * @param devptr device table entry
- * @param buf packet buffer
- * @param len size of the buffer
- * @return number of bytes sent from input buffer
- */
-devcall etherWrite(device *devptr, void *buf, uint len)
+/* Implementation of etherWrite() for the ag71xx; see the documentation for this
+ * function in ether.h.  */
+devcall etherWrite(device *devptr, const void *buf, uint len)
 {
     struct ether *ethptr = NULL;
     struct ag71xx *nicptr = NULL;
@@ -32,7 +25,7 @@ devcall etherWrite(device *devptr, void *buf, uint len)
     struct dmaDescriptor *dmaptr = NULL;
     irqmask im;
     ulong tail = 0;
-    uchar *buffer = buf;
+    const uchar *buffer = buf;
 /* 	ulong *flushControl = (ulong *)0xB800007C; */
 
     ethptr = &ethertab[devptr->minor];

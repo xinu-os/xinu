@@ -1,8 +1,6 @@
 /**
  * @file etherOpen.c
- * @provides etherOpen.
  *
- * $Id: etherOpen.c 2116 2009-11-03 20:55:05Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -16,11 +14,8 @@
 #include <interrupt.h>
 #include <mips.h>
 
-/**
- * Open an ethernet device for use.
- * @param  devptr ethernet device table entry
- * @return OK if opened properly, otherwise SYSERR
- */
+/* Implementation of etherOpen() for the ag71xx; see the documentation for this
+ * function in ether.h.  */
 devcall etherOpen(device *devptr)
 {
     int i;
@@ -59,6 +54,7 @@ devcall etherOpen(device *devptr)
     if (SYSERR == ethptr->outPool)
     {
         ETH_TRACE("eth%d outPool buffer error.\r\n", devptr->minor);
+        restore(im);
         return SYSERR;
     }
 
@@ -70,6 +66,7 @@ devcall etherOpen(device *devptr)
     if (SYSERR == ethptr->inPool)
     {
         ETH_TRACE("eth%d inPool buffer error.\r\n", devptr->minor);
+        restore(im);
         return SYSERR;
     }
 
@@ -86,11 +83,10 @@ devcall etherOpen(device *devptr)
     {
         allocRxBuffer(ethptr, i);
     }
-    /* Point NIC to start of Tx ring */
+    /* Point NIC to start of Rx ring */
     nicptr->rxDMA = ((ulong)ethptr->rxRing) & PMEM_MASK;
 
     // FIXME: Need to start up PHY here?
-    // FIXME: Need to read MAC from NVRAM.
     etherControl(devptr, ETH_CTRL_SET_MAC, (long)ethptr->devAddress, 0);
 
     /* start Rx engine */

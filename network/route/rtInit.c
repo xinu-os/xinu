@@ -1,8 +1,6 @@
 /**
  * @file rtInit.c
- * @provides rtInit
  * 
- * $Id: rtInit.c 2118 2009-11-05 05:22:51Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,6 +15,8 @@ struct rtEntry rttab[RT_NENTRY];
 mailbox rtqueue;
 
 /**
+ * @ingroup route
+ *
  * Initialize the route table and route daemon.
  * @return OK if initialization is successful, otherwise SYSERR
  */

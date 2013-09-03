@@ -1,8 +1,6 @@
 /**
  * @file ttyRead.c
- * @provides ttyRead.
  *
- * $Id: ttyRead.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 static void ttyEcho(device *, char);
 
 /**
+ * @ingroup tty
+ *
  * Read characters from a tty.
  * @param devptr pointer to tty device
  * @param buf buffer for read characters
@@ -24,7 +24,7 @@ devcall ttyRead(device *devptr, void *buf, uint len)
 {
     struct tty *ttyptr;
     device *phw;
-    char ch = 0;
+    int ch = 0;
     int count = 0;
     char *buffer = buf;
 

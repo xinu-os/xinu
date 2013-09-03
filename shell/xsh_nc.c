@@ -1,8 +1,6 @@
 /**
  * @file     xsh_nc.c
- * @provides xsh_nc
  *
- * $Id: xsh_nc.c 2108 2009-10-29 05:07:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -19,6 +17,7 @@
 #include <thread.h>
 #include <udp.h>
 
+#if NETHER
 static void usage(char *command);
 thread ncRecv(ushort);
 thread ncSend(ushort);
@@ -36,6 +35,8 @@ int connError(void)
 }
 
 /**
+ * @ingroup shell
+ *
  * Shell command (nc).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -52,9 +53,6 @@ shellcmd xsh_nc(int nargs, char *args[])
     tid_typ sendthr;
     int msg = 0;
     int dev;
-
-    /* Enable interrupts */
-    enable();
 
     /* Output help, if '--help' argument was supplied */
     if (nargs == 2 && 0 == strncmp(args[1], "--help", 7))
@@ -229,8 +227,6 @@ thread ncRecv(ushort dev)
     uint bytes = 0;
     int result;
 
-    enable();
-
     result = read(dev, &ch, 1);
     while (result >= 0)
     {
@@ -247,8 +243,6 @@ thread ncSend(ushort dev)
     char buf[1000];
     int count = 0;
 
-    enable();
-
     count = read(stdin, buf, 1000);
     while (count != EOF)
     {
@@ -260,3 +254,4 @@ thread ncSend(ushort dev)
     }
     return OK;
 }
+#endif /* NETHER */

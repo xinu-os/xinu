@@ -1,8 +1,6 @@
 /**
  * @file arpLookup.c
- * @provides arpLookup
  *
- * $Id: arpLookup.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,13 +12,15 @@
 #include <thread.h>
 
 /**
+ * @ingroup arp
+ *
  * Obtains a hardware address from the ARP table given a protocol address.
  * @param netptr network interface
  * @param praddr protocol address
  * @param hwaddr buffer into which hardware address should be placed
  * @return OK if hardware address was obtained, otherwise TIMEOUT or SYSERR
  */
-syscall arpLookup(struct netif *netptr, struct netaddr *praddr,
+syscall arpLookup(struct netif *netptr, const struct netaddr *praddr,
                   struct netaddr *hwaddr)
 {
     struct arpEntry *entry = NULL;  /**< pointer to ARP table entry   */

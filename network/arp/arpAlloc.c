@@ -1,8 +1,6 @@
 /**
  * @file arpAlloc.c
- * @provides arpAlloc
  *
- * $Id: arpAlloc.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup arp
+ *
  * Allocates an entry from the ARP table.
  * @return entry in ARP table, SYSERR if error occurs
  * @pre-condition interrupts are disabled

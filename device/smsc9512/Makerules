@@ -1,0 +1,24 @@
+# This Makefile contains rules to build this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/smsc9512
+
+# Source files for this component
+C_FILES =                \
+        colon2mac.c      \
+        etherClose.c     \
+        etherControl.c   \
+        etherInit.c      \
+        etherInterrupt.c \
+        etherOpen.c      \
+        etherRead.c      \
+        etherStat.c      \
+        etherWrite.c     \
+        smsc9512.c       \
+        vlanStat.c
+
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

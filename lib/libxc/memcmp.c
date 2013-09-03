@@ -1,29 +1,38 @@
 /**
  * @file memcmp.c
- * @provides memcmp.
- *
- * $Id: memcmp.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
 
 /**
- * Compare memory (ISO C89).
- * Assumes memory locations are same length
- * @param s1 first memory location
- * @param s2 second memory location
- * @param n length to compare
- * @return s1>s2: >0  s1==s2: 0  s1<s2: <0
+ * @ingroup libxc
+ *
+ * Compares two memory regions of a specified length.
+ *
+ * @param s1
+ *      Pointer to the first memory location.
+ * @param s2
+ *      Pointer to the second memory location.
+ * @param n
+ *      Length, in bytes, to compare.
+ *
+ * @return
+ *      A negative value, 0, or a positive value if the @p s1 region of memory
+ *      is less than, equal to, or greater than the @p s2 region of memory,
+ *      respectively.
  */
-int memcmp(const void *s1, const void *s2, int n)
+int memcmp(const void *s1, const void *s2, size_t n)
 {
-    const unsigned char *c1;
-    const unsigned char *c2;
+    const unsigned char *p1 = s1, *p2 = s2;
+    size_t i;
 
-    for (c1 = s1, c2 = s2; n > 0; n--, c1++, c2++)
+    for (i = 0; i < n; i++)
     {
-        if (*c1 != *c2)
+        if (p1[i] != p2[i])
         {
-            return ((int)*c1) - ((int)*c2);
+            return (int)p1[i] - (int)p2[i];
         }
     }
     return 0;

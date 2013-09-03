@@ -2,7 +2,6 @@
  * @file flashControl.c
  * Provides various control functions for Flash memory.
  *
- * $Id: flashControl.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 
@@ -27,7 +26,6 @@ devcall flashControl(device *devptr, ushort func, long arg1, long arg2)
     struct flash_block l_block;
     uchar n;
     ulong v;
-
 
     flash = &flashtab[devptr->minor];
 

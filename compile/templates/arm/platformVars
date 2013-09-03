@@ -1,0 +1,28 @@
+#
+# Makefile definitions for Embedded Xinu shared between all supported ARM
+# platforms.
+#
+
+TEMPLATE_ARCH := arm
+
+# Architecture root and prefix (ignored if user overrides COMPILER_ROOT from the
+# toplevel Makefile).
+ARCH_ROOT     :=
+ARCH_PREFIX   := arm-none-eabi-
+
+# Flag for producing GDB debug information.
+BUGFLAG       := -gstabs+
+
+# libgcc is needed for a software implementation of integer division, which is
+# not included in the ARM instruction set.
+LDLIBS        += -lgcc
+
+# Objcopy flags, used for including data files in the resulting binary.
+OCFLAGS       := -I binary -O elf32-littlearm -B arm
+
+# Add a way to test for any ARM platform in C code.
+DEFS          += -D_XINU_ARCH_ARM_
+
+# Default built target.  For ARM we just translate the kernel into a raw binary.
+$(BOOTIMAGE): xinu.elf
+	$(OBJCOPY) -O binary $^ $@

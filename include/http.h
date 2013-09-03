@@ -1,7 +1,6 @@
 /**
  * @file http.h
  *
- * $Id: http.h 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 #ifndef _HTTP_H_

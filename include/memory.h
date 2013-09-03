@@ -1,9 +1,7 @@
 /**
  * @file memory.h
- * @provides roundmb, truncmb, stkfree.
  * Definitions for kernel memory allocator and maintenance.
  *
- * $Id: memory.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,7 +15,11 @@
 /* truncmb - truncate address down to size of memblock */
 #define truncmb(x)  (void *)( ((ulong)(x)) & ~0x07 )
 
-/* stkfree - free the allocated stack memory */
+/**
+ * @ingroup memory_mgmt
+ *
+ * Frees memory allocated with stkget().
+ */
 #define stkfree(p, len) memfree((void *)((ulong)(p)         \
                                 - (ulong)roundmb(len)       \
                                 + (ulong)sizeof(ulong)),    \

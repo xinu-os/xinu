@@ -1,7 +1,6 @@
 /**
  * @file ag71xx.h
  *
- * $Id: ag71xx.h 2128 2009-11-17 01:38:29Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

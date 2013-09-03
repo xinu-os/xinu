@@ -1,8 +1,6 @@
 /**
  * @file httpControl.c
- * @provides httpControl.
  *
- * $Id: httpControl.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

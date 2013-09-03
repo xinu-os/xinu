@@ -1,8 +1,6 @@
 /**
  * @file icmpDestUnreach.c
- * @provides icmpDestUnreach
  *
- * $Id: icmpDestUnreach.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,15 +10,17 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup icmp
+ *
  * Compose ICMP Destination Unreachable message.
  * @param unreached packet that could not be sent
  * @param code      ICMP destination unreachable code number
  * @return OK if packet was sent, otherwise SYSERR
  */
-syscall icmpDestUnreach(struct packet *unreached, int code)
+syscall icmpDestUnreach(const struct packet *unreached, int code)
 {
     struct packet *pkt = NULL;
-    struct ipv4Pkt *ip = NULL;
+    const struct ipv4Pkt *ip = NULL;
     struct netaddr dst;
     int result = OK;
     int ihl = 0;
@@ -33,7 +33,7 @@ syscall icmpDestUnreach(struct packet *unreached, int code)
         return SYSERR;
     }
 
-    ip = (struct ipv4Pkt *)unreached->nethdr;
+    ip = (const struct ipv4Pkt *)unreached->nethdr;
     dst.type = NETADDR_IPv4;
     dst.len = IPv4_ADDR_LEN;
     /* Send error message back to original source.                */

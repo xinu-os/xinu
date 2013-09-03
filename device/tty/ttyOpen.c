@@ -1,8 +1,6 @@
 /**
  * @file ttyOpen.c
- * @provides ttyOpen.
  *
- * $Id: ttyOpen.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup tty
+ *
  * Associate a TTY with a hardware device.
  * @param devptr TTY device table entry
  * @param ap 2nd argument is the device number for the hardware device

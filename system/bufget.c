@@ -1,8 +1,6 @@
 /**
  * @file bufget.c
- * @provides bufget.
  *
- * $Id: bufget.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,9 +10,19 @@
 #include <bufpool.h>
 
 /**
- * Acquire buffer from initialized pool
- * @param poolid index of pool in bptab
- * @return pointer to buffer on success, SYSERR on failure
+ * @ingroup memory_mgmt
+ *
+ * Allocate a buffer from a buffer pool.  If no buffers are currently available,
+ * this function wait until one is, usually rescheduling the thread.  The
+ * returned buffer must be freed with buffree() when the calling code is
+ * finished with it.
+ *
+ * @param poolid
+ *      Identifier of the buffer pool, as returned by bfpalloc().
+ *
+ * @return
+ *      If @p poolid does not specify a valid buffer pool, returns ::SYSERR;
+ *      otherwise returns a pointer to the resulting buffer.
  */
 void *bufget(int poolid)
 {

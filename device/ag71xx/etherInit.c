@@ -1,10 +1,8 @@
 /**
  * @file etherInit.c
- * @provides etherInit.
  *
  * Initialization for the Atheros ag71xx series of ethernet devices.
  *
- * $Id: etherInit.c 2128 2009-11-17 01:38:29Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -19,46 +17,13 @@
 #include <clock.h>
 #include <string.h>
 #include <safemem.h>
+#include <nvram.h>
 
 /* Global table of ethernet devices */
 struct ether ethertab[NETHER];
 
-void udelay(uint n)
-{
-    uint delay = (platform.clkfreq / 1000000) * n;
-    uint start = 0, count = 0, target = 0;
-    start = clkcount();
-    target = start + delay;
-
-    if (target >= start)
-    {
-        while (((count = clkcount()) < target) && (count >= start))
-            ;
-    }
-    else
-    {
-        // wrap around case
-        while ((count = clkcount()) > start)
-            ;
-        while ((count = clkcount()) < target)
-            ;
-    }
-}
-
-void mdelay(uint n)
-{
-    int i = 0;
-    for (i = 0; i < n; i++)
-    {
-        udelay(1000);
-    }
-}
-
-/**
- * Initialize ethernet device structures.
- * @param devptr ETH device table entry
- * @return OK if device is intialized successfully, otherwise SYSERR
- */
+/* Implementation of etherInit() for the ag71xx; see the documentation for this
+ * function in ether.h.  */
 devcall etherInit(device *devptr)
 {
     struct ether *ethptr;
@@ -96,11 +61,8 @@ devcall etherInit(device *devptr)
     ethptr->ovrrun = 0;
     ethptr->rxOffset = ETH_PKT_RESERVE;
 
-    // FIXME: Actual MAC lookup in nvram.
     /* Lookup canonical MAC in NVRAM, and store in ether struct */
-    // colon2mac(nvramGet("et0macaddr"), ethptr->devAddress);
-    char mac[] = { 0x00, 0x01, 0x36, 0x22, 0x7e, 0xf1 };
-    memcpy(ethptr->devAddress, mac, ETH_ADDR_LEN);
+    colon2mac(nvramGet("et0macaddr"), ethptr->devAddress);
     ethptr->addressLength = ETH_ADDR_LEN;
 
     // Reset the device.

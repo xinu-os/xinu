@@ -1,12 +1,10 @@
 /**
  * @file     tlb.S
- * @provides tlbMiss
  * TLB miss handler, if this code can remain under 32 instructions we're
  * able to install it at the true TLB exception entry vector (0x80000000).
  * If it grows too large, we'll just put it with the rest and have a simple
  * jump instruction at the entry vector.
  *
- * $Id: tlbMiss.S 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

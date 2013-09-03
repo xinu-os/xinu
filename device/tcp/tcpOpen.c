@@ -1,8 +1,6 @@
 /**
  * @file tcpOpen.c
- * @provides tcpOpen
  *
- * $Id: tcpOpen.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,6 +15,8 @@
 static ushort allocPort(void);
 
 /**
+ * @ingroup tcp
+ *
  * Associate a tcp with a network device.
  * @param devptr tcp device table entry
  * @param ap 2nd argument is the local IP address

@@ -1,8 +1,6 @@
 /**
  * @file     ctxsw.s
- * @provides ctxsw.
  *
- * $Id: ctxsw.S 2086 2009-10-06 22:24:27Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -18,6 +16,8 @@
  */
 	.ent ctxsw
 ctxsw:
+        /* Update address space ID                                     */
+        mtc0    a2, CP0_ENTRYHI
 	/* build context record on stack                               */
 	addiu	sp, sp, -CONTEXT
 	sw	ra, CONTEXT-4(sp)
@@ -57,6 +57,13 @@ ctxsw:
 	lw	v0, CONTEXT-4(sp)
 	lw	ra, CONTEXT-8(sp)
 	addiu	sp, sp, CONTEXT
+
+	beq	v0, ra, ctxdone
+	mfc0	v1, CP0_STATUS
+	ori	v1, v1, STATUS_IE  
+	mtc0	v1, CP0_STATUS
+
+ctxdone:
 	jr	v0
 	.end ctxsw
 

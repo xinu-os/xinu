@@ -1,8 +1,6 @@
 /**
  * @file rawOpen.c
- * @provides rawOpen
  * 
- * $Id: rawOpen.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup raw
+ *
  * Open a raw socket.
  * @param devptr RAW device table entry
  * @param ap 2nd argument is the local IP address

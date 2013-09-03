@@ -1,0 +1,2 @@
+The directory contains code shared by all Xinu's UART drivers.
+This is not a UART by itself, so do *not* include it in DEVICES in platformVars.

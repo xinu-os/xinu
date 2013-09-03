@@ -6,29 +6,15 @@
 
 thread spin(void)
 {
-#ifdef MIPS
-    int i;
-    for (i = IRQ_HW0; i <= IRQ_HW5; i++)
-    {
-        disable_irq(i);
-    }
-    enable_irq(IRQ_TIMER);
-    enable();
+    volatile int n = 1;
 
-    while (TRUE)
-        ;
+    while (n != 0)
+    {
+    }
 
     return OK;
-#else
-    return SYSERR;
-#endif
 }
 
-/**
- * Example of a test program for the Xinu testsuite.  Beyond this file you
- * must add an entry to the testtab in testhelper.c and a prototype in
- * testsuite.h.
- */
 thread test_preempt(bool verbose)
 {
     /* the failif macro depends on 'passed' and 'verbose' vars */

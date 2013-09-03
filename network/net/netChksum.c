@@ -1,14 +1,15 @@
 /**
  * @file netChksum.c
- * @provides netChksum
  *
- * $Id: netChksum.c 2134 2009-11-20 02:12:30Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <stddef.h>
 #include <network.h>
 
+/**
+ * @ingroup network
+ */
 ushort netChksum(void *data, uint len)
 {
     uint sum;

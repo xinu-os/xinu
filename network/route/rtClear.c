@@ -1,8 +1,6 @@
 /**
  * @file rtClear.c
- * @provides rtClear.
  * 
- * $Id: rtClear.c 2118 2009-11-05 05:22:51Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <route.h>
 
 /**
+ * @ingroup route
+ *
  * Removes all entries for a network interface from the routing table. 
  * @param nif network interface 
  * @return OK if entries are removed successfully, otherwise SYSERR

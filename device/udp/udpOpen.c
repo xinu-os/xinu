@@ -1,10 +1,8 @@
 /**
  * @file     udpOpen.c
- * @provides udpOpen
  *
- * $Id: udpOpen.c 2114 2009-11-03 01:13:43Z zlund $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -18,22 +16,32 @@
 static ushort allocPort(void);
 
 /**
- * Associate a UDP socket with a hardware device.
- * @param devptr UDP device table entry
- * @param ap 2nd argument is the local IP address
- *           3rd argument is the remote IP address
- *           4th argument is the local port (auto-assigned if zero)
- *           5th argument is the remote port
- * @return OK if UDP is opened properly, otherwise SYSERR
+ * @ingroup udpexternal
+ *
+ * Associate a UDP socket with local and remote IP addresses and ports, and
+ * prepare it for receiving and sending data with udpRead() and udpWrite().
+ *
+ * @param devptr
+ *      Device table entry for the UDP device.
+ *
+ * @param ap Four additional arguments, specifying the following in order:
+ *     - The local IP address.
+ *     - The remote IP address.  May be @c NULL to create an initially
+ *       unbound socket.
+ *     - The local port.  May be 0 to auto-assign a port number.
+ *     - The remote port.  May be 0 if creating an initially unbound socket.
+ *
+ * @return ::OK if the UDP device was opened successfully; otherwise ::SYSERR.
  */
 devcall udpOpen(device *devptr, va_list ap)
 {
-    struct udp *udpptr = NULL;
-    ushort localpt = 0;
-    ushort remotept = 0;
-    struct netaddr *localip = NULL;
-    struct netaddr *remoteip = NULL;
     irqmask im;
+    int retval;
+    struct udp *udpptr;
+    const struct netaddr *localip;
+    const struct netaddr *remoteip;
+    ushort localpt;
+    ushort remotept;
 
     udpptr = &udptab[devptr->minor];
 
@@ -42,8 +50,8 @@ devcall udpOpen(device *devptr, va_list ap)
     if (UDP_OPEN == udpptr->state)
     {
         UDP_TRACE("udp%d has already been opened.", devptr->minor);
-        restore(im);
-        return SYSERR;
+        retval = SYSERR;
+        goto out_restore;
     }
 
     udpptr->state = UDP_OPEN;
@@ -56,66 +64,79 @@ devcall udpOpen(device *devptr, va_list ap)
     /* Initialize the semaphore */
     udpptr->isem = semcreate(0);
 
-    /* Parse arguments */
-    localip = va_arg(ap, struct netaddr *);
-    remoteip = va_arg(ap, struct netaddr *);
+    if (SYSERR == (int)udpptr->isem)
+    {
+        retval = SYSERR;
+        goto out_udp_close;
+    }
+
+    /* Retrieve port and address arguments */
+    localip = va_arg(ap, const struct netaddr *);
+    remoteip = va_arg(ap, const struct netaddr *);
     localpt = va_arg(ap, int);
     remotept = va_arg(ap, int);
 
+    /* Initialize ports and addresses */
+
+    /* Local IP address is required */
+    if (NULL == localip)
+    {
+        retval = SYSERR;
+        goto out_free_sem;
+    }
+
+    netaddrcpy(&udpptr->localip, localip);
+
+    /* Remote IP address is not required */
+    if (NULL == remoteip)
+    {
+        bzero(&udpptr->remoteip, sizeof(struct netaddr));
+    }
+    else
+    {
+        netaddrcpy(&udpptr->remoteip, remoteip);
+    }
+
     /* Allocate a local port if none is specified */
-    if (NULL == localpt)
+    if (0 == localpt)
     {
         localpt = allocPort();
     }
 
-    /* Set remote port to 0 if none is specified */
-    if (NULL == remotept)
-    {
-        remotept = 0;
-    }
-
-    /* Local IP is required */
-    if (NULL == localip)
-    {
-        restore(im);
-        return SYSERR;
-    }
-
-    if (NULL == remoteip)
-    {
-        bzero(&(udpptr->remoteip), sizeof(struct netaddr));
-    }
-
-    /* Initialize ports and addresses */
-    udpptr->localpt = (ushort)localpt;
-    udpptr->remotept = (ushort)remotept;
-
-    if (NULL != localip)
-    {
-        netaddrcpy(&(udpptr->localip), localip);
-    }
-
-    if (NULL != remoteip)
-    {
-        netaddrcpy(&(udpptr->remoteip), remoteip);
-    }
+    udpptr->localpt = localpt;
+    udpptr->remotept = remotept;
 
     /* Allocate received UDP packet buffer pool */
     udpptr->inPool = bfpalloc(NET_MAX_PKTLEN, UDP_MAX_PKTS);
+    if (SYSERR == (int)udpptr->inPool)
+    {
+        retval = SYSERR;
+        goto out_release_port;
+    }
     UDP_TRACE("udp%d inPool has been assigned pool ID %d.\r\n",
               devptr->minor, udpptr->inPool);
 
     udpptr->flags = 0;
 
+    retval = OK;
+    goto out_restore;
+
+out_release_port:
+    udpptr->localpt = 0;
+out_free_sem:
+    semfree(udpptr->isem);
+out_udp_close:
+    udpptr->state = UDP_FREE;
+out_restore:
     restore(im);
-    return OK;
+    return retval;
 }
 
 /**
  * Allocates an unused UDP port to use as a local port
  * @return UDP port
  */
-static ushort allocPort()
+static ushort allocPort(void)
 {
     static ushort nextport = 0;
     int i = 0;

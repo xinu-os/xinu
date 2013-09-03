@@ -1,8 +1,6 @@
 /**
  * @file etherControl.c
- * @provides etherControl
  *
- * $Id: etherControl.c 2108 2009-10-29 05:07:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,14 +12,8 @@
 #include <ethernet.h>
 #include <network.h>
 
-/**
- * Control function for ethernet devices.
- * @param devptr ethernet device table entry
- * @param func control function to execute
- * @param arg1 first argument for the control function
- * @param arg2 second argument for the control function
- * @return the result of the control function
- */
+/* Implementation of etherControl() for the bcm4713; see the documentation for
+ * this function in ether.h.  */
 devcall etherControl(device *devptr, int func, long arg1, long arg2)
 {
     struct ether *ethptr;

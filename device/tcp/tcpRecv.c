@@ -1,8 +1,6 @@
 /**
  * @file tcpRecv.c
- * @provides tcpRecv
  *
- * $Id: tcpRecv.c 2074 2009-09-21 23:37:28Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Processes an incoming TCP packet.  See RFC 793, pg 65 for an overview 
  * of the TCP packet arrival algorithm.
  * @param pkt incoming packet

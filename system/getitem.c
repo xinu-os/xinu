@@ -1,8 +1,6 @@
 /**
  * @file getitem.c
- * @provides getfirst, getlast, getitem.
  *
- * $Id: getitem.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <queue.h>
 
 /**
+ * @ingroup threads
+ *
  * Remove a thread from front of queue
  * @param  q  target queue
  * @return thread ID of removed thread
@@ -32,6 +32,8 @@ tid_typ getfirst(qid_typ q)
 }
 
 /**
+ * @ingroup threads
+ *
  * Remove a thread from end of queue
  * @param  q  target queue
  * @return thread ID of removed thread
@@ -54,6 +56,8 @@ tid_typ getlast(qid_typ q)
 }
 
 /**
+ * @ingroup threads
+ *
  * Remove a thread from anywhere in a queue
  * @param  tid  thread ID to get
  * @return thread ID of removed thread

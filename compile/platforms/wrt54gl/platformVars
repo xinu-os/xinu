@@ -1,64 +1,32 @@
 #
-#  Platform-specific Makefile definitions for the
-#  Embedded Xinu operating system.
+# Platform-specific Makefile definitions for the Linksys WRT54GL port of
+# Embedded Xinu.
 #
-#  32-bit MIPS little-endian (mipsel)
-#  Linksys WRT54GL wireless router
-#
-#  $Id: platformVars 2132 2009-11-17 23:22:38Z brylow $
 
-PLATFORM = wrt54gl
+PLATFORM_NAME := Linksys WRT54GL Wireless Router
 
-BOOTIMAGE = xinu.boot
-
-MIPS_ROOT = /usr/local/project/mipsel-dev/bin
-MIPS_PREFIX = mipsel-
-
-COMPILER_ROOT = ${MIPS_ROOT}/${MIPS_PREFIX}
-
-CC       = ${COMPILER_ROOT}gcc
-CPP      = ${COMPILER_ROOT}cpp
-LD       = ${COMPILER_ROOT}ld
-AS       = ${COMPILER_ROOT}as
-AR       = ${COMPILER_ROOT}ar
-OBJCOPY  = ${COMPILER_ROOT}objcopy
-MAKEDEP  = gcc -M -MG
-
-DOCGEN   = doxygen
-
-# DETAIL   = -DDETAIL
-
-DEFS     =
-INCLUDE  = -I../include -I../system/platforms/${PLATFORM}
-
-#flag for producing GDB debug information
-BUGFLAG = -gstabs+
-
-# C compilation flags
-CFLAGS = -O0 -Wall -Werror -Wstrict-prototypes -Wno-trigraphs    \
-         -nostdinc -fno-builtin -fno-strict-aliasing -fno-common \
-       	 -fomit-frame-pointer -fno-pic -ffunction-sections -G 0  \
-         -mlong-calls -mno-abicalls -mabi=32 -march=mips32       \
-         -Wa,-32 -Wa,-march=mips32 -Wa,-mips32 -Wa,--trap        \
-         ${DEBUG} ${INCLUDE} ${DETAIL} ${DEFS} -c
-
-# Assembler flags
-ASFLAGS  = ${INCLUDE} ${DEBUG} -march=mips32 -mips32
-
-# Loader flags
-LDFLAGS   = -static --gc-sections -T platforms/${PLATFORM}/ld.script
-
-# Objcopy flags
-OCFLAGS  = -I binary -O elf32-littlemips -B mips
+# Include default mipsel definitions
+MIPS_ENDIANNESS := little
+MIPS_REVISION   := 1
+include templates/mips/platformVars
 
 # Embedded Xinu components to build into kernel image
-APPCOMPS  = apps mailbox shell test network # mem
+APPCOMPS := apps        \
+            mailbox     \
+            network     \
+            shell       \
+            test
 
-DEVICES = bcmbus bcm4713 flash \
-		ethloop loopback raw tty uart-ns16550 \
-		udp tcp http telnet
-DEVCOMPS  = ${DEVICES:%=device/%}
-
-${BOOTIMAGE}: xinu.elf
-	cp $^ $@
-
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES := bcm4713      \
+           bcmbus       \
+           ethloop      \
+           flash        \
+           http         \
+           loopback     \
+           raw          \
+           tcp          \
+           telnet       \
+           tty          \
+           uart-ns16550 \
+           udp

@@ -1,0 +1,12 @@
+# This Makefile contains rules to build this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/rtp
+
+# Source files for this component
+C_FILES = rtpAlloc.c rtpClose.c rtpFreebuf.c rtpGetbuf.c rtpInit.c rtpOpen.c rtpRead.c rtpRecv.c rtpSend.c rtpWrite.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

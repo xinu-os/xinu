@@ -1,8 +1,6 @@
 /**
  * @file vlanStat.c
- * @provides vlanStat.
  *
- * $Id: vlanStat.c 2108 2009-10-29 05:07:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

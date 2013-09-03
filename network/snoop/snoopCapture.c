@@ -1,7 +1,5 @@
 /* @file snoopCapture.c
- * @provides snoopCapture
  *
- * $Id: snoopCapture.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -9,6 +7,8 @@
 #include <snoop.h>
 
 /**
+ * @ingroup snoop
+ *
  * Captures a network packet from a network interface.
  * @return OK if capture was successful, otherwise SYSERR
  */

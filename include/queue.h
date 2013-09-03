@@ -1,6 +1,5 @@
 /**
  * @file queue.h 
- * @provides firstid, firstkey, isempty, lastkey, nonempty.
  * 
  * The thread queue system allows a statically-allocated array to
  * model sorted thread queueing before more complex operating system
@@ -17,7 +16,6 @@
  * Ordering of threads within a given queue depends upon the sorting
  * functions called when maintaining that particular system queue.
  *
- * $Id: queue.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -31,7 +29,7 @@
 #ifndef NQENT
 
 /** NQENT = 1 per thread, 2 per list, 2 per sem */
-# define NQENT   (NTHREAD + 4 + NSEM + NSEM)
+#define NQENT   (NTHREAD + 4 + NSEM + NSEM)
 #endif
 
 #define EMPTY (-2)              /**< null pointer for queues            */

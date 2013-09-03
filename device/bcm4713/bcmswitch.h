@@ -1,7 +1,6 @@
 /*
  * @file bcmswitch.h
  *
- * $Id: bcmswitch.h 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

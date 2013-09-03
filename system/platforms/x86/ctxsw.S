@@ -1,8 +1,6 @@
 /**
  * @file     ctxsw.s
- * @provides ctxsw
  *
- * $Id: ctxsw.S 2361 2011-02-22 20:13:36Z mziwisky $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 

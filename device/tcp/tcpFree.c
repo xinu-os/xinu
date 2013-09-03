@@ -8,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Delete a TCB.
  * @param tcbptr pointer to transmission control block for connection
  * @precondition TCB mutex is already held

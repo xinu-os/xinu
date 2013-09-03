@@ -1,8 +1,6 @@
 /**
  * @file mailboxCount.c
- * @provides mailboxCount.
  *
- * $Id: mailboxCount.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <mailbox.h>
 
 /**
+ * @ingroup mailbox
+ *
  * Count the number of messages in a mailbox.
  * @param box the number of the mailbox to count
  * @return count of messages in mailbox, SYSERR if error occured

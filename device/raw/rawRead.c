@@ -1,8 +1,6 @@
 /**
  * @file     rawRead.c
- * @provides rawRead
  *
- * $Id: rawRead.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 #include <string.h>
 
 /**
+ * @ingroup raw
+ *
  * Read a packet from a raw socket.
  * @param devptr pointer to RAW device
  * @param buf buffer for read packet

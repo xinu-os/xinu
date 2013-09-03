@@ -1,15 +1,20 @@
 /**
  * @file     udpDemux.c
- * @provides udpDemux
  *
- * $Id: udpDemux.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <stddef.h>
 #include <udp.h>
 
+#define NO_MATCH      0
+#define DEST_MATCH    1
+#define PARTIAL_MATCH 2
+#define FULL_MATCH    3
+
 /**
+ * @ingroup udpinternal
+ *
  * Locate the UDP socket for a UDP packet
  * @param dstpt destination port of the UDP packet
  * @param srcpt source port of the UDP packet
@@ -19,50 +24,57 @@
  * @pre-condition interrupts are already disabled
  * @post-condition interrupts are still disabled
  */
-struct udp *udpDemux(ushort dstpt, ushort srcpt, struct netaddr *dstip,
-                     struct netaddr *srcip)
+struct udp *udpDemux(ushort dstpt, ushort srcpt, const struct netaddr *dstip,
+                     const struct netaddr *srcip)
 {
     struct udp *udpptr = NULL;
     uint i;
-    uint level = 0;
+    uint match = NO_MATCH;
 
     /* Cycle through all udp devices to find the best match */
     for (i = 0; i < NUDP; i++)
     {
-        if (udptab[i].state != UDP_FREE)
+        if (udptab[i].state == UDP_FREE)
         {
-            /* Full match is the best */
-            if (level < 3
-                && (udptab[i].localpt == dstpt)
-                && (udptab[i].remotept == srcpt)
-                && (netaddrequal(&udptab[i].remoteip, srcip))
-                && (netaddrequal(&udptab[i].localip, dstip)))
-            {
-                udpptr = &udptab[i];
-                level = 3;
-            }
+            /* skip this entry */
+            continue;
+        }
+        if (!netaddrequal(&udptab[i].localip, dstip))
+        {
+            /* entry is not bound to the destination */
+            continue;
+        }
 
-            /* Src and dst ports match is second */
-            if (level < 2
-                && (udptab[i].localpt == dstpt)
-                && (udptab[i].remotept == srcpt)
-                && (netaddrequal(&udptab[i].localip, dstip))
-                && (udptab[i].remoteip.type == NULL))
-            {
-                udpptr = &udptab[i];
-                level = 2;
-            }
+        /* Full match is the best */
+        if (match < FULL_MATCH
+            && (udptab[i].localpt == dstpt)
+            && (udptab[i].remotept == srcpt)
+            && (netaddrequal(&udptab[i].remoteip, srcip)))
+        {
+            udpptr = &udptab[i];
+            match = FULL_MATCH;
+            /* you can't beat a full match */
+            break;
+        }
 
-            /* Dst ports match is last */
-            if (level < 1
-                && (udptab[i].localpt == dstpt)
-                && (udptab[i].remotept == NULL)
-                && (netaddrequal(&udptab[i].localip, dstip))
-                && (udptab[i].remoteip.type == NULL))
-            {
-                udpptr = &udptab[i];
-                level = 1;
-            }
+        /* Src and dst ports match is second */
+        if (match < PARTIAL_MATCH
+            && (udptab[i].localpt == dstpt)
+            && (udptab[i].remotept == srcpt)
+            && (udptab[i].remoteip.type == NULL))
+        {
+            udpptr = &udptab[i];
+            match = PARTIAL_MATCH;
+        }
+
+        /* Dst ports match is last */
+        if (match < DEST_MATCH
+            && (udptab[i].localpt == dstpt)
+            && (udptab[i].remotept == NULL)
+            && (udptab[i].remoteip.type == NULL))
+        {
+            udpptr = &udptab[i];
+            match = DEST_MATCH;
         }
     }
 

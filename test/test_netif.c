@@ -1,8 +1,6 @@
 /**
  * @file     test_netif.c
- * @provides test_netif
  *
- * $Id: test_netif.c 2152 2010-01-07 02:43:18Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -32,6 +30,7 @@ extern int _binary_data_testnetif_pcap_start;
  */
 thread test_netif(bool verbose)
 {
+#if NETHER
     bool passed = TRUE;
     int i = 0;
     struct netaddr ip;
@@ -43,8 +42,6 @@ thread test_netif(bool verbose)
     struct packet *pkt;
     struct netif *netptr;
     uchar *data;
-
-    enable();
 
     ip.type = NETADDR_IPv4;
     ip.len = IPv4_ADDR_LEN;
@@ -196,5 +193,8 @@ thread test_netif(bool verbose)
         testFail(TRUE, "");
     }
 
+#else /* NETHER */
+    testSkip(TRUE, "");
+#endif /* NETHER == 0 */
     return OK;
 }

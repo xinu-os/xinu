@@ -1,8 +1,6 @@
 /**
  * @file     rawSend.c
- * @provides rawSend
  *
- * $Id: rawSend.c 2140 2009-12-10 02:06:20Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <route.h>
 
 /**
+ * @ingroup raw
+ *
  * Send an outgoing packet of protocol other than UDP or TCP.
  * @param rawptr pointer to the raw socket control block
  * @param buf buffer to semd

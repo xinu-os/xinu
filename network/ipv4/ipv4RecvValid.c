@@ -1,8 +1,6 @@
 /**
  * file ipv4RecvValid.c
- * @provides ipv4RecvValid
  * 
- * $Id: ipv4RecvValid.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -16,11 +14,7 @@
  */
 bool ipv4RecvValid(struct ipv4Pkt *ip)
 {
-    /* Validate checksum */
-    if (netChksum(ip, (4 * (ip->ver_ihl & IPv4_IHL))) != 0)
-    {
-        return FALSE;
-    }
+	int ip_ihl = ip->ver_ihl & IPv4_IHL;
 
     /* Check version */
     if (((ip->ver_ihl & IPv4_VER) >> 4) != IPv4_VERSION)
@@ -28,6 +22,11 @@ bool ipv4RecvValid(struct ipv4Pkt *ip)
         return FALSE;
     }
 
+    /* Check length of header */
+    if ((ip_ihl < IPv4_MIN_IHL) || (ip_ihl > IPv4_MAX_IHL))
+    {
+        return FALSE;
+    }
 
     /* Check total length */
     if (ip->len < (IPv4_MIN_IHL * 4))
@@ -35,13 +34,11 @@ bool ipv4RecvValid(struct ipv4Pkt *ip)
         return FALSE;
     }
 
-    /* Check length of header */
-    if (((ip->ver_ihl & IPv4_IHL) < IPv4_MIN_IHL)
-        || ((ip->ver_ihl & IPv4_IHL) > IPv4_MAX_IHL))
+    /* Validate checksum */
+    if (netChksum(ip, (ip_ihl * 4)) != 0)
     {
         return FALSE;
     }
 
     return TRUE;
-
 }

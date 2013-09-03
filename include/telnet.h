@@ -1,7 +1,6 @@
 /**
  * @file telnet.h
  *
- * $Id: telnet.h 2115 2009-11-03 02:31:19Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009. All rights reserved. */
 

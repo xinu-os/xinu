@@ -1,0 +1,12 @@
+# This Makefile contains rules to build files in this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = device/framebuffer_rpi
+
+# Source files for this component
+S_FILES =
+C_FILES = screenInit.c mailbox.c drawChar.c drawShapes.c fbPutc.c fbWrite.c fbprintf.c trig.c font.c
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

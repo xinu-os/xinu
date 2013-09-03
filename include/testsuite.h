@@ -1,9 +1,7 @@
 /**
  * @file testsuite.h
- * @provides failif.
  * Definitions relating to the Xinu testsuite.
  *
- * $Id: testsuite.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -57,7 +55,7 @@ void testPrint(bool, const char *);
  * @param failmsg message to display if case fails.
  */
 #define failif(cond, failmsg) \
-	if ( cond ) { testFail(verbose, failmsg); passed = FALSE; } \
+	if ( cond ) { testFail(verbose, failmsg); printf("\t%s:%d\r\n", __FILE__, __LINE__); passed = FALSE; } \
 	else { testPass(verbose, ""); }
 
 /**

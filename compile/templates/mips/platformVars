@@ -1,0 +1,80 @@
+#
+# Makefile definitions for Embedded Xinu shared between all supported MIPS
+# platforms.
+#
+# Before including this file, define the following variables:
+#
+#   MIPS_ENDIANNESS := little
+#
+# or
+#
+#   MIPS_ENDIANNESS := big
+#
+# as well as
+#
+#   MIPS_RELEASE  := 1
+#
+# or
+#
+#   MIPS_RELEASE  := 2
+#
+# Default is little endian, release 1.
+#
+# You can also set
+#
+#   MIPS_PLATFORM_DEFINES_DEFAULT_TARGET := yes
+#
+# to override the default rule to build the final boot image.
+#
+
+TEMPLATE_ARCH   := mips
+MIPS_ENDIANNESS ?= little
+MIPS_RELEASE    ?= 1
+
+# Architecture root and prefix (ignored if user overrides COMPILER_ROOT from the
+# toplevel Makefile).
+ifeq ($(MIPS_ENDIANNESS),little)
+  ARCH_PREFIX   := mipsel-
+else
+  ARCH_PREFIX   := mips-
+endif
+ARCH_ROOT :=
+
+# Flag to pass to compiler and assembler for the specific MIPS Instruction Set
+# Architecture Level
+ifeq ($(MIPS_RELEASE),1)
+  MIPS_ISA_FLAG := mips32
+else
+  MIPS_ISA_FLAG := mips32r2
+endif
+
+# Flag for producing GDB debug information
+BUGFLAG  := -gstabs+
+
+# Additional platform-specific compiler and assembler flags.
+CFLAGS   += -march=$(MIPS_ISA_FLAG) -Wa,-march=$(MIPS_ISA_FLAG) \
+            -Wa,-$(MIPS_ISA_FLAG)                               \
+	    -fomit-frame-pointer -G 0 -mlong-calls              \
+	    -mno-abicalls -mabi=32 -Wa,--trap -Wa,-32
+ASFLAGS  += -march=$(MIPS_ISA_FLAG) -$(MIPS_ISA_FLAG)
+
+# Add a way to test for any MIPS or MIPSel platform from C code.
+DEFS += -D_XINU_ARCH_MIPS_
+ifeq ($(MIPS_ENDIANNESS),little)
+  DEFS += -D_XINU_ARCH_MIPSEL_
+endif
+
+# Objcopy flags, used for including data files in the resulting binary.
+ifeq ($(MIPS_ENDIANNESS),little)
+  MIPS_BFDARCH := elf32-littlemips
+else
+  MIPS_BFDARCH := elf32-bigmips
+endif
+OCFLAGS       := -I binary -O $(MIPS_BFDARCH) -B mips
+
+# Use the ELF-format kernel as the final build target, unless the specific
+# MIPS platform requires something different.
+ifneq ($(MIPS_PLATFORM_DEFINES_DEFAULT_TARGET),yes)
+$(BOOTIMAGE): xinu.elf
+	cp $^ $@
+endif

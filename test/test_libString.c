@@ -36,6 +36,10 @@ thread test_libString(bool verbose)
     s1 = strncpy(sB, "fghij", 3);
     failif(((0 != strncmp(sB, "fghde", 5)) || (s1 != sB)), "");
 
+    testPrint(verbose, "String n copy (fills remaining space with zeroes)");
+    strncpy(sB, "", 6);
+    failif(0 != memcmp(sB, "\0\0\0\0\0\0", 6), "");
+
     /* strncat */
     testPrint(verbose, "String n concantenate");
     char sD[6] = "zyx";

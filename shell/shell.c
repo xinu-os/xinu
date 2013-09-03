@@ -1,8 +1,6 @@
 /**
  * @file     shell.c
- * @provides shell.
  *
- * $Id: shell.c 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -17,6 +15,7 @@
 #include <thread.h>
 #include <nvram.h>
 #include <conf.h>
+#include <framebuffer.h>
 
 const struct centry commandtab[] = {
 #if NETHER
@@ -38,6 +37,9 @@ const struct centry commandtab[] = {
     {"gpiostat", FALSE, xsh_gpiostat},
 #endif
     {"help", FALSE, xsh_help},
+#if defined(ETH0) || defined(_XINU_PLATFORM_ARM_RPI_)
+    {"kexec", FALSE, xsh_kexec},
+#endif
     {"kill", TRUE, xsh_kill},
 #ifdef GPIO_BASE
     {"led", FALSE, xsh_led},
@@ -59,6 +61,7 @@ const struct centry commandtab[] = {
     {"ps", FALSE, xsh_ps},
 #if NETHER
     {"ping", FALSE, xsh_ping},
+    {"pktgen", FALSE, xsh_pktgen},
     {"rdate", FALSE, xsh_rdate},
 #endif
     {"reset", FALSE, xsh_reset},
@@ -78,8 +81,21 @@ const struct centry commandtab[] = {
     {"telnetserver", FALSE, xsh_telnetserver},
 #endif
     {"test", FALSE, xsh_test},
+#if HAVE_TESTSUITE
     {"testsuite", TRUE, xsh_testsuite},
+#endif
+#if NETHER
+    {"timeserver", FALSE, xsh_timeserver},
+#endif
+#if FRAMEBUF
+    {"turtle", FALSE, xsh_turtle},
+#endif
+#if NUART
     {"uartstat", FALSE, xsh_uartstat},
+#endif
+#ifdef WITH_USB
+    {"usbinfo", FALSE, xsh_usbinfo},
+#endif
 #if USE_TLB
     {"user", FALSE, xsh_user},
 #endif
@@ -93,8 +109,11 @@ const struct centry commandtab[] = {
 };
 
 ulong ncommand = sizeof(commandtab) / sizeof(struct centry);
+extern ulong foreground;
 
 /**
+ * @ingroup shell
+ *
  * The Xinu shell.  Provides an interface to execute commands.
  * @param descrp descriptor of device on which the shell is open
  * @return OK for successful exit, SYSERR for unrecoverable error
@@ -119,16 +138,13 @@ thread shell(int indescrp, int outdescrp, int errdescrp)
     int hostname_strsz;         /* nvram hostname name size */
     device *devptr;             /* device pointer           */
 
-    /* Enable interrupts */
-    enable();
-
     hostptr = NULL;
     devptr = NULL;
-    hostname_strsz = 0;
     bzero(hostnm, NET_HOSTNM_MAXLEN + 1);
 
     /* Setup buffer for string for nvramGet call for hostname */
 #ifdef ETH0
+    hostname_strsz = 0;
     if (!isbaddev(ETH0))
     {
         /* Determine the hostname of the main network device */
@@ -156,10 +172,20 @@ thread shell(int indescrp, int outdescrp, int errdescrp)
     stdout = outdescrp;
     stderr = errdescrp;
 
-    /* Print shell banner */
-    printf(SHELL_BANNER);
-    /* Print shell welcome message */
+    /* Print shell banner to framebuffer, if exists */
+#if FRAMEBUF
+    foreground = RASPBERRY;
+    printf(SHELL_BANNER_PI_NONVT100);
+    foreground = LEAFGREEN;
     printf(SHELL_START);
+    foreground = GREEN;
+#else 
+    printf(SHELL_BANNER);
+    printf(SHELL_START);
+#endif
+
+
+   
 
     /* Continually receive and handle commands */
     while (TRUE)

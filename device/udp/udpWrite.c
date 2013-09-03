@@ -1,56 +1,110 @@
 /**
  * @file     udpWrite.c
- * @provides udpWrite
  *
- * $Id: udpWrite.c 2077 2009-09-24 23:58:54Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <device.h>
-#include <stddef.h>
 #include <udp.h>
 
 /**
- * Tell a UDP device to send a packet with the specified data
- * @param devptr UDP device table entry
- * @param buf Buffer of data to be sent
- * @param len Length of data to be sent
- * @return OK if the packet was sent, otherwise SYSERR
+ * @ingroup udpexternal
+ *
+ * Write data to a UDP device, thereby sending it over the network in one or
+ * more UDP packets using the address/port parameters with which the UDP device
+ * is configured.
+ *
+ * Note: depending on the lower levels of the network stack, this function
+ * likely only buffers the UDP packet(s) to be sent at some later time.
+ * Therefore, they may not have actually been transmitted on the wire when this
+ * function returns.
+ *
+ * The UDP device MUST be open and MUST remain open throughout the execution of
+ * this function.
+ *
+ * @param devptr
+ *      Device entry for the UDP device.
+ * @param buf
+ *      Buffer of data to be sent.  If the UDP device is in the default mode,
+ *      this is interpreted as the UDP payload to send, which will be split up
+ *      among multiple UDP packets if its size exceeds ::UDP_MAX_DATALEN bytes.
+ *      Alternatively, if the UDP device is in @ref UDP_FLAG_PASSIVE "passive
+ *      mode", the data is intepreted as a single UDP packet including the UDP
+ *      pseudo-header, followed by the UDP header, followed by the UDP payload.
+ * @param len
+ *      Number of bytes of data to send (length of @p buf).
+ *
+ * @return
+ *      If any packets were successfully sent, returns the number of bytes of
+ *      data successfully sent, which may be less than @p len in the case of an
+ *      error.  If the UDP device is not in passive mode and @p len was 0, no
+ *      packets will be sent and 0 will be returned.  Otherwise, returns
+ *      ::SYSERR.
  */
-devcall udpWrite(device *devptr, void *buf, uint len)
+devcall udpWrite(device *devptr, const void *buf, uint len)
 {
     struct udp *udpptr;
-    uchar *p = (uchar *)buf;
+    int result;
 
     udpptr = &udptab[devptr->minor];
 
-    /* Check if we have a specified remote port and ip */
-    if (NULL == udpptr->remotept || NULL == udpptr->remoteip.type)
+    if (udpptr->flags & UDP_FLAG_PASSIVE)
     {
-        return SYSERR;
-    }
-
-    /* Carry out the actual writing */
-    while (len > 0)
-    {
-        if (len > UDP_MAX_DATALEN)
+        /* If passive UDP device, pass in pseudoheader + header + payload */
+        if (len > sizeof(struct udpPseudoHdr) + UDP_HDR_LEN + UDP_MAX_DATALEN ||
+            len < sizeof(struct udpPseudoHdr) + UDP_HDR_LEN)
         {
-            if (SYSERR == udpSend(udpptr, UDP_MAX_DATALEN, p))
-            {
-                return SYSERR;
-            }
-            len -= UDP_MAX_DATALEN;
-            p += UDP_MAX_DATALEN;
+            UDP_TRACE("Invalid size (%d) passed to passive UDP device", len);
+            return SYSERR;
+        }
+        result = udpSend(udpptr, len, buf);
+        if (OK == result)
+        {
+            return len;
         }
         else
         {
-            if (SYSERR == udpSend(udpptr, len, p))
-            {
-                return SYSERR;
-            }
-            len = 0;
+            return SYSERR;
         }
     }
+    else
+    {
+        uint pktsize;
+        uint count;
 
-    return len;
+        /* Check if we have a specified remote port and ip */
+        if (0 == udpptr->remotept || 0 == udpptr->remoteip.type)
+        {
+            UDP_TRACE("No specified remote port or IP address.");
+            return SYSERR;
+        }
+
+        /* Carry out the actual writing */
+        for (count = 0; count < len; count += pktsize)
+        {
+            uint bytes_remaining = len - count;
+
+            if (bytes_remaining >= UDP_MAX_DATALEN)
+            {
+                pktsize = UDP_MAX_DATALEN;
+            }
+            else
+            {
+                pktsize = bytes_remaining;
+            }
+
+            result = udpSend(udpptr, pktsize, (const uchar*)buf + count);
+            if (OK != result)
+            {
+                if (0 == count)
+                {
+                    return SYSERR;
+                }
+                else
+                {
+                    return count;
+                }
+            }
+        }
+        return len;
+    }
 }

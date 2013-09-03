@@ -1,8 +1,6 @@
 /**
  * @file tcpSeqdiff.c
- * @provides tcpSeqdiff
  *
- * $Id: tcpSeqdiff.c 2134 2009-11-20 02:12:30Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Calculates the difference between two sequence numbers.
  * @param first sequence number that occurs first
  * @param second sequence number that occurs second

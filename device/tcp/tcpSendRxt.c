@@ -1,8 +1,6 @@
 /**
  * @file tcpSendRxt.c
- * @provides tcpSendRxt
  *
- * $Id: tcpSendRxt.c 2039 2009-08-14 22:55:10Z agember $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Retransmitts a segment of pending outbound data (including SYN and FIN) 
  * for a TCP connection.
  * @param tcpptr pointer to the transmission control block for connection

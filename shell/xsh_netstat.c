@@ -1,8 +1,6 @@
 /*
  * @file     xsh_netstat.c
- * @provides xsh_netstat
  *
- * $Id: xsh_netstat.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,9 +9,12 @@
 #include <string.h>
 #include <network.h>
 
+#if NETHER
 static void netStat(struct netif *);
 
 /**
+ * @ingroup shell
+ *
  * Shell command (netstat).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -98,3 +99,4 @@ static void netStat(struct netif *netptr)
 
     return;
 }
+#endif /* NETHER */

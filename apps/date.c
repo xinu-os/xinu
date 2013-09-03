@@ -1,8 +1,6 @@
 /**
  * @file date.c
- * @provides date
  *
- * $Id: date.c 2112 2009-11-02 22:15:54Z kthurow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 

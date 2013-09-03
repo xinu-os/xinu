@@ -1,9 +1,7 @@
 /**
  * @file memRegionTransfer.c
- * @provides memRegionTransfer.
  * Transfer a memory region to a new thread.
  *
- * $Id: memRegionTransfer.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

@@ -1,8 +1,6 @@
 /**
  * @file     xsh_led.c
- * @provides xsh_led.
  *
- * $Id: xsh_led.c 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <string.h>
 
 /**
+ * @ingroup shell
+ *
  * Shell command (led DESCRIPTOR STATE) turns a specified led on or off.
  * @param nargs number of arguments in args array
  * @param args  array of arguments

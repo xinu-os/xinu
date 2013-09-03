@@ -1,8 +1,6 @@
 /**
  * @file start.S
- * @provides _start.
  *
- * $Id: start.S 1723 2009-02-28 00:29:03Z mschul $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 

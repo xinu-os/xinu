@@ -1,8 +1,6 @@
 /**
  * @file telnetGetc.c
- * @provides telnetGetc.
  *
- * $Id: telnetGetc.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <telnet.h>
 
 /**
+ * @ingroup telnet
+ *
  * Read a single character from TELNET.
  * @param devptr TELNET device table entry
  * @return character read from TELNET, or EOF

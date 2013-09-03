@@ -1,8 +1,6 @@
 /**
  * @file arpSendRqst.c
- * @provides arpSendRqst
  *
- * $Id: arpSendRqst.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <network.h>
 
 /**
+ * @ingroup arp
+ *
  * Sends an ARP request for an ARP table entry over a network interface. 
  * @param entry ARP table entry
  * @return OK if packet was sent, otherwise SYSERR

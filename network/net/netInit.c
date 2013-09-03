@@ -1,7 +1,5 @@
 /* @file netInit.c
- * @provides netInit
  *
- * $Id: netInit.c 2108 2009-10-29 05:07:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -23,6 +21,8 @@ struct netif netiftab[NNETIF];
 int netpool;
 
 /**
+ * @ingroup network
+ *
  * Initialize network interfaces
  * @return OK if initialized properly, otherwise SYSERR
  */

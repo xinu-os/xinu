@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <testsuite.h>
 
+#if NSEM
+
 void test_semWaiter(semaphore s, int times, uchar *testResult)
 {
     while (times > 0)
@@ -56,8 +58,11 @@ bool test_checkResult(uchar testResult, uchar expected, bool verbose)
     return TRUE;
 }
 
+#endif /* NSEM */
+
 thread test_semaphore(bool verbose)
 {
+#if NSEM
     tid_typ atid;
     bool passed = TRUE;
     semaphore s;
@@ -161,5 +166,8 @@ thread test_semaphore(bool verbose)
         testFail(TRUE, "");
     }
 
+#else /* NSEM */
+    testSkip(TRUE, "");
+#endif /* NSEM == 0 */
     return OK;
 }

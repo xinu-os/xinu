@@ -1,8 +1,6 @@
 /**
  * @file icmpSend.c
- * @provides icmpSend
  *
- * $Id: icmpSend.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <network.h>
 
 /**
+ * @ingroup icmp
+ *
  * Sends an ICMP reply.
  * @return OK if packet was sent, otherwise SYSERR
  */

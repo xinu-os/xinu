@@ -1,8 +1,6 @@
 /**
  * @file icmpEchoReply.c
- * @provides icmpEchoReply
  *
- * $Id: icmpEchoReply.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <stdlib.h>
 
 /**
+ * @ingroup icmp
+ *
  * Compose ICMP Echo Reply.
  * @param pkt Packet containing request
  * @param nif Net interface matching destination address

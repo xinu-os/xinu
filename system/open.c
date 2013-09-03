@@ -1,8 +1,6 @@
 /**
  * @file open.c
- * @provides open.
  *
- * $Id: open.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,9 +9,23 @@
 #include <stdarg.h>
 
 /**
- * open a connection to a device 
- * @param descrp definition of device to open
- * @return function to open device on success, SYSERR on failure
+ * @ingroup devcalls
+ *
+ * Open a device so that read(), write(), putc(), and/or getc() operations can
+ * be performed on it.
+ *
+ * @param descrp
+ *      Index of the device to open.
+ * @param ...
+ *      Zero or more additional parameters that will be passed to the
+ *      device-specific open function.
+ *
+ * @return
+ *      On success, returns ::OK.  If the device index is bad or if another
+ *      error occurs, returns ::SYSERR.  Generally, device drivers will at least
+ *      return ::SYSERR in the case that the device is already open, but
+ *      ::SYSERR may also be returned because of failure to allocate resources
+ *      or for device-specific errors.
  */
 devcall open(int descrp, ...)
 {

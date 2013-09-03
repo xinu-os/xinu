@@ -10,6 +10,7 @@
 
 thread test_bufpool(bool verbose)
 {
+#if NPOOL
     bool passed = TRUE;
     int id, i;
     void *pbuf;
@@ -27,7 +28,7 @@ thread test_bufpool(bool verbose)
         memsize - ((TBUFSIZE + sizeof(struct poolbuf)) * TBUFNUM))
     {
         restore(im);
-        testFail(verbose,
+        testFail(TRUE,
                  "\nmemlist.length reduction does not match pool size");
         return OK;
     }
@@ -146,6 +147,8 @@ thread test_bufpool(bool verbose)
     {
         testFail(TRUE, "");
     }
-
+#else /* NPOOL */
+    testSkip(TRUE, "");
+#endif /* NPOOL == 0 */
     return OK;
 }

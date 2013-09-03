@@ -1,10 +1,7 @@
 /**
  * @file     clkhandler.c
- * @provides clkhandler.
- *
- * $Id: clkhandler.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stddef.h>
 #include <queue.h>
@@ -12,12 +9,18 @@
 #include <thread.h>
 #include <platform.h>
 
+#if RTCLOCK
+
 void wakeup(void);
-syscall resched(void);
+int resched(void);
 
 /**
- * Clock handler updates timer registers and system time.
- * Wakes sleeping threads if necessary.
+ * @ingroup timer
+ *
+ * Interrupt handler function for the timer interrupt.  This schedules a new
+ * timer interrupt to occur at some point in the future, then updates ::clktime
+ * and ::clkticks, then wakes sleeping threads if there are any, otherwise
+ * reschedules the processor.
  */
 interrupt clkhandler(void)
 {
@@ -44,3 +47,5 @@ interrupt clkhandler(void)
         resched();
     }
 }
+
+#endif /* RTCLOCK */

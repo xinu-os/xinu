@@ -1,8 +1,6 @@
 /**
  * @file     udpRecv.c
- * @provides udpRecv
  *
- * $Id: udpRecv.c 2116 2009-11-03 20:55:05Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,16 +12,19 @@
 #include <udp.h>
 
 /**
+ * @ingroup udpinternal
+ *
  * Receive a UDP packet and place it in the UDP device's input buffer
  * @param pkt Incoming UDP packet
  * @param src Source address
  * @param dst Destination address
  * @return OK if UDP packet is received properly, otherwise SYSERR
  */
-syscall udpRecv(struct packet *pkt, struct netaddr *src,
-                struct netaddr *dst)
+syscall udpRecv(struct packet *pkt, const struct netaddr *src,
+                const struct netaddr *dst)
 {
     struct udpPkt *udppkt;
+    struct udpPseudoHdr *pseudo;
     struct udp *udpptr;
     struct udpPkt *tpkt;
 #ifdef TRACE_UDP
@@ -43,8 +44,9 @@ syscall udpRecv(struct packet *pkt, struct netaddr *src,
         return SYSERR;
     }
 
-    /* Calculate checksum */
-    if (0 != udpChksum(pkt, net2hs(udppkt->len), src, dst))
+    /* Calculate optional checksum */
+    if ((udppkt->chksum)
+        && (0 != udpChksum(pkt, net2hs(udppkt->len), src, dst)))
     {
         UDP_TRACE("Invalid UDP checksum.");
         netFreebuf(pkt);
@@ -71,6 +73,13 @@ syscall udpRecv(struct packet *pkt, struct netaddr *src,
                   udppkt->srcPort, strB, udppkt->dstPort);
 #endif                          /* TRACE_UDP */
         restore(im);
+
+        // TODO: Validate packet byte ordering.
+        /* Convert UDP header fields to net order */
+        udppkt->srcPort = hs2net(udppkt->srcPort);
+        udppkt->dstPort = hs2net(udppkt->dstPort);
+        udppkt->len = hs2net(udppkt->len);
+
         /* Send ICMP port unreachable message */
         icmpDestUnreach(pkt, ICMP_PORT_UNR);
         netFreebuf(pkt);
@@ -100,13 +109,21 @@ syscall udpRecv(struct packet *pkt, struct netaddr *src,
     if (SYSERR == (int)tpkt)
     {
         UDP_TRACE("Unable to get UDP buffer from pool. Dropping packet.");
+        restore(im);
         netFreebuf(pkt);
         return SYSERR;
     }
 
     /* Copy the data of the packet into the input buffer at the current 
      * position */
-    memcpy(tpkt, udppkt, udppkt->len);
+    pseudo = (struct udpPseudoHdr *)tpkt;
+    memcpy(pseudo->srcIp, src->addr, IPv4_ADDR_LEN);
+    memcpy(pseudo->dstIp, dst->addr, IPv4_ADDR_LEN);
+    pseudo->zero = 0;
+    pseudo->proto = IPv4_PROTO_UDP;
+    pseudo->len = udppkt->len;
+
+    memcpy((pseudo + 1), udppkt, udppkt->len);
 
     /* Store the temporary UDP packet in a FIFO buffer */
     udpptr->in[(udpptr->istart + udpptr->icount) % UDP_MAX_PKTS] = tpkt;

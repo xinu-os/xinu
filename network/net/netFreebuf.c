@@ -1,8 +1,6 @@
 /**
  * file netGetbuf.c
- * @provides netFreebuf
  * 
- * $Id: netFreebuf.c 2079 2009-10-05 22:32:48Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <network.h>
 
 /**
+ * @ingroup network
+ *
  * Frees a buffer for storing a packet.
  * @return OK if successful, SYSERR if an error occured
  */

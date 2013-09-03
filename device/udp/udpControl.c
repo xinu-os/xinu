@@ -1,8 +1,6 @@
 /**
  * @file     udpControl.c
- * @provides udpControl
  *
- * $Id: udpControl.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <udp.h>
 
 /**
+ * @ingroup udpexternal
+ *
  * Control function for udp devices.
  * @param devptr udp device table entry
  * @param func control function to execute

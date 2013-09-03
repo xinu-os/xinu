@@ -1,21 +1,34 @@
 /**
  * @file ns16550.h
  *
- * $Id: ns16550.h 2102 2009-10-26 20:36:13Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #ifndef _NS16550_H_
 #define _NS16550_H_
 
-# include <stddef.h>
+#include <stddef.h>
+#include <conf.h>
 
 /**
  * Control and status registers for the 16550 UART.  This structure is
  * mapped directly to the base address for the CSR.
  */
-struct uart_csreg
+struct ns16550_uart_csreg
 {
+#if UART_CSR_SPACED
+    volatile ulong buffer;      /**< receive buffer (read only)         */
+                                /**<  OR transmit hold (write only)     */
+    volatile ulong ier;         /**< interrupt enable                   */
+    volatile ulong iir;         /**< interrupt ident (read only)        */
+                                /**<  OR FIFO control (write only)      */
+    volatile ulong lcr;         /**< line control                       */
+    volatile ulong mcr;         /**< modem control                      */
+    volatile ulong lsr;         /**< line status                        */
+    volatile ulong msr;         /**< modem status                       */
+    volatile ulong scr;         /**< scratch                            */
+#else
+
     volatile uchar buffer;      /**< receive buffer (read only)         */
                                 /**<  OR transmit hold (write only)     */
     volatile uchar ier;         /**< interrupt enable                   */
@@ -26,6 +39,7 @@ struct uart_csreg
     volatile uchar lsr;         /**< line status                        */
     volatile uchar msr;         /**< modem status                       */
     volatile uchar scr;         /**< scratch                            */
+#endif
 };
 
 /* Alternative names for control and status registers                   */
@@ -72,7 +86,5 @@ struct uart_csreg
 #define UART_LSR_DR     0x01    /**< Data ready                         */
 #define UART_LSR_THRE   0x20    /**< Transmit-hold-register empty       */
 #define UART_LSR_TEMT   0x40    /**< Transmitter empty                  */
-
-#define UART_FIFO_LEN   64      /**< At least 64 bytes on WRT54GL.      */
 
 #endif                          /* _NS16550_H_ */

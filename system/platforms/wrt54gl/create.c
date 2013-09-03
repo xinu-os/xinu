@@ -1,9 +1,7 @@
 /**
  * @file create.c
- * @provides create, newtid.
  * @brief Creates a thread to start running a procedure
  *
- * $Id: create.c 2086 2009-10-06 22:24:27Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -16,15 +14,8 @@
 
 static int thrnew(void);
 
-/**
- * Create a thread to start running a procedure.
- * @param procaddr procedure address
- * @param ssize stack size in bytes
- * @param priority thread priority
- * @param name name of the thread
- * @param nargs number of args that follow
- * @return new thread ID
- */
+/* create() implementation for wrt54gl platform.  See thread.h for generic
+ * documentation.  */
 tid_typ create(void *procaddr, uint ssize, int priority,
                char *name, int nargs, ...)
 {
@@ -61,7 +52,7 @@ tid_typ create(void *procaddr, uint ssize, int priority,
     thrptr->stkbase = saddr;
     thrptr->stklen = ssize;
     thrptr->stkptr = saddr;
-    strncpy(thrptr->name, name, TNMLEN);
+    strlcpy(thrptr->name, name, TNMLEN);
     thrptr->parent = gettid();
     thrptr->hasmsg = FALSE;
     thrptr->memlist.next = NULL;

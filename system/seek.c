@@ -1,8 +1,6 @@
 /**
  * @file seek.c
- * @provides seek.
  *
- * $Id: seek.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <device.h>
 
 /**
+ * XXX:  This function apparently isn't used anywhere currently.
+ *
  * position a device (very common special case of control)
  * @param descrp definition of device on which to seek
  * @param pos requested position to seek

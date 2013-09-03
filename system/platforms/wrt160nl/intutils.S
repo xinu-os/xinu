@@ -1,9 +1,7 @@
 /**
  * @file     intutils.S
- * @provides enable, disable, restore, enable_cpuirq, disable_cpuirq, restore_intr, exlreset, exlset.
  * Functions to control disabling and enabling of interrupts.
  *
- * $Id: intutils.S 2103 2009-10-27 01:43:40Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 

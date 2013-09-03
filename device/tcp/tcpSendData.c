@@ -1,8 +1,6 @@
 /**
  * @file tcpSendData.c
- * @provides tcpSendData
  *
- * $Id: tcpSendData.c 2074 2009-09-21 23:37:28Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,6 +8,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Sends pending outbound data (including SYN and FIN) for a TCP connection, 
  * if new data is ready for transmission.
  * @param tcpptr pointer to the transmission control block for connection

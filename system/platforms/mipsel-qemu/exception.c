@@ -1,8 +1,6 @@
 /**
  * @file exception.c 
- * @provides exception.
  *
- * $Id: exception.c 2092 2009-10-07 23:08:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -97,11 +95,6 @@ void exception(long cause, long *frame)
             frame + 0, frame[IRQREC_ZER / 4], frame[IRQREC_AT / 4],
             frame[IRQREC_V0 / 4], frame[IRQREC_V1 / 4]);
 
-#ifdef DEBUG
-    debugbreak();
-    return;
-#else                           /* not DEBUG */
     while (1)
         ;                       /* forever */
-#endif                          /* not debug */
 }

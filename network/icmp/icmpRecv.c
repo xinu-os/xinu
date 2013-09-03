@@ -1,8 +1,6 @@
 /**
  * @file icmpRecv.c
- * @provides icmpRecv
  *
- * $Id: icmpRecv.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -18,6 +16,8 @@
 #include <string.h>
 
 /**
+ * @ingroup icmp
+ *
  * Processes an incoming ICMP packet.
  * @param pkt pointer to the incoming packet
  * return OK if packet was processed succesfully, otherwise SYSERR

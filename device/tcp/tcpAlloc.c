@@ -1,8 +1,6 @@
 /**
  * @file tcpAlloc.c
- * @provides tcpAlloc.
  *
- * $Id: tcpAlloc.c 1991 2009-08-12 01:35:28Z agember $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Allocate an available tcp device.
  * @return device number for a tcp device, SYSERR if none are free
  */

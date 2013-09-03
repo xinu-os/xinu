@@ -1,8 +1,6 @@
 /**
  * @file memget.c
- * @provides memget.
  *
- * $Id: memget.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,9 +8,18 @@
 #include <memory.h>
 
 /**
- * Allocate heap storage, returning lowest word address
- * @param nbytes  bytes requested
- * @return pointer to region on success, SYSERR on failure
+ * @ingroup memory_mgmt
+ *
+ * Allocate heap memory.
+ *
+ * @param nbytes
+ *      Number of bytes requested.
+ *
+ * @return
+ *      ::SYSERR if @p nbytes was 0 or there is no memory to satisfy the
+ *      request; otherwise returns a pointer to the allocated memory region.
+ *      The returned pointer is guaranteed to be 8-byte aligned.  Free the block
+ *      with memfree() when done with it.
  */
 void *memget(uint nbytes)
 {

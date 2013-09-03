@@ -2,7 +2,6 @@
  * Generic exception handler(s) for x86-xinu.  Adapted from D.W.Brylow's 
  * version for the PPC port of XINU
  *
- * $Id$
  */
 #include <asm-i386/icu.h>
 

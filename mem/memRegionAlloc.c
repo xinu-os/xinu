@@ -1,10 +1,8 @@
 /**
  * @file     memRegionAlloc.c
- * @provides memRegionAlloc.
  * User/kernel agnostic memory allocator.  Simply provides a pointer to
  * memory that belongs to the current thread.
  *
- * $Id: memRegionAlloc.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

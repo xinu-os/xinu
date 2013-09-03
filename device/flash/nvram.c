@@ -1,9 +1,7 @@
 /**
  * @file nvram.c
- * @provide nvramInit, nvramGet, nvramSet, nvramUnset, nvramCommit
  * Functions to access the nvram settings from kernel space.
  *
- * $Id: nvram.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 
@@ -31,7 +29,6 @@ devcall nvramInit(void)
 {
     struct dentry *devptr = NULL;
     struct flash *flash = NULL;
-    struct flash_block block;
     uint nvbase, offset, index, pair_len;
     uint nvram_length, size;
     char *pair;
@@ -59,11 +56,14 @@ devcall nvramInit(void)
         nvram_tuples[index] = NULL;
     }
 
-    /* fetch where nvram begins */
-    block = logicalMap(flash, NVRAM_MIN_BLOCK);
-
-    /* use seek to position region/block, then grab the base */
-    nvbase = flash->base + block.start_pos + block.size - NVRAM_SIZE;
+    /* Scan flash at for NVRAM magic number */
+    nvbase = flash->base + flash->size - NVRAM_SIZE;
+    while (nvbase > flash->base)
+    {
+        if (NVRAM_MAGIC == *((uint *)nvbase))
+            break;
+        nvbase -= NVRAM_SIZE;
+    }
     offset = 0;
 
     /* find the head for data */

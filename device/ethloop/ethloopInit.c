@@ -1,8 +1,6 @@
 /**
  * @file     ethloopInit.c
- * @provides ethloopInit
  *
- * $Id: ethloopInit.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,6 +12,8 @@
 struct ethloop elooptab[NETHLOOP];
 
 /**
+ * @ingroup ethloop
+ *
  * Initialize ethloop device
  * @param devptr 
  * @return OK on open

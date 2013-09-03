@@ -1,24 +1,28 @@
 /**
  * @file httpPutc.c
- * @provides httpPutc.
- *
- * $Id: httpPutc.c 2077 2009-09-24 23:58:54Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stddef.h>
 #include <http.h>
 
 /**
- * Write a single character to a HTTP.
- * @param devptr HTTP device table entry
- * @param ch character to output
- * @return OK if character was written successfully, otherwise SYSERR
+ * Write a single character to the HTTP device.
+ *
+ * @param devptr
+ *      HTTP device table entry
+ * @param ch
+ *      character to output
+ *
+ * @return
+ *      @p ch as an <code>unsigned char</code> cast to an @c int on success; @c
+ *      SYSERR on failure.
  */
 devcall httpPutc(device *devptr, char ch)
 {
     struct http *webptr;
     device *phw = NULL;
+    int ret;
 
     /* Setup and error check pointers to structures */
     webptr = &httptab[devptr->minor];
@@ -29,5 +33,13 @@ devcall httpPutc(device *devptr, char ch)
     }
 
     /* Write character to httpWrite */
-    return httpWrite(devptr, &ch, 1);
+    ret = httpWrite(devptr, &ch, 1);
+    if (ret == 1)
+    {
+        return (uchar)ch;
+    }
+    else
+    {
+        return SYSERR;
+    }
 }

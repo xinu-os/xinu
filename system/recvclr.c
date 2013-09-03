@@ -1,14 +1,14 @@
 /**
  * @file recvclr.c
- * @provides recvclr.
  *
- * $Id: recvclr.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <thread.h>
 
 /**
+ * @ingroup threads
+ *
  * Clear messages, return waiting message (if any)
  * @return msg if available, NOMSG if no message
  */

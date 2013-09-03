@@ -1,8 +1,6 @@
 /**
  * @file etherClose.c
- * @provides etherClose.
  *
- * $Id: etherClose.c 2107 2009-10-28 23:12:53Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -16,11 +14,8 @@
 #include <interrupt.h>
 #include <thread.h>
 
-/**
- * Close an ethernet device.
- * @param devptr ether device table entry
- * @return OK if device is closed properly, otherwise SYSERR
- */
+/* Implementation of etherClose() for the bcm4713; see the documentation for
+ * this function in ether.h.  */
 devcall etherClose(device *devptr)
 {
     irqmask im;

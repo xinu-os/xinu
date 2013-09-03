@@ -1,7 +1,6 @@
 /**
  * @file tcp.h
  * 
- * $Id: tcp.h 2134 2009-11-20 02:12:30Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

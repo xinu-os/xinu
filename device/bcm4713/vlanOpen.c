@@ -1,8 +1,6 @@
 /**
  * @file vlanOpen.c
- * @provides vlanOpen.
  *
- * $Id: vlanOpen.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -15,6 +13,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup etherspecific
+ *
  * Open a virtual ethernet device for use
  * @param  devptr ethernet device table entry
  * @return OK if opened properly, otherwise SYSERR

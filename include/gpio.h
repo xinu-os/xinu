@@ -1,13 +1,13 @@
 /**
  * @file gpio.h
- * @provides gpioLEDOn, gpioLEDOff.
  *
- * $Id: gpio.h 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #ifndef _GPIO_H_
 #define _GPIO_H_
+
+#include <stddef.h>
 
 /* GPIO bits for pin direction */
 #define GPIO_DIR_IN        0x00 /**< set pin for input                  */

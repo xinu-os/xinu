@@ -1,8 +1,6 @@
 /**
  * @file httpReadHdrs.c
- * @provides httpReadHdrs
  *
- * $Id: httpReadHdrs.c 2076 2009-09-24 23:05:39Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

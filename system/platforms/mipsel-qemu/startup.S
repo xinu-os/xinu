@@ -1,11 +1,9 @@
 /**
  * @file     startup.S
- * @provides _startup, copyhandler, clearvector.
  * This is where kernel execution begins once loader hands off.  The boot
  * loader flushes caches, copies this kernel's interrupt handler to proper
  * location in memory and hands off control.
  *
- * $Id: startup.S 2105 2009-10-28 19:07:32Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

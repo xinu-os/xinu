@@ -1,8 +1,6 @@
 /**
  * @file vlanStat.c
- * @provides vlanStat.
  *
- * $Id: vlanStat.c 2106 2009-10-28 21:51:16Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * @ingroup etherspecific
+ */
 int vlanStat(void)
 {
     struct mdioregs *mdio = NULL;

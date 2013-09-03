@@ -1,8 +1,6 @@
 /**
  * @file     xsh_memstat.c
- * @provides xsh_memstat.
  *
- * $Id: xsh_memstat.c 2074 2009-09-21 23:37:28Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -44,6 +42,8 @@ static void usage(char *command)
 }
 
 /**
+ * @ingroup shell
+ *
  * Shell command (gpiostat) provides memory use and free list information.
  * @param nargs number of arguments in args array
  * @param args  array of arguments
@@ -143,12 +143,17 @@ static void printMemUsage(void)
     struct memregion *regptr;   /* point to memory region */
 #endif                          /* UHEAP_SIZE */
 
+
+#ifdef _XINU_ARCH_MIPS_
     /* Calculate amount of physical memory */
     phys = (ulong)platform.maxaddr - (ulong)KSEG0_BASE;
-
     /* Calculate amount of reserved system memory */
     resrv = (ulong)_start - (ulong)KSEG0_BASE;
-
+#else
+    phys = (ulong)platform.maxaddr - (ulong)platform.minaddr;
+    resrv = (ulong)_start - (ulong)platform.minaddr;
+#endif
+    
     /* Calculate amount of text memory */
     code = (ulong)&_end - (ulong)_start;
 

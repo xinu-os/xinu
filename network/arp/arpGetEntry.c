@@ -1,8 +1,6 @@
 /**
  * @file arpGetEntry.c
- * @provides arpGetEntry
  *
- * $Id: arpGetEntry.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,11 +10,13 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup arp
+ *
  * Obtains an entry from the ARP table given a protocol address.
  * @param praddr protocol address
  * @return entry for correspoding praddr in ARP table, NULL if none exists
  */
-struct arpEntry *arpGetEntry(struct netaddr *praddr)
+struct arpEntry *arpGetEntry(const struct netaddr *praddr)
 {
     int i = 0;
     struct arpEntry *entry = NULL;  /**< pointer to ARP table entry   */

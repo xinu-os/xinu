@@ -1,8 +1,6 @@
 /**
  * @file icmpRedirect.c
- * @provides icmpRedirect
  *
- * $Id: icmpRedirect.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <route.h>
 
 /**
+ * @ingroup icmp
+ *
  * Compose ICMP Redirect message.
  * @param redir packet that should have gone somewhere else
  * @param code  ICMP redirect code number

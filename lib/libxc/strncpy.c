@@ -1,34 +1,49 @@
 /**
  * @file strncpy.c
- * @provides strncpy.
- *
- * $Id: strncpy.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
 
 /**
- * Copy string s2 to s1, truncating or null-padding to always copy n bytes.
- * @param s1 first string
- * @param s2 second string
- * @param n length of s2 to copy
- * @return s1
+ * @ingroup libxc
+ *
+ * Copies at most @p n bytes of a string to a new location.  The source string
+ * may or may not be null-terminated, but if it is and the null terminator is
+ * present in the first @p n bytes, then copying will stop early when it is
+ * reached.  If less than @p n bytes were copied, then the remaining bytes in
+ * the destination will be set to null characters until @p n bytes total have
+ * been written.
+ *
+ * <b>Beware: if the source string does not contain a null terminator in its
+ * first @p n bytes, the destination will not be null-terminated.  To correctly
+ * write a null-terminated string into a fixed-size buffer with truncation as
+ * expected, consider using strlcpy() instead.</b>
+ *
+ * @param dest
+ *      Pointer to the memory to which to copy the string.
+ * @param src
+ *      Pointer to the string to copy.
+ * @param n
+ *      Number of bytes to fill (see above description).
+ *
+ * @return
+ *      A pointer to @p dest.
  */
-char *strncpy(char *s1, const char *s2, int n)
+char *strncpy(char *dest, const char *src, size_t n)
 {
-    register int i;
-    register char *os1;
+    size_t i;
+    char *dest_save = dest;
 
-    os1 = s1;
-    for (i = 0; i < n; i++)
+    for (i = 0; src[i] != '\0' && i < n; i++)
     {
-        if (((*s1++) = (*s2++)) == '\0')
-        {
-            while (++i < n)
-            {
-                *s1++ = '\0';
-            }
-            return os1;
-        }
+        dest[i] = src[i];
     }
-    return os1;
+
+    for (; i < n; i++)
+    {
+        dest[i] = '\0';
+    }
+
+    return dest_save;
 }

@@ -1,8 +1,6 @@
 /**
  * @file bfpfree.c
- * @provides bfpfree.
  *
- * $Id: bfpfree.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,17 +9,30 @@
 #include <memory.h>
 #include <bufpool.h>
 
-syscall bfpfree(int id)
+/**
+ * @ingroup memory_mgmt
+ *
+ * Frees the memory allocated for a buffer pool.
+ *
+ * @param poolid
+ *      Identifier of the buffer pool to free, as returned by bfpalloc().
+ *
+ * @return
+ *      ::OK if the buffer pool was valid and was successfully freed; otherwise
+ *      ::SYSERR.  If @p poolid specified a valid buffer pool, then this
+ *      function can only return ::SYSERR as a result of memory corruption.
+ */
+syscall bfpfree(int poolid)
 {
     struct bfpentry *bfpptr;
     irqmask im;
 
-    if (isbadpool(id))
+    if (isbadpool(poolid))
     {
         return SYSERR;
     }
 
-    bfpptr = &bfptab[id];
+    bfpptr = &bfptab[poolid];
 
     im = disable();
     bfpptr->state = BFPFREE;

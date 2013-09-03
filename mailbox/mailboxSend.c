@@ -1,8 +1,6 @@
 /**
  * @file mailboxSend.c
- * @provides mailboxSend.
  *
- * $Id: mailboxSend.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <mailbox.h>
 
 /**
+ * @ingroup mailbox
+ *
  * Send a mailmsg to a mailbox.
  * @param box the number of the mailbox to send to
  * @param mailmsg the mailmsg to send

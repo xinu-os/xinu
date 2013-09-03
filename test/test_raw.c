@@ -1,8 +1,6 @@
 /**
  * @file test_raw.c
- * @provides test_raw
  *
- * $Id: test_raw.c 2152 2010-01-07 02:43:18Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -26,7 +24,7 @@ extern int _binary_data_testraw_pcap_start;
  */
 thread test_raw(bool verbose)
 {
-#if RAW0
+#ifdef RAW0
     /* the failif macro depends on 'passed' and 'verbose' vars */
     bool passed = TRUE;
     device *devptr;
@@ -544,6 +542,8 @@ thread test_raw(bool verbose)
     {
         testFail(TRUE, "");
     }
-#endif                          /* RAW0 */
+#else /* RAW0 */
+    testSkip(TRUE, "");
+#endif /* !RAW0 */
     return OK;
 }

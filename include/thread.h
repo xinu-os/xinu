@@ -1,19 +1,19 @@
 /**
  * @file thread.h
- * @provides isbadtid.
  *
- * $Id: thread.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
+#ifndef __ASSEMBLER__
 #include <interrupt.h>
 #include <semaphore.h>
 #include <debug.h>
 #include <stddef.h>
 #include <memory.h>
+#endif /* __ASSEMBLER__ */
 
 /* unusual value marks the top of the thread stack                      */
 #define STACKMAGIC  0x0A0AAAA9
@@ -27,6 +27,7 @@
 #define THRSUSP     6           /**< thread is suspended                */
 #define THRWAIT     7           /**< thread is on semaphore queue       */
 #define THRTMOUT    8           /**< thread is receiving with timeout   */
+#define THRMIGRATE  9           /**< thread is being migrated           */
 
 /* miscellaneous thread definitions                                     */
 #define TNMLEN      16          /**< length of thread "name"            */
@@ -37,11 +38,11 @@
 #define INITSTK     65536       /**< initial thread stack size          */
 #define INITPRIO    20          /**< initial thread priority            */
 #define MINSTK      128         /**< minimum thread stack size          */
-#ifdef DEBUG
+#ifdef JTAG_DEBUG
 #define INITRET   debugret      /**< threads return address for debug   */
-#else                           /* not DEBUG */
-#define INITRET   userret     /**< threads return address             */
-#endif                          /* not DEBUG */
+#else                           /* not JTAG_DEBUG */
+#define INITRET   userret       /**< threads return address             */
+#endif                          /* JTAG_DEBUG */
 
 /* Reschedule constants for ready  */
 #define RESCHED_YES 1           /**< tell ready to reschedule           */
@@ -53,6 +54,16 @@
 
 /** Maximum number of file descriptors a thread can hold */
 #define NDESC       5
+
+/** Maximum number of local devices */
+#define NLOCDEV     10
+
+/* Expose sizeof(struct thrent) and offsetof(struct thrent, stkdiv) to 
+ * assembly files. */
+#define THRENTSIZE 148
+#define STKDIVOFFSET 104
+
+#ifndef __ASSEMBLER__
 
 /**
  * Defines what an entry in the thread table looks like.
@@ -85,7 +96,30 @@ message recvclr(void);
 message recvtime(int);
 
 /* Thread management function prototypes */
-tid_typ create(void *, uint, int, char *, int, ...);
+
+/**
+ * @ingroup threads
+ *
+ * Create a thread to start running a procedure.
+ * @param procaddr
+ *      procedure address
+ * @param ssize
+ *      stack size in words
+ * @param priority
+ *      thread priority (0 is lowest priority)
+ * @param name
+ *      name of the thread, used for debugging
+ * @param nargs
+ *      number of arguments that follow
+ * @param ...
+ *      arguments to pass to thread procedure
+ * @return
+ *      the new thread's thread id, or ::SYSERR if a new thread could not be
+ *      created.
+ */
+tid_typ create(void *procaddr, uint ssize, int priority,
+               const char *name, int nargs, ...);
+
 tid_typ gettid(void);
 syscall getprio(tid_typ);
 syscall kill(int);
@@ -94,7 +128,17 @@ int resched(void);
 syscall sleep(uint);
 syscall unsleep(tid_typ);
 syscall yield(void);
+
+/**
+ * @ingroup threads
+ *
+ * Enter some kind of powerdown state (if it exists) that suspends
+ * execution until an interrupt is detected.
+ */
 void pause(void);
+
 void userret(void);
+
+#endif /* __ASSEMBLER__ */
 
 #endif                          /* _THREAD_H_ */

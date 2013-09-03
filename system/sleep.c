@@ -1,8 +1,6 @@
 /**
  * @file sleep.c
- * @provides sleep.
  *
- * $Id: sleep.c 2094 2009-10-09 22:20:18Z zlund $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -14,9 +12,17 @@
 #include <clock.h>
 
 /**
- * Delay the calling thread n milliseconds.
+ * @ingroup threads
+ *
+ * Yields the processor for the specified number of milliseconds, allowing other
+ * threads to be scheduled.
+ *
  * @param ms number of milliseconds to sleep
- * @return OK if thread is sleeping, SYSERR if no clock
+ *
+ * @return
+ *      If successful, the thread will sleep for the specified number of
+ *      milliseconds, then return ::OK.  Otherwise, ::SYSERR will be returned.
+ *      If a system timer is not supported, ::SYSERR will always returned.
  */
 syscall sleep(uint ms)
 {

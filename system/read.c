@@ -1,8 +1,6 @@
 /**
  * @file read.c
- * @provides read.
  *
- * $Id: read.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -10,11 +8,22 @@
 #include <device.h>
 
 /**
- * read one or more bytes from a device
- * @param descrp definition of device from which to read
- * @param *buffer pointer into read-to location
- * @param count length of buffer
- * @return function to read from device on success, SYSERR on failure
+ * @ingroup devcalls
+ *
+ * Read data from a device.
+ *
+ * @param descrp
+ *      Index of the device to read from.
+ * @param buffer
+ *      Buffer into which to read the data.
+ * @param count
+ *      Maximum number of bytes to read.
+ *
+ * @return
+ *      On success, returns the number of bytes read, which may be less than @p
+ *      count in the event of a read error or end-of-file condition.
+ *      Alternatively, ::SYSERR is returned if the device index is not valid or
+ *      if a read error occurred before any data at all was successfully read.
  */
 devcall read(int descrp, void *buffer, uint count)
 {

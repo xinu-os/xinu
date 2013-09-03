@@ -1,68 +1,21 @@
 #
-#  Platform-specific Makefile definitions for the
-#  Embedded Xinu operating system.
+# Platform-specific Makefile definitions for the x86 port of Embedded Xinu.
 #
-#  32-bit i386
-#
-#  $Id: platformVars 2188 2010-05-17 23:52:10Z akoehler $
 
-PLATFORM = x86
+# Include default x86 definitions
+include templates/x86/platformVars
 
-BINIMAGE = xinu.bin
-BOOTIMAGE = xinu.boot
+PLATFORM_NAME := Intel x86
 
-X86_ROOT = /opt/dev/x86_64-unknown-elf/bin
-X86_PREFIX = x86_64-unknown-elf-
+# Add flags to compile 32 bit code
+CFLAGS        += -m32
+ASFLAGS       += --32
 
-COMPILER_ROOT = ${X86_ROOT}/${X86_PREFIX}
+# Add a define so we can test for x86 in C code if absolutely needed
+DEFS          += -D_XINU_PLATFORM_X86_
 
-CC       = ${COMPILER_ROOT}gcc
-CPP      = ${COMPILER_ROOT}cpp
-LD       = ${COMPILER_ROOT}ld
-AS       = ${COMPILER_ROOT}as
-AR       = ${COMPILER_ROOT}ar
-OBJCOPY  = ${COMPILER_ROOT}objcopy
-STRIP    = ${COMPILER_ROOT}strip
-MAKEDEP  = gcc -M -MG
+# Embedded Xinu components to build into the kernel image
+APPCOMPS      := apps mailbox shell test
 
-DOCGEN   = doxygen
-
-# DETAIL   = -DDETAIL
-
-DEFS     = -DI386
-INCLUDE  = -I../include -I../system/platforms/${PLATFORM}
-
-#flag for producing GDB debug information
-BUGFLAG = -gstabs+
-
-# C compilation flags
-CFLAGS = -O0 -m32 -Wall -Wstrict-prototypes -Wno-trigraphs            \
-         -nostdinc -fno-builtin -fno-strict-aliasing -fno-common \
-         -fomit-frame-pointer -fno-pic -ffunction-sections \
-         ${INCLUDE} ${DETAIL} ${DEFS} -c
-
-# Assembler flags
-ASFLAGS  = -m32 ${INCLUDE} ${DEBUG}
-
-# Loader flags
-IMG_START = 0x100000
-LDFLAGS   = -static --gc-sections --whole-archive -Ttext=${IMG_START} \
-            -e _start -m elf_i386
-
-# Objcopy flags
-OCFLAGS  = -I binary -O elf32-i386 -B i386
-
-# Embedded Xinu components to build into kernel image
-# APPCOMPS  = apps mailbox shell test network # mem
-APPCOMPS  = apps mailbox shell test
-
-
-DEVICES = tty x86uart #e100
-DEVCOMPS  = ${DEVICES:%=device/%}
-
-${BINIMAGE}: ${BOOTIMAGE}
-	${OBJCOPY} -O binary $^ $@
-
-${BOOTIMAGE}: xinu.elf
-	cp $^ $@
-	${STRIP} $@
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES       := loopback tty uart-x86

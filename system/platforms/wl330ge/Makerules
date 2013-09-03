@@ -1,0 +1,29 @@
+# This Makefile contains rules to build files in this directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = system/platforms/wl330ge
+
+# Source files for this component
+
+# Important system components
+S_FILES = startup.S pause.S
+C_FILES = platforminit.c
+
+# Files for process control
+S_FILES += ctxsw.S
+C_FILES += create.c 
+
+# Files for preemption and interrupts
+S_FILES += clkupdate.S intutils.S intdispatch.S halt.S
+C_FILES += dispatch.c exception.c
+
+# Files for JTAG debugging
+S_FILES += debugbreak.S debugret.S
+
+# Files for system calls
+S_FILES += syscall_entry.S
+C_FILES += syscall_dispatch.c
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

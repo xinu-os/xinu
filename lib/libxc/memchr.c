@@ -1,29 +1,40 @@
 /**
  * @file memchr.c
- * @provides memchr.
- *
- * $Id: memchr.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
+#include <stddef.h>
 
 /** 
- * Returns a pointer to the location in  memory at which which a particular
- * character appears.
- * @param *cs string to search
- * @param c character to locate
- * @param n number of bytes to search
- * @return the pointer in the string, NULL if character not found
+ * @ingroup libxc
+ *
+ * Returns a pointer to the first location in a region of memory at which a
+ * particular byte appears.
+ *
+ * @param s
+ *      A pointer to the memory region to search.
+ * @param c
+ *      The byte to locate.
+ * @param n
+ *      The maximum number of bytes to search.
+ *
+ * @return
+ *      A pointer to the first occurrence of @p c in the memory region, or @c
+ *      NULL if @p c was not found in the memory region.
  */
-void *memchr(const void *cs, int c, int n)
+void *memchr(const void *s, int c, size_t n)
 {
-    char *cp = (char *)cs;
+    const unsigned char *p = s;
+    unsigned char byte = c;
+    size_t i;
 
-    for (; *cp != '\0'; cp++)
+    for (i = 0; i < n; i++)
     {
-        if (*cp == (unsigned char)c)
+        if (p[i] == byte)
         {
-            return (void *)cp;
+            return (void*)&p[i]; /* Cast away const */
         }
     }
-    return 0;
+    return NULL;
 }

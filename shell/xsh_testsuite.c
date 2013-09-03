@@ -1,22 +1,26 @@
 /**
  * @file     xsh_testsuite.c
- * @provides xsh_testsuite.
  *
- * $Id: xsh_testsuite.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
+#include <conf.h>
+
+#if HAVE_TESTSUITE
+
 #include <stddef.h>
-#include <thread.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <testsuite.h>
+#include <thread.h>
 
 static void testItem(int, bool);
 static void help(char *command);
 
 /**
+ * @ingroup shell
+ *
  * Shell command (testsuite) provides a menu of standard Xinu component
  * tests.
  * @param nargs number of arguments
@@ -112,3 +116,5 @@ static void testItem(int testnum, bool verbose)
         fprintf(stderr, "testsuite: (%d) No such test.\n", testnum + 1);
     }
 }
+
+#endif /* HAVE_TESTSUITE */

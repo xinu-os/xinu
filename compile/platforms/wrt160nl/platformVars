@@ -1,70 +1,49 @@
 #
-#  Platform-specific Makefile definitions for the
-#  Embedded Xinu operating system.
+# Platform-specific Makefile definitions for the WRT160NL port of Embedded Xinu.
 #
-#  32-bit MIPS big-endian
-#  Linksys WRT160NL wireless router
-#
-#  $Id: platformVars 2132 2009-11-17 23:22:38Z brylow $
 
-PLATFORM = wrt160nl
+PLATFORM_NAME := Linksys WRT160NL
 
-BOOTIMAGE = xinu.boot
-
-MIPS_ROOT = /usr/local/project/mips-dev/bin
-MIPS_PREFIX = mips-
-
-COMPILER_ROOT = ${MIPS_ROOT}/${MIPS_PREFIX}
-
-CC       = ${COMPILER_ROOT}gcc
-CPP      = ${COMPILER_ROOT}cpp
-LD       = ${COMPILER_ROOT}ld
-AS       = ${COMPILER_ROOT}as
-AR       = ${COMPILER_ROOT}ar
-OBJCOPY  = ${COMPILER_ROOT}objcopy
-MAKEDEP  = gcc -M -MG
-
-DOCGEN   = doxygen
-
-# DETAIL   = -DDETAIL
-
-DEFS     =
-INCLUDE  = -I../include -I../system/platforms/${PLATFORM}
-
-#flag for producing GDB debug information
-BUGFLAG = -gstabs+
-
-# C compilation flags
-CFLAGS = -O0 -Wall -Werror -Wstrict-prototypes -Wno-trigraphs		\
-	     -nostdinc -fno-builtin -fno-strict-aliasing -fno-common	\
-       	 -fomit-frame-pointer -fno-pic -ffunction-sections -G 0		\
-         -mlong-calls -mno-abicalls -mabi=32 -march=mips32r2		\
-         -Wa,-32 -Wa,-march=mips32r2 -Wa,-mips32r2 -Wa,--trap		\
-         ${DEBUG} ${INCLUDE} ${DETAIL} ${DEFS} -c
-
-# Assembler flags
-ASFLAGS  = ${INCLUDE} ${DEBUG} -march=mips32r2 -mips32r2
-
-# Loader flags
-LDFLAGS   = -static --gc-sections -T platforms/${PLATFORM}/ld.script
-
-# Objcopy flags
-OCFLAGS  = -I binary -O elf32-bigmips -B mips
+# Include default mips definitions, but override some details about the
+# specific sub-architecture
+MIPS_RELEASE                         := 2
+MIPS_ENDIANNESS                      := big
+MIPS_PLATFORM_DEFINES_DEFAULT_TARGET := yes
+include templates/mips/platformVars
 
 # Embedded Xinu components to build into kernel image
-APPCOMPS  = apps mailbox shell test network # mem
+APPCOMPS := apps        \
+            mailbox     \
+            network     \
+            shell       \
+            test
 
-DEVICES = loopback tty uart-ns16550a \
-	ag71xx ethloop raw \
-	udp tcp telnet
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES := ag71xx       \
+           ethloop      \
+           flash        \
+           loopback     \
+           raw          \
+           tcp          \
+           telnet       \
+           tty          \
+           uart-ns16550a\
+           udp
 
-DEVCOMPS  = ${DEVICES:%=device/%}
+# On this platform, generating the final boot image requires an external tool.
 
-MKIMAGE   = uboot-tool/mkimage
-UBOOTOPTS = -A mips -O linux -T kernel -a 0x80010000 -C none -e 0x80010000 -n 'Xinu'
+MKIMAGE   := uboot-tool/mkimage
+UBOOTOPTS := -A mips -O linux -T kernel -a 0x80010000 \
+             -C none -e 0x80010000 -n 'Xinu'
 
-${BOOTIMAGE}: xinu.bin ${MKIMAGE}
-	${MKIMAGE} ${UBOOTOPTS} -d xinu.bin $@
+# Default build target
+$(BOOTIMAGE): xinu.bin $(MKIMAGE)
+	$(MKIMAGE) $(UBOOTOPTS) -d xinu.bin $@
+
+$(MKIMAGE):
+	@echo "ERROR: The U-Boot utilities are not part of Xinu."
+	@echo "ERROR: Please acquire the mkimage utility separately."
+	exit 1
 
 xinu.bin: xinu.elf
-	${OBJCOPY} -O binary $^ $@
+	$(OBJCOPY) -O binary $^ $@

@@ -1,9 +1,8 @@
 /**
  * @file ether.h
  *
- * $Id: ether.h 2115 2009-11-03 02:31:19Z brylow $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #ifndef _ETHER_H_
 #define _ETHER_H_
@@ -118,20 +117,153 @@ struct ether
     int outPool;                /**< buffer pool id for output          */
 };
 
+/**
+ * \ingroup ether
+ *
+ * Global table of ethernet devices.  Note that Xinu does not support multiple
+ * types of Ethernet devices concurrently, only all the same kind.
+ */
 extern struct ether ethertab[];
 
-/* Driver functions */
-devcall etherInit(device *);
-devcall etherOpen(device *);
-devcall etherClose(device *);
-devcall etherRead(device *, void *, uint);
-devcall etherWrite(device *, void *, uint);
-devcall etherControl(device *, int, long, long);
+/* Ethernet driver functions */
+
+/**
+ * \ingroup ether
+ *
+ * Do one-time initialization of an Ethernet device.  This performs
+ * initialization of the Ethernet device that perists through calls to
+ * etherOpen() and etherClose(), such as initializing the Ethernet control block
+ * and setting hardware parameters.
+ *
+ * @param devptr
+ *      Pointer to the entry in Xinu's device table for the Ethernet device.
+ * @return
+ *      ::OK if the device was initialized successfully; otherwise ::SYSERR.
+ */
+devcall etherInit(device *devptr);
+
+/**
+ * \ingroup ether
+ *
+ * Open an Ethernet device.  This enables Tx and Rx functionality and sets the
+ * device state to ::ETH_STATE_UP.  This should be called through open().
+ *
+ * @param devptr
+ *      Pointer to the entry in Xinu's device table for the Ethernet device.
+ *
+ * @return
+ *      ::OK if the device was opened successfully; otherwise ::SYSERR.
+ */
+devcall etherOpen(device *devptr);
+
+/**
+ * \ingroup ether
+ *
+ * Close an Ethernet device.  This disables Tx and Rx functionality and sets the
+ * device state to ::ETH_STATE_DOWN.  This should be called through close().
+ *
+ * @param devptr
+ *      Pointer to the entry in Xinu's device table for the Ethernet device.
+ *
+ * @return ::OK if the device was closed successfully; otherwise ::SYSERR.
+ */
+devcall etherClose(device *devptr);
+
+/**
+ * \ingroup ether
+ *
+ * Read an Ethernet frame from an Ethernet device.  This should be called
+ * through read().
+ *
+ * This function blocks until a frame has actually been received.  There is no
+ * timeout.
+ *
+ * @param devptr
+ *      Pointer to the entry in Xinu's device table for the Ethernet device.
+ * @param buf
+ *      Buffer in which to receive the Ethernet frame.  The received frame will
+ *      start with the MAC destination address and end with the payload.
+ * @param len
+ *      Maximum length, in bytes, of the Ethernet frame to receive (size of @p
+ *      buf).
+ *
+ * @return
+ *      ::SYSERR if the Ethernet device is not currently up; otherwise the
+ *      actual length of the Ethernet frame received and written to @p buf.
+ */
+devcall etherRead(device *devptr, void *buf, uint len);
+
+/**
+ * \ingroup ether
+ *
+ * Write an Ethernet frame (excluding certain fields) to an Ethernet device.
+ * This should be called through write().
+ *
+ * This function actually only buffers the frame to be sent at some later time.
+ * Therefore, there is no guarantee the frame has actually been transmitted on
+ * the wire when this function returns.
+ *
+ * @param devptr
+ *      Pointer to the entry in Xinu's device table for the Ethernet device.
+ * @param buf
+ *      Buffer that contains the Ethernet frame to send.  It must start with the
+ *      MAC destination address and end with the payload.
+ * @param len
+ *      Length, in bytes, of the Ethernet frame to send.
+ *
+ * @return
+ *      ::SYSERR if packet is too small, too large, or the Ethernet device is
+ *      not currently up; otherwise @p len, the number of bytes submitted to be
+ *      written at some later time.
+ */
+devcall etherWrite(device *devptr, const void *buf, uint len);
+
+/**
+ * \ingroup ether
+ *
+ * Execute a control function on an Ethernet device.  This should be called
+ * through control().
+ *
+ * @param devptr
+ *      Pointer to the entry in Xinu's device table for the Ethernet device.
+ * @param req
+ *      Control request to execute.
+ * @param arg1
+ *      First argument (if any) for the control request.
+ * @param arg2
+ *      Second argument (if any) for the control request.
+ *
+ * @return
+ *      The result of the control request, or ::SYSERR if the control request
+ *      @p req was not recognized.
+ */
+devcall etherControl(device *devptr, int req, long arg1, long arg2);
+
+/**
+ * \ingroup ether
+ *
+ * Print information about an Ethernet device.
+ *
+ * @param minor
+ *      Minor number of the Ethernet device to print information about.
+ */
+void etherStat(ushort minor);
+
+/**
+ * \ingroup ether
+ *
+ * Print throughput data about an Ethernet device.
+ *
+ * @param minor
+ *      Minor number of the Ethernet device to print throughput data about.
+ */
+void etherThroughput(ushort minor);
+
 interrupt etherInterrupt(void);
 
-void etherStat(ushort);
-void etherThroughput(ushort);
-
+/**
+ * \ingroup ether
+ */
 int colon2mac(char *, uchar *);
 int allocRxBuffer(struct ether *, int);
 int waitOnBit(volatile uint *, uint, const int, int);

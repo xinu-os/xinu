@@ -1,8 +1,6 @@
 /**
  * @file tcpSetup.c
- * @provides tcpSetup, tcpIss
  *
- * $Id: tcpSetup.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -15,6 +13,8 @@
 static uint tcpIss(void);
 
 /**
+ * @ingroup tcp
+ *
  * Intializes a transmission control block.
  * @prarm tcbptr TCB for connection
  * @return OK if TCB is initialized properly, otherwise SYSERR

@@ -1,7 +1,5 @@
 /* @file snoopOpen.c
- * @provides snoopOpen
  *
- * $Id: snoopOpen.c 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <snoop.h>
 
 /**
+ * @ingroup snoop
+ *
  * Opens a capture from a network device.
  * @param cap pointer to capture structure
  * @param name of underlying device, ALL for all network devices
@@ -25,7 +25,6 @@ int snoopOpen(struct snoop *cap, char *devname)
     int devnum;
     irqmask im;
 
-    i = 0;
     /* Error check pointers */
     if ((NULL == cap) || (NULL == devname))
     {
@@ -66,6 +65,7 @@ int snoopOpen(struct snoop *cap, char *devname)
         if (0 == count)
         {
             SNOOP_TRACE("Capture not attached to any interface");
+            mailboxFree(cap->queue);
             return SYSERR;
         }
         return OK;
@@ -76,6 +76,7 @@ int snoopOpen(struct snoop *cap, char *devname)
     if (SYSERR == devnum)
     {
         SNOOP_TRACE("Invalid device");
+        mailboxFree(cap->queue);
         return SYSERR;
     }
     im = disable();
@@ -96,5 +97,6 @@ int snoopOpen(struct snoop *cap, char *devname)
     /* No network interface found */
     restore(im);
     SNOOP_TRACE("No network interface found");
+    mailboxFree(cap->queue);
     return SYSERR;
 }

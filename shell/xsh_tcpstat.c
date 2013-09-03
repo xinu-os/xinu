@@ -1,8 +1,6 @@
 /*
  * @file     xsh_tcpstat.c
- * @provides xsh_tcpstat
  *
- * $Id: xsh_tcpstat.c 2134 2009-11-20 02:12:30Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,7 +10,10 @@
 #include <network.h>
 #include <tcp.h>
 
+#if NETHER
 /**
+ * @ingroup shell
+ *
  * Shell command (tcpstat).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
@@ -55,3 +56,4 @@ shellcmd xsh_tcpstat(int nargs, char *args[])
 
     return OK;
 }
+#endif /* NETHER */

@@ -1,14 +1,13 @@
 /**
  * @file     flashInit.c
- * @provides flashInit
  * Flash initialization.  This should be called during general device
  * initialization and will detect a CFI flash device.
  *
- * $Id: flashInit.c 2077 2009-09-24 23:58:54Z mschul $
  */
 #include <kernel.h>
 #include <stdlib.h>
 #include <flash.h>
+#include "platformflash.h"
 
 #ifndef NFLASH
 #define NFLASH 0
@@ -16,6 +15,8 @@
 
 struct flash flashtab[NFLASH];
 struct flash_block bad_block = { 0, 0, FLASH_BLOCK_DIRTY, NULL };
+
+int flash_size = -1;
 
 /**
  * Initialized the flash device located beginning at the value of
@@ -36,6 +37,12 @@ devcall flashInit(device *devptr)
     flash->device = devptr;
     flash->base = (ulong)devptr->csr;
     flash->lock = semcreate(1);
+
+    /* Check for flash_size passed from bootloader       */
+    if (flash_size != -1)
+    {
+        flash->size = flash_size << 20;
+    }
 
     /* Change to CFI query mode */
     CFI_PUT_8(flash->base, CFI_QUERY_ADDR, CFI_QUERY_MODE);
@@ -59,6 +66,7 @@ devcall flashInit(device *devptr)
     if (!(flash->commands == FLASH_INTEL_SCS
           || flash->commands == FLASH_AMD_SCS))
     {
+        CFI_PUT_8(flash->base, CFI_QUERY_ADDR, CFI_QUERY_EXIT);
         return SYSERR;
     }
 
@@ -70,6 +78,7 @@ devcall flashInit(device *devptr)
 
     if (flash->nregions >= MAX_REGIONS)
     {
+        CFI_PUT_8(flash->base, CFI_QUERY_ADDR, CFI_QUERY_EXIT);
         return SYSERR;
     }
 
@@ -106,6 +115,7 @@ devcall flashInit(device *devptr)
     /* Dumb check to make sure all regions are counted */
     if (position != flash->size)
     {
+        CFI_PUT_8(flash->base, CFI_QUERY_ADDR, CFI_QUERY_EXIT);
         return SYSERR;
     }
 

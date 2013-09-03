@@ -1,34 +1,37 @@
 /**
  * @file strrchr.c
- * @provides strrchr.
- *
- * $Id: strrchr.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <string.h>
+#include <stddef.h>
 
 /**
- * Returns a pointer to the location in a string at which which a particular
- * character last appears.
- * @param *s string to search
- * @param c character to locate
- * @return the pointer in the string, NULL if character not found
+ * @ingroup libxc
+ *
+ * Returns a pointer to the last location in a null-terminated string at which a
+ * particular character appears.
+ *
+ * @param s
+ *      The string to search.
+ * @param c
+ *      The character to locate.
+ *
+ * @return
+ *      The pointer in the string, or @c NULL if the character was not found.
  */
 char *strrchr(const char *s, int c)
 {
-    char *r = 0;
+    char *r = NULL;
+    unsigned char ch = c;
 
-    for (; *s != '\0'; s++)
+    do
     {
-        if (*s == (const char)c)
+        if (*s == ch)
         {
-            r = (char *)s;
+            r = (char *)s; /* Cast away const. */
         }
-    }
-
-    if ((const char)c == *s)
-    {
-        return (char *)s;
-    }
+    } while (*s++);
 
     return r;
 }

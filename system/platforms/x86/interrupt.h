@@ -4,7 +4,6 @@
  * Constants and declarations associated with interrupt and exception
  * processing.
  *
- * $Id: interrupt.h 1721 2009-02-25 18:32:21Z mschul $
  */
 /* Embedded XINU, Copyright (C) 2007.  All rights reserved. */
 

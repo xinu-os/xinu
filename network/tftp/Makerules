@@ -1,0 +1,14 @@
+#This Makefile contains rules to build files in the net/tftp directory.
+
+# Name of this component (the directory this file is stored in)
+COMP = network/tftp
+
+# Source files for this component
+
+# Important network components
+C_FILES = tftpGet.c tftpGetIntoBuffer.c tftpRecvPackets.c tftpSendACK.c tftpSendRRQ.c
+S_FILES =
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

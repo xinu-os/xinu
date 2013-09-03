@@ -1,19 +1,29 @@
 /**
  * @file abs.c
- * @provides abs.
- *
- * $Id: abs.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
+
+#include <stdlib.h>
 
 /**
- * Calculates the absolute value of a number.
- * @param arg number to get absolute value of
- * @return absolute value of arg
+ * @ingroup libxc
+ *
+ * Calculates the absolute value of an integer.
+ *
+ * @param j
+ *      The integer to get the absolute value of.
+ *
+ * @return
+ *      The absolute value of @p j.  As a special case, if @p j is @c INT_MIN,
+ *      the return value will be undefined because @c -INT_MIN cannot be
+ *      represented in an @c int.
  */
-int abs(int arg)
+int abs(int j)
 {
-    if (arg < 0)
-        arg = -arg;
-    return (arg);
+    if (j < 0)
+    {
+        j = -j;
+    }
+
+    return j;
 }

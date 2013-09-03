@@ -1,8 +1,6 @@
 /**
  * @file rtLookup.c
- * @provides rtLookup
  * 
- * $Id: rtLookup.c 2140 2009-12-10 02:06:20Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,11 +10,13 @@
 #include <route.h>
 
 /**
+ * @ingroup route
+ *
  * Looks up an entry in the routing table
  * @param addr the IP address that needs routing
  * @return a route table entry, NULL if none matches, SYSERR on error
  */
-struct rtEntry *rtLookup(struct netaddr *addr)
+struct rtEntry *rtLookup(const struct netaddr *addr)
 {
     int i;
     struct rtEntry *rtptr;

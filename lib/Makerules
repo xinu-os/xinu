@@ -1,0 +1,49 @@
+#
+# Common Makefile targets to build a static library.
+#
+
+INCLUDE := -I../../include -I../../system/platforms/$(PLATFORM)
+
+# Filter out source files that have been overridden on this platform.  This is
+# primarily intended to allow platforms to provide optimized implementations of
+# libxc functions.  For that use case, one would define LIBXC_OVERRIDE_CFILES in
+# platformVars to be a list of C source files that are *not* to be compiled as
+# part of libxc.
+CFILES  := $(filter-out $($(shell echo $(LIBNAME) | tr a-z A-Z)_OVERRIDE_CFILES), $(CFILES))
+SFILES  := $(filter-out $($(shell echo $(LIBNAME) | tr a-z A-Z)_OVERRIDE_SFILES), $(SFILES))
+
+# Update the include flag
+CFLAGS  := $(CFLAGS:-I%=$(INCLUDE))
+
+# C object files
+COBJ    := $(CFILES:%.c=%.o)
+
+# Assembly object files
+SOBJ    := $(SFILES:%.S=%.o)
+
+# All object files
+OBJ     := $(COBJ) $(SOBJ)
+
+all: $(LIBNAME).a
+
+$(COBJ): %.o: %.c
+	@echo -e "\tCompiling" $^
+	$(CC) $(CFLAGS) -c -o$@ $^
+
+$(SOBJ): %.o: %.c
+	@echo -e "\tAssembling" $^
+	$(AS) $(AFLAGS) -o$@ $^
+
+$(LIBNAME).a: $(OBJ)
+	rm -f $(LIBNAME).a
+	$(AR) cr $(LIBNAME).a $(OBJ)
+
+$(LIBDIR)/$(LIBNAME).a: $(LIBNAME).a
+	cp $^ $@
+
+install: $(LIBDIR)/$(LIBNAME).a
+
+clean:
+	rm -f $(OBJ) $(LIBNAME).a $(LIBDIR)/$(LIBNAME).a
+
+.PHONY: clean install all

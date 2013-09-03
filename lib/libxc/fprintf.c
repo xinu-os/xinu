@@ -1,29 +1,36 @@
 /**
  * @file fprintf.c
- * @provides fprintf.
- *
- * $Id: fprintf.c 2020 2009-08-13 17:50:08Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <stdarg.h>
-
-extern void _doprnt(char *, va_list, int (*)(int, int), int);
+#include <stdio.h>
 
 /**
- * Print a formatted message on specified device (file)
- * @param dev device to write to
- * @param *fmt format string
- * @return 0 if the output was printed sucessfully, -1 if an error occured
+ * @ingroup libxc
+ *
+ * Writes a formatted message to the specified device.
+ *
+ * @param dev
+ *      Index of the device to write to.
+ * @param format
+ *      The format string.  Not all standard conversion specifications are
+ *      supported by this implementation.  See _doprnt() for a description of
+ *      supported conversion specifications.
+ * @param ...
+ *      Arguments matching those in the format string.
+ *
+ * @return
+ *      On success, returns the number of characters written.  On write error,
+ *      returns a negative value.
  */
-int fprintf(int dev, char *fmt, ...)
+int fprintf(int dev, const char *format, ...)
 {
     va_list ap;
-    int putc(int, int);
+    int ret;
 
-    va_start(ap, fmt);
-    _doprnt(fmt, ap, putc, dev);
+    va_start(ap, format);
+    ret = _doprnt(format, ap, fputc, dev);
     va_end(ap);
-
-    return 0;
+    return ret;
 }

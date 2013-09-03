@@ -23,7 +23,7 @@ thread test_memory(bool verbose)
     if (SYSERR == (uint)testblock)
     {
         passed = FALSE;
-        testFail(verbose, "getmem SYSERR");
+        testFail(verbose, "memget SYSERR");
     }
     else if (!list_check())
     {

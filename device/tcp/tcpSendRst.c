@@ -1,8 +1,6 @@
 /**
  * @file tcpSendRst.c
- * @provides tcpSendRst
  *
- * $Id: tcpSendRst.c 2065 2009-09-04 21:44:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <tcp.h>
 
 /**
+ * @ingroup tcp
+ *
  * Sends a reset in response to an incorrect TCP packet
  * @param pkt incoming packet which requires a reset response
  * @param src source IP address of the packet	

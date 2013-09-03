@@ -1,8 +1,6 @@
 /**
  * @file ttyClose.c
- * @provides ttyClose.
  *
- * $Id: ttyClose.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup tty
+ *
  * Close a TTY device.
  * @param devptr TTY device table entry
  * @return OK if TTY is closed properly, otherwise SYSERR

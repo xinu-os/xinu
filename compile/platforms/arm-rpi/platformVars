@@ -1,0 +1,38 @@
+#
+# Platform-specific Makefile definitions for the Raspberry Pi port of Embedded
+# Xinu.
+#
+
+
+# Include default ARM definitions
+include templates/arm/platformVars
+
+PLATFORM_NAME := Raspberry Pi
+
+# Extra compiler and assembler flags to specifically target the ARM1176JZF-S CPU
+# used on the BCM2835 (used by the Raspberry Pi).
+CFLAGS   += -mcpu=arm1176jzf-s
+ASFLAGS  += -mcpu=arm1176jzf-s
+
+# Add a define so we can test for Raspberry Pi in C code if absolutely needed
+DEFS     += -D_XINU_PLATFORM_ARM_RPI_
+
+# Embedded Xinu components to build into the kernel image
+APPCOMPS := apps      \
+            mailbox   \
+            network   \
+            shell     \
+            test
+
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES  := ethloop         \
+            raw             \
+            smsc9512        \
+            tcp             \
+            telnet          \
+            uart-pl011      \
+            framebuffer_rpi \
+            udp             \
+            usb             \
+            loopback        \
+            tty

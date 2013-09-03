@@ -1,0 +1,50 @@
+#
+# Platform-specific Makefile definitions for the Cisco Linksys E2100L port of
+# Embedded Xinu.
+#
+
+PLATFORM_NAME := Cisco Linksys E2100L
+
+# Include default mips definitions, but override some details about the
+# specific sub-architecture
+MIPS_RELEASE                         := 2
+MIPS_ENDIANNESS                      := big
+MIPS_PLATFORM_DEFINES_DEFAULT_TARGET := yes
+include templates/mips/platformVars
+
+# Embedded Xinu components to build into kernel image
+APPCOMPS := apps        \
+            mailbox     \
+            network     \
+            shell       \
+            test
+
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES := ag71xx       \
+           ethloop      \
+           flash        \
+           loopback     \
+           raw          \
+           tcp          \
+           telnet       \
+           tty          \
+           uart-ns16550 \
+           udp
+
+# On this platform, generating the final boot image requires an external tool.
+
+MKIMAGE   := uboot-tool/mkimage
+UBOOTOPTS := -A mips -O linux -T kernel -a 0x80010000 \
+             -C none -e 0x80010000 -n 'Xinu'
+
+# Default build target
+$(BOOTIMAGE): xinu.bin $(MKIMAGE)
+	$(MKIMAGE) $(UBOOTOPTS) -d xinu.bin $@
+
+$(MKIMAGE):
+	@echo "ERROR: The U-Boot utilities are not part of Xinu."
+	@echo "ERROR: Please acquire the mkimage utility separately."
+	exit 1
+
+xinu.bin: xinu.elf
+	$(OBJCOPY) -O binary $^ $@

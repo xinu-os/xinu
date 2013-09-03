@@ -1,26 +1,35 @@
 /**
  * @file     ethloopWrite.c
- * @provides ethloopWrite
- *
- * $Id: ethloopWrite.c 2077 2009-09-24 23:58:54Z mschul $
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
 #include <bufpool.h>
 #include <device.h>
 #include <ethloop.h>
 #include <interrupt.h>
+#include <stddef.h>
 #include <string.h>
 
 /**
- * Write characters to an ethloop.
- * @param devptr 
- * @param buf buffer for read characters
- * @param len size of the buffer
- * @return number of characters written, SYSERR if an error occurs
+ * @ingroup ethloop
+ *
+ * Write data to an Ethernet Loopback device.  On success, the data will be
+ * available to be read by a subsequent call to ethloopRead().
+ *
+ * @param devptr
+ *      Pointer to the device table entry for the ethloop.
+ *
+ * @param buf
+ *      Buffer of data to write.
+ *
+ * @param len
+ *      Length of data to write, in bytes.
+ *
+ * @return
+ *      On success, returns the number of bytes written, which will be exactly
+ *      @p len.  On failure, returns SYSERR.
  */
-devcall ethloopWrite(device *devptr, void *buf, uint len)
+devcall ethloopWrite(device *devptr, const void *buf, uint len)
 {
     struct ethloop *elpptr;
     irqmask im;
@@ -29,38 +38,42 @@ devcall ethloopWrite(device *devptr, void *buf, uint len)
 
     elpptr = &elooptab[devptr->minor];
 
-    if ((len > ELOOP_BUFSIZE) || (len < ELOOP_LINKHDRSIZE))
+    /* Make sure the packet isn't too small or too large  */
+    if ((len < ELOOP_LINKHDRSIZE) || (len > ELOOP_BUFSIZE))
     {
         return SYSERR;
     }
 
     im = disable();
+
+    /* Make sure the ethloop is actually open  */
     if (ELOOP_STATE_ALLOC != elpptr->state)
     {
         restore(im);
         return SYSERR;
     }
 
-    /* Allocate buffer space */
-    pkt = (char *)bufget(elpptr->poolid);
-    if (SYSERR == (int)pkt)
-    {
-        return SYSERR;
-    }
-
-    /* Copy supplied buffer into allocated buffer */
-    memcpy(pkt, buf, len);
-
     /* Drop packet if drop flags(s) are set */
-    if ((elpptr->flags & ELOOP_FLAG_DROPNXT)
-        || (elpptr->flags & ELOOP_FLAG_DROPALL))
+    if (elpptr->flags & (ELOOP_FLAG_DROPNXT | ELOOP_FLAG_DROPALL))
     {
         elpptr->flags &= ~ELOOP_FLAG_DROPNXT;
         restore(im);
         return len;
     }
 
-    /* Hold next packet if flags is set */
+    /* Allocate buffer space.  This is blocking, so it can only fail if the pool
+     * ID was corrupted.  */
+    pkt = (char *)bufget(elpptr->poolid);
+    if (SYSERR == (int)pkt)
+    {
+        restore(im);
+        return SYSERR;
+    }
+
+    /* Copy supplied buffer into allocated buffer */
+    memcpy(pkt, buf, len);
+
+    /* Hold next packet if the appropriate flag is set */
     if (elpptr->flags & ELOOP_FLAG_HOLDNXT)
     {
         elpptr->flags &= ~ELOOP_FLAG_HOLDNXT;
@@ -75,9 +88,10 @@ devcall ethloopWrite(device *devptr, void *buf, uint len)
         return len;
     }
 
-    /* Ensure there is enough buffer space */
+    /* Ensure there is enough buffer space (there always should be)  */
     if (elpptr->count >= ELOOP_NBUF)
     {
+        buffree(pkt);
         restore(im);
         return SYSERR;
     }

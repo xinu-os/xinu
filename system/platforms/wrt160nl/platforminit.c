@@ -1,8 +1,6 @@
 /**
  * @file platforminit.c
- * @provides platforminit.
  *
- * $Id: platforminit.c 2092 2009-10-07 23:08:36Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

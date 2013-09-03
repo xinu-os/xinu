@@ -1,7 +1,6 @@
 /**
  * @file mailbox.h
  *
- * $Id: mailbox.h 2070 2009-09-18 22:36:02Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 

@@ -1,6 +1,5 @@
 /**
  * @file     xsh_user.c
- * @provides xsh_user.
  * Shell command demonstrating use of userland functions/syscall interface.
  *
  * NOTE (applies to xsh_user.c, syscall_entry.S, and syscall_dispatch.c):
@@ -28,20 +27,23 @@
  * arbitrary values used by the programmer to test the interface.
  *                                                        -mjs (2009-Sep-24)
  *
- * $Id: xsh_user.c 2075 2009-09-24 21:34:24Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <syscall.h>
+#include <mailbox.h>
 
+#if USE_TLB
 #define BUF_LENGTH 512
 
 #ifndef LOOP
 #define LOOP (-1)
 #endif
 /**
+ * @ingroup shell
+ *
  * Take a system call number and run that system call.  This is only for
  * demonstration.
  * @param nargs number of arguments
@@ -125,3 +127,4 @@ shellcmd xsh_user(int nargs, char **args)
 
     return 0;
 }
+#endif /* USE_TLB */

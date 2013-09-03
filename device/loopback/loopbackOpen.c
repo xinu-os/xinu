@@ -1,9 +1,7 @@
 /**
  * @file     loopbackOpen.c
- * @provides loopbackOpen.
  * 
- * $Id: loopbackOpen.c 2077 2009-09-24 23:58:54Z mschul $
- **/
+ */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <stddef.h>
@@ -13,13 +11,15 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup loopback
+ *
  * Open a loopback device. 
  * @param devptr loopback device table entry
  * @return OK if loopback is opened properly, otherwise SYSERR
  */
 devcall loopbackOpen(device *devptr)
 {
-    struct loopback *lbkptr = NULL;
+    struct loopback *lbkptr;
     irqmask im;
 
     lbkptr = &looptab[devptr->minor];
@@ -32,16 +32,22 @@ devcall loopbackOpen(device *devptr)
         return SYSERR;
     }
 
-    lbkptr->state = LOOP_STATE_ALLOC;
-
-    /* Gather new semaphore */
+    /* Create new semaphore */
     lbkptr->sem = semcreate(0);
+
+    if (SYSERR == lbkptr->sem)
+    {
+        restore(im);
+        return SYSERR;
+    }
 
     /* Zero out the buffer */
     bzero(lbkptr->buffer, LOOP_BUFFER);
 
     /* Zero out flags */
     lbkptr->flags = 0;
+
+    lbkptr->state = LOOP_STATE_ALLOC;
 
     restore(im);
     return OK;

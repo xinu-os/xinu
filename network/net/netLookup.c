@@ -1,8 +1,6 @@
 /**
  * @file     netLookup.c
- * @provides netLookup
  *
- * $Id: netLookup.c 2126 2009-11-12 07:23:04Z svn $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,6 +9,8 @@
 #include <raw.h>
 
 /**
+ * @ingroup network
+ *
  * Lookup a network interface, given an underlying device.
  * @param devnum device number to find netif for.
  * @return network interface, NULL if none exists

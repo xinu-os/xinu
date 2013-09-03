@@ -1,8 +1,6 @@
 /**
  * @file bufpool.h
- * @provides isbadpool roundword.
  *
- * $Id: bufpool.h 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -11,11 +9,7 @@
 
 #include <stddef.h>
 #include <semaphore.h>
-
-#define NPOOL  8
-#define POOL_MAX_BUFSIZE  2048
-#define POOL_MIN_BUFSIZE  8
-#define POOL_MAX_NBUFS    8192
+#include <conf.h>
 
 /* Buffer pool state definitions */
 #define BFPFREE  1

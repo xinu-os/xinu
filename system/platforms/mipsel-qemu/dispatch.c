@@ -1,8 +1,6 @@
 /**
  * @file dispatch.c 
- * @provides dispatch, irqEnable.
  *
- * $Id: dispatch.c 2157 2010-01-19 00:40:07Z brylow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 

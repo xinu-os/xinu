@@ -1,8 +1,6 @@
 /**
  * @file mailboxFree.c
- * @provides mailboxFree.
  *
- * $Id: mailboxFree.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -12,6 +10,8 @@
 #include <semaphore.h>
 
 /**
+ * @ingroup mailbox
+ *
  * Free a mailbox.
  * @param box the number of the mailbox to delete
  * @return OK if the mailbox was deleted successfully, otherwise SYSERR

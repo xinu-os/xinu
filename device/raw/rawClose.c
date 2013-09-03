@@ -1,8 +1,6 @@
 /**
  * @file rawClose.c
- * @provides rawClose
  *
- * $Id: rawClose.c 2077 2009-09-24 23:58:54Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -13,6 +11,8 @@
 #include <interrupt.h>
 
 /**
+ * @ingroup raw
+ *
  * Close a raw socket device.
  * @param devptr RAW device table entry
  * @return OK if raw socket is closed properly, otherwise SYSERR

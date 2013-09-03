@@ -1,12 +1,11 @@
 /**
  * @file     test_netaddr.c
- * @provides test_netaddr
  *
- * $Id: test_netaddr.c 2020 2009-08-13 17:50:08Z mschul $
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
 #include <stddef.h>
+#include <stdio.h>
 #include <ether.h>
 #include <interrupt.h>
 #include <ipv4.h>
@@ -15,11 +14,10 @@
 
 thread test_netaddr(bool verbose)
 {
+#if NETHER
     bool passed = TRUE;
     struct netaddr a;
     struct netaddr b;
-
-    enable();
 
     /* Setup structures */
     a.type = NETADDR_ETHERNET;
@@ -89,5 +87,8 @@ thread test_netaddr(bool verbose)
         testFail(TRUE, "");
     }
 
+#else /* NETHER */
+    testSkip(TRUE, "");
+#endif /* NETHER == 0 */
     return OK;
 }
