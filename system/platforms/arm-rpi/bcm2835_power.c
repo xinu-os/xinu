@@ -1,29 +1,32 @@
 /**
  * @file bcm2835_power.c
  *
- * This driver provides the ability to power on hardware, such as the USB
- * Controller, on the BCM2835 (Raspberry Pi).
- *
+ * This driver provides the ability to power on and power off hardware, such as
+ * the USB Controller, on the BCM2835 SoC used on the Raspberry Pi.  This makes
+ * use of the BCM2835's mailbox mechanism.
  */
 #include "bcm2835.h"
 
-/**
- * Pointer to the "mailbox" on the BCM2835.  This is needed to communicate with
- * the GPU and is needed here to physically power on the USB hardware before
- * accessing it.
- */
-static volatile uint *const mailbox_regs = (volatile uint*)0x2000B880;
+static volatile uint *const mailbox_regs = (volatile uint*)MAILBOX_REGS_BASE;
 
+/* BCM2835 mailbox register indices  */
 #define MAILBOX_READ               0
 #define MAILBOX_STATUS             6
 #define MAILBOX_WRITE              8
 
+/* BCM2835 mailbox status flags  */
 #define MAILBOX_FULL               0x80000000
 #define MAILBOX_EMPTY              0x40000000
 
+/* BCM2835 mailbox channels  */
 #define MAILBOX_CHANNEL_POWER_MGMT 0
+
+/* The BCM2835 mailboxes are used for passing 28-bit messages.  The low 4 bits
+ * of the 32-bit value are used to specify the channel over which the message is
+ * being transferred  */
 #define MAILBOX_CHANNEL_MASK       0xf
 
+/* Write to the specified channel of the mailbox.  */
 static void
 bcm2835_mailbox_write(uint channel, uint value)
 {
@@ -33,6 +36,7 @@ bcm2835_mailbox_write(uint channel, uint value)
     mailbox_regs[MAILBOX_WRITE] = (value & ~MAILBOX_CHANNEL_MASK) | channel;
 }
 
+/* Read from the specified channel of the mailbox.  */
 static uint
 bcm2835_mailbox_read(uint channel)
 {
@@ -48,33 +52,34 @@ bcm2835_mailbox_read(uint channel)
     return (value & ~MAILBOX_CHANNEL_MASK);
 }
 
+/* Retrieve the bitmask of power on/off state.  */
 static uint
 bcm2835_get_power_mask(void)
 {
     return (bcm2835_mailbox_read(MAILBOX_CHANNEL_POWER_MGMT) >> 4);
 }
 
+/* Set the bitmask of power on/off state.  */
 static void
 bcm2835_set_power_mask(uint mask)
 {
     bcm2835_mailbox_write(MAILBOX_CHANNEL_POWER_MGMT, mask << 4);
 }
 
-/**
- * Current on/off state of the various hardware.
- */
+/* Bitmask that gives the current on/off state of the BCM2835 hardware.
+ * This is a cached value.  */
 static uint bcm2835_power_mask;
 
 /**
- * Powers on or off a piece of hardware on the board.
+ * Powers on or powers off BCM2835 hardware.
  *
  * @param feature
- *      Device or hardware to power on or off
+ *      Device or hardware to power on or off.
  * @param on
- *      TRUE to power on; FALSE to power on.
+ *      ::TRUE to power on; ::FALSE to power off.
  *
  * @return
- *      OK if successful; SYSERR otherwise.
+ *      ::OK if successful; ::SYSERR otherwise.
  */
 int bcm2835_setpower(enum board_power_feature feature, bool on)
 {
@@ -98,7 +103,7 @@ int bcm2835_setpower(enum board_power_feature feature, bool on)
 }
 
 /**
- * Resets power to default state.
+ * Resets BCM2835 power to default state (all devices powered off).
  */
 void bcm2835_power_init(void)
 {

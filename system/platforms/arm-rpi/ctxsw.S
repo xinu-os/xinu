@@ -1,12 +1,11 @@
 /**
- * @file     ctxsw.S
+ * @file ctxsw.S
  */
 /* Embedded Xinu, Copyright (C) 2013.  All rights reserved. */
 
 #include <arm.h>
 
-.text
-	.globl ctxsw
+.globl ctxsw
 
 /*------------------------------------------------------------------------
  *  ctxsw  -  Switch from one thread context to another.
@@ -42,8 +41,8 @@
  * code to create() that sets the control bits of new threads such that
  * interrupts are enabled.
  *------------------------------------------------------------------------*/
-	.func ctxsw
 ctxsw:
+	.func ctxsw
 	mrs r12, cpsr
 	push {r0-r14}
 

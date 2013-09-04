@@ -1,7 +1,7 @@
 /**
- * @file    usb_dwc_hcd.c
+ * @file usb_dwc_hcd.c
  * @ingroup usbhcd
- * 
+ *
  * This file contains a USB Host Controller Driver for the Synopsys DesignWare
  * Hi-Speed USB 2.0 On-The-Go Controller.
  */
@@ -12,8 +12,8 @@
  *
  * This is a USB Host Controller Driver (HCD) that interfaces with the Synopsys
  * DesignWare Hi-Speed USB 2.0 On-The-Go Controller, henceforth abbreviated as
- * "DWC".  This is the USB Host Controller used on the BCM2835 board, better
- * known as the board used by the Raspberry Pi.
+ * "DWC".  This is the USB Host Controller used on the BCM2835 SoC used on the
+ * Raspberry Pi.
  *
  * Please note that there is no publicly available official documentation for
  * this particular piece of hardware, and it uses its own custom host controller

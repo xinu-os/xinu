@@ -7,7 +7,7 @@
 #include <string.h>
 #include "bcm2835.h"
 
-/** Definitions of ARM boot tags.  */
+/* Definitions of ARM boot tags.  */
 enum {
     ATAG_NONE       = 0x00000000,
     ATAG_CORE       = 0x54410001,
@@ -23,25 +23,25 @@ enum {
 
 /* Below we only define structures for tags we actually use.  */
 
-/** ARM boot tag header.  */
+/* ARM boot tag header.  */
 struct atag_header {
-    uint size;  /** Size of tag, in words, including the header.  */
-    uint tag;   /** One of the ATAG_* values from above.          */
+    uint size;  /* Size of tag, in words, including the header.  */
+    uint tag;   /* One of the ATAG_* values from above.          */
 };
 
-/** Description of memory region (ATAG_MEM)  */
+/* Description of memory region (ATAG_MEM)  */
 struct atag_mem {
     uint size;
     uint start;
 };
 
-/** Board serial number (ATAG_SERIAL)  */
+/* Board serial number (ATAG_SERIAL)  */
 struct atag_serialnr {
     uint low;
     uint high;
 };
 
-/** Format of ARM boot tag  */
+/* Format of ARM boot tag  */
 struct atag {
     struct atag_header hdr;
     union {
@@ -55,10 +55,10 @@ struct atag {
  * prevent it from being placed in .bss.  */
 const struct atag *atags_ptr = (void*)-1;
 
-/** End of kernel (used for sanity check)  */
+/* End of kernel (used for sanity check)  */
 extern void *_end;
 
-/** Extract some information from the ARM boot tag list and place it in the
+/* Extract some information from the ARM boot tag list and place it in the
  * 'platform' structure.  */
 static void
 parse_atag_list(void)

@@ -3,8 +3,7 @@
  */
 /* Embedded Xinu, Copyright (C) 2013.  All rights reserved. */
 
-.text
-	.globl halt
+.globl halt
 
 #include <arm.h>
 
@@ -15,8 +14,14 @@
  */
 halt:
 	.func halt
-	msr cpsr_c, #ARM_I_BIT | ARM_F_BIT
+
 _loop:
+	/* Disable IRQs and FIQs.  */
+	msr cpsr_c, #ARM_I_BIT | ARM_F_BIT
+
+	/* Wait for interrupt.  */
 	wfi
+
+	/* Shouldn't be necessary, but repeat just in case.  */
 	b _loop
 	.endfunc

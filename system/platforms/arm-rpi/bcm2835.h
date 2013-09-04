@@ -1,33 +1,79 @@
 /**
  * @file bcm2835.h
  *
- * This file is included by usb_dwc_hcd.c to separate functionality that is
- * specific to the BCM2835 SoC.
+ * Definitions specific to the BCM2835 SoC used in the Raspberry Pi.
+ *
+ * Note that although some of the numbers defined in this file are documented in
+ * Broadcom's "BCM2835 ARM Peripherals" document, unfortunately some could only
+ * be found in the Linux source (arch/arm/mach-bcm2708/include/mach/platform.h).
  */
 
 #ifndef _BCM2835_H_
+#define _BCM2835_H_
 
 #include <stddef.h>
 
-/** Physical memory address at which software can communicate with the DWC USB
- * Controller via memory-mapped registers.  This is documented on Page 202 of
- * the BCM2835 ARM Peripherals document, but the stated address of 0x7e980000 is
- * a bus address must be translated into a physical address as per page 6 first.
- * */
-#define DWC_REGS_BASE        0x20980000
+/********************************************************************
+ * ARM physical memory addresses of selected BCM2835 peripherals    *
+ ********************************************************************/
 
-/**
- * IRQ line for the USB host controller on the Raspberry Pi.  This isn't
- * actually documented anywhere.  I found it in
- * arch/arm/mach-bcm2708/include/mach/platform.h in the Linux kernel sources
- * (may be in the Raspberry Pi repository only).  There, INTERRUPT_USB is
- * defined as (64 + 11), indicating that the USB host controller interrupt
- * corresponds to bit 11 in the IRQ Basic Pending register, which is an alias
- * for "GPU" IRQ 9.  Yes, that code is used on the BCM2835 despite being in a
- * directory named after BCM2708, which likely is a previous version of the
- * board.
- */
-#define IRQ_USB 9
+/* Start of memory-mapped peripherals address space  */
+#define PERIPHERALS_BASE 0x20000000
+
+/* System timer  */
+#define SYSTEM_TIMER_REGS_BASE (PERIPHERALS_BASE + 0x3000)
+
+/* Interrupt controller (for ARM)  */
+#define INTERRUPT_REGS_BASE    (PERIPHERALS_BASE + 0xB200)
+
+/* Mailbox  */
+#define MAILBOX_REGS_BASE      (PERIPHERALS_BASE + 0xB880)
+
+/* Power management / watchdog timer  */
+#define PM_REGS_BASE           (PERIPHERALS_BASE + 0x100000)
+
+/* PL011 UART  */
+#define PL011_REGS_BASE        (PERIPHERALS_BASE + 0x201000)
+
+/* SD host controller  */
+#define SDHCI_REGS_BASE        (PERIPHERALS_BASE + 0x300000)
+
+/* Synopsys DesignWare Hi-Speed USB 2.0 On-The-Go Controller  */
+#define DWC_REGS_BASE          (PERIPHERALS_BASE + 0x980000)
+
+
+/***************************************************************************
+ * IRQ lines of selected BCM2835 peripherals.  Note about the numbering    *
+ * used here:  IRQs 0-63 are those shared between the GPU and CPU, whereas *
+ * IRQs 64+ are CPU-specific.                                              *
+ ***************************************************************************/
+
+/* System timer - one IRQ line per output compare register.  */
+#define IRQ_SYSTEM_TIMER_0 0
+#define IRQ_SYSTEM_TIMER_1 1
+#define IRQ_SYSTEM_TIMER_2 2
+#define IRQ_SYSTEM_TIMER_3 3
+
+/* Timer IRQ to use by default.  Note: this only be either 1 or 3, since 0 and 2
+ * are already used by the VideoCore.  */
+#define IRQ_TIMER          IRQ_SYSTEM_TIMER_3
+
+/* Synopsys DesignWare Hi-Speed USB 2.0 On-The-Go Controller  */
+#define IRQ_USB            9
+
+/* PCM sound  */
+#define IRQ_PCM            55
+
+/* PL011 UART  */
+#define IRQ_PL011          57
+
+/* SD card host controller  */
+#define IRQ_SD             62
+
+
+/************************************
+ * Board-specific power management  *
+ ************************************/
 
 enum board_power_feature {
     POWER_SD     = 0,
@@ -40,5 +86,27 @@ extern int bcm2835_setpower(enum board_power_feature feature, bool on);
 extern void bcm2835_power_init(void);
 
 #define board_setpower bcm2835_setpower
+
+
+/************************************************************************
+ * Interfaces to memory barriers for peripheral access.                 *
+ *                                                                      *
+ * These are necessary due to the memory ordering caveats documented in *
+ * section 1.3 of Broadcom's "BCM2835 ARM Peripherals" document.        *
+ ************************************************************************/
+extern void memory_barrier(void);
+
+/* Memory barriers needed before/after one or more reads from a peripheral  */
+#define pre_peripheral_read_mb    memory_barrier
+#define post_peripheral_read_mb   memory_barrier
+
+/* Memory barriers needed before/after one or more writes to a peripheral  */
+#define pre_peripheral_write_mb   memory_barrier
+#define post_peripheral_write_mb  memory_barrier
+
+/* Memory barriers needed before/after one or more reads and writes from/to a
+ * peripheral  */
+#define pre_peripheral_access_mb  memory_barrier
+#define post_peripheral_access_mb memory_barrier
 
 #endif /* _BCM2835_H_ */

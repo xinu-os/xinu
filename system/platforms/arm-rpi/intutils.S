@@ -2,6 +2,8 @@
  * @file intutils.S
  *
  * Functions to enable, disable, or restore global interrupts on the ARM.
+ *
+ * See http://xinu-os.org/Interrupt_handling_(ARM) for more information.
  */
 /* Embedded Xinu, Copyright (C) 2013.  All rights reserved. */
 

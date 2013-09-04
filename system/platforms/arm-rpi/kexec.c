@@ -27,12 +27,12 @@
  */
 
 /*00000000 <copy_kernel>:*/
-   /*0:	e3a04902 	mov	r4, #32768	; 0x8000*/
-   /*4:	e4903004 	ldr	r3, [r0], #4*/
-   /*8:	e4843004 	str	r3, [r4], #4*/
-   /*c:	e2511001 	subs	r1, r1, #1*/
-  /*10:	1afffffb 	bne	4 <copy_kernel+0x4>*/
-  /*14:	e3a0f902 	mov	pc, #32768	; 0x8000*/
+  /* 0:   e3a04902    mov     r4, #32768        ; 0x8000 */
+  /* 4:   e4903004    ldr     r3, [r0], #4               */
+  /* 8:   e4843004    str     r3, [r4], #4               */
+  /* c:   e2511001    subs    r1, r1, #1                 */
+  /*10:   1afffffb    bne     4 <copy_kernel+0x4>        */
+  /*14:   e3a0f902    mov     pc, #32768        ; 0x8000 */
 static const ulong copy_kernel[] = {
     0xe3a04902,
     0xe4903004,

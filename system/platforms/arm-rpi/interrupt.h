@@ -24,13 +24,7 @@ void enable_irq(irqmask);
 void disable_irq(irqmask);
 void memory_barrier(void);
 
-/* We're using the the output compare register in the BCM2835 system timer with
- * index 3.  This corresponds to "GPU" IRQ 3, although this is not actually
- * documented by the Broadcom docs.  */
-#define IRQ_TIMER 3
-
-/* TODO: Remove useless IRQ_HW* definitions.  */
-#define IRQ_HW0 0
-#define IRQ_HW5 5
+/* Include IRQ definitions  */
+#include "bcm2835.h"
 
 #endif /* _INTERRUPT_H_ */

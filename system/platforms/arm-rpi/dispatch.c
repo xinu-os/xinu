@@ -1,20 +1,23 @@
 /**
  * @file dispatch.c
  *
- * This file contains the code to interact with the interrupt controller
- * hardware on the BCM2835 (Raspberry Pi).  This poorly-documented interrupt
- * controller allows for 64 interrupt lines allegedly shared between the ARM and
- * GPU, as well as a certain number of additional interrupt lines for the ARM,
- * which our code here maps to IRQ indices 64 and greater.
+ * This file contains code that interfaces with the interrupt controller of the
+ * BCM2835 SoC used in the Raspberry Pi.
+ *
+ * This "interrupt controller" is, more specifically, the interrupt controller
+ * used by the ARM processor on the BCM2835.  That is, this interrupt controller
+ * controls which IRQs the ARM receives.  The VideoCore co-processor likely has
+ * its own (undocumented) way to control IRQs to itself.
+ *
+ * See http://xinu-os.org/BCM2835_Interrupt_Controller for additional
+ * information.
  */
 /* Embedded Xinu, Copyright (C) 2013.  All rights reserved. */
 
-
 #include <interrupt.h>
+#include <kernel.h>
 #include <stddef.h>
-#include <kernel.h> /* for kprintf() */
-
-extern void halt(void);
+#include "bcm2835.h"
 
 /** Layout of the BCM2835 interrupt controller's registers. */
 struct bcm2835_interrupt_registers {
@@ -30,10 +33,8 @@ struct bcm2835_interrupt_registers {
     uint Disable_Basic_IRQs;
 };
 
-#define BCM2835_INTERRUPT_REGS_BASE 0x2000B200
-
 static volatile struct bcm2835_interrupt_registers * const regs =
-        (volatile struct bcm2835_interrupt_registers*)BCM2835_INTERRUPT_REGS_BASE;
+        (volatile struct bcm2835_interrupt_registers*)INTERRUPT_REGS_BASE;
 
 /* Number of IRQs shared between the GPU and ARM. These correspond to the IRQs
  * that show up in the IRQ_pending_1 and IRQ_pending_2 registers.  */
@@ -65,6 +66,8 @@ static void handle_irq(uchar irq_num)
     else
     {
         kprintf("ERROR: No handler registered for interrupt %u\r\n", irq_num);
+
+        extern void halt(void);
         halt();
     }
 }

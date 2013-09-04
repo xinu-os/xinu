@@ -1,4 +1,4 @@
-# This Makefile contains rules to build files in this directory.
+# Rules to build files in this directory
 
 # Name of this component (the directory this file is stored in)
 COMP = system/platforms/arm-rpi
@@ -8,6 +8,7 @@ S_FILES = ctxsw.S          \
           halt.S           \
           intutils.S       \
           irq_handler.S    \
+          memory_barrier.S \
           pause.S
 
 C_FILES = bcm2835_power.c  \
