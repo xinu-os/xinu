@@ -96,7 +96,6 @@ void dispatch(long cause, long *frame)
  */
 void enable_irq(irqmask irqnumber)
 {
-    int enable_cpuirq(int);
 #ifdef IRQ_ATH_MISC
     int irqmisc;
     ulong *miscMask = (ulong *)RST_MISC_INTERRUPT_MASK;
@@ -123,7 +122,6 @@ void enable_irq(irqmask irqnumber)
  */
 void disable_irq(irqmask irqnumber)
 {
-    int disable_cpuirq(int);
 #ifdef IRQ_ATH_MISC
     int irqmisc;
     ulong *miscMask = (ulong *)RST_MISC_INTERRUPT_MASK;

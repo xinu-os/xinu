@@ -3,7 +3,7 @@
 #
 
 # Include default x86 definitions
-include templates/x86/platformVars
+include arch/x86/platformVars
 
 PLATFORM_NAME := Intel x86
 

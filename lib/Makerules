@@ -2,7 +2,7 @@
 # Common Makefile targets to build a static library.
 #
 
-INCLUDE := -I../../include -I../../system/platforms/$(PLATFORM)
+INCLUDE := -I../../include -I../../system/platforms/$(PLATFORM) -I../..
 
 # Filter out source files that have been overridden on this platform.  This is
 # primarily intended to allow platforms to provide optimized implementations of

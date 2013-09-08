@@ -97,29 +97,8 @@ message recvtime(int);
 
 /* Thread management function prototypes */
 
-/**
- * @ingroup threads
- *
- * Create a thread to start running a procedure.
- * @param procaddr
- *      procedure address
- * @param ssize
- *      stack size in words
- * @param priority
- *      thread priority (0 is lowest priority)
- * @param name
- *      name of the thread, used for debugging
- * @param nargs
- *      number of arguments that follow
- * @param ...
- *      arguments to pass to thread procedure
- * @return
- *      the new thread's thread id, or ::SYSERR if a new thread could not be
- *      created.
- */
 tid_typ create(void *procaddr, uint ssize, int priority,
                const char *name, int nargs, ...);
-
 tid_typ gettid(void);
 syscall getprio(tid_typ);
 syscall kill(int);

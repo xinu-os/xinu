@@ -94,19 +94,20 @@ extern void bcm2835_power_init(void);
  * These are necessary due to the memory ordering caveats documented in *
  * section 1.3 of Broadcom's "BCM2835 ARM Peripherals" document.        *
  ************************************************************************/
-extern void memory_barrier(void);
+
+extern void dmb(void);
 
 /* Memory barriers needed before/after one or more reads from a peripheral  */
-#define pre_peripheral_read_mb    memory_barrier
-#define post_peripheral_read_mb   memory_barrier
+#define pre_peripheral_read_mb    dmb
+#define post_peripheral_read_mb   dmb
 
 /* Memory barriers needed before/after one or more writes to a peripheral  */
-#define pre_peripheral_write_mb   memory_barrier
-#define post_peripheral_write_mb  memory_barrier
+#define pre_peripheral_write_mb   dmb
+#define post_peripheral_write_mb  dmb
 
 /* Memory barriers needed before/after one or more reads and writes from/to a
  * peripheral  */
-#define pre_peripheral_access_mb  memory_barrier
-#define post_peripheral_access_mb memory_barrier
+#define pre_peripheral_access_mb  dmb
+#define post_peripheral_access_mb dmb
 
 #endif /* _BCM2835_H_ */

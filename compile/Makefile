@@ -94,7 +94,7 @@ LDLIBS  :=
 
 # Set default include directories.  platformVars can add additional directories
 # to this if really needed.
-INCLUDE := -I$(TOPDIR)/include -I$(TOPDIR)/system/platforms/$(PLATFORM)
+INCLUDE := -I$(TOPDIR)/include -I$(TOPDIR)/system/platforms/$(PLATFORM) -I$(TOPDIR)
 
 # Override this as -DDETAIL to enable certain debugging messages in Embedded
 # Xinu.
@@ -141,11 +141,11 @@ else
   CFLAGS += -DHAVE_SHELL=0
 endif
 
-# Set linker script.  A script in platforms/ overrides the one in templates/, if
+# Set linker script.  A script in platforms/ overrides the one in arch/, if
 # present.
 ifneq ($(TEMPLATE_ARCH),)
-  ifeq ($(shell if [ -e templates/$(TEMPLATE_ARCH)/ld.script ]; then echo 1; fi),1)
-    LDSCRIPT := templates/$(TEMPLATE_ARCH)/ld.script
+  ifeq ($(shell if [ -e arch/$(TEMPLATE_ARCH)/ld.script ]; then echo 1; fi),1)
+    LDSCRIPT := arch/$(TEMPLATE_ARCH)/ld.script
   endif
 endif
 

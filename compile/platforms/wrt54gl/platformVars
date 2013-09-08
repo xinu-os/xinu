@@ -8,7 +8,7 @@ PLATFORM_NAME := Linksys WRT54GL Wireless Router
 # Include default mipsel definitions
 MIPS_ENDIANNESS := little
 MIPS_REVISION   := 1
-include templates/mips/platformVars
+include arch/mips/platformVars
 
 # Embedded Xinu components to build into kernel image
 APPCOMPS := apps        \

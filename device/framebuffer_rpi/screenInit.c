@@ -8,9 +8,9 @@
 #include <stddef.h>
 #include <framebuffer.h>
 #include <stdlib.h>
-#include <interrupt.h> /* for memory_barrier */
 #include <shell.h> /* for banner */
 #include <kernel.h>
+#include <bcm2835.h>
 
 int rows;
 int cols;
@@ -41,9 +41,6 @@ void screenInit() {
 
 /* Initializes the framebuffer used by the GPU. Returns OK on success; SYSERR on failure. */
 int framebufferInit() {
-
-	memory_barrier();
-
     //GPU expects this struct to be 16 byte aligned
     struct framebuffer frame __attribute__((aligned (16)));
 
@@ -58,13 +55,9 @@ int framebufferInit() {
 	frame.address = 0; //always initializes to 0x48006000
 	frame.size = 0;
 
-	memory_barrier();
-
     mailboxWrite((ulong)&frame);
 
-	memory_barrier();
 	ulong result = mailboxRead();
-	memory_barrier();
 
 	/* Error checking */
 	if (result) { //if anything but zero

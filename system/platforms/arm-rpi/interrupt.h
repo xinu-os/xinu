@@ -22,7 +22,6 @@ irqmask disable(void);
 irqmask restore(irqmask);
 void enable_irq(irqmask);
 void disable_irq(irqmask);
-void memory_barrier(void);
 
 /* Include IRQ definitions  */
 #include "bcm2835.h"

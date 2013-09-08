@@ -7,8 +7,7 @@
 
 #include <stddef.h>
 #include <framebuffer.h>
-#include <kernel.h> /* for kprintf() */
-#include <interrupt.h> //for memory_barrier
+#include <bcm2835.h>
 
 /* Read from mailbox one on channel one (GPU mailbox) */
 /* Note: Data: first 28 bits. Channel: last 4 bits.   */
@@ -35,16 +34,20 @@ void mailboxWrite(ulong data) {
  * memory mapped IO registers. */
 ulong readMMIO(ulong base, ulong reg)
 {
-	memory_barrier();
-	return *(volatile ulong *)(MMIO_BASE + base + reg);
+    ulong n;
+
+	pre_peripheral_read_mb();
+	n = *(volatile ulong *)(MMIO_BASE + base + reg);
+    post_peripheral_read_mb();
+    return n;
 }
 
 /* The opposite of above. Write to MMIO. */
 void writeMMIO(ulong base, ulong reg, ulong val)
 {
-	memory_barrier();
+	pre_peripheral_write_mb();
 	*(volatile ulong *)(MMIO_BASE + base + reg) = val;
-	memory_barrier();
+	post_peripheral_write_mb();
 }
 
 

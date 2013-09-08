@@ -16,8 +16,6 @@
 struct flash flashtab[NFLASH];
 struct flash_block bad_block = { 0, 0, FLASH_BLOCK_DIRTY, NULL };
 
-int flash_size = -1;
-
 /**
  * Initialized the flash device located beginning at the value of
  * this devices CSR.
@@ -37,12 +35,6 @@ devcall flashInit(device *devptr)
     flash->device = devptr;
     flash->base = (ulong)devptr->csr;
     flash->lock = semcreate(1);
-
-    /* Check for flash_size passed from bootloader       */
-    if (flash_size != -1)
-    {
-        flash->size = flash_size << 20;
-    }
 
     /* Change to CFI query mode */
     CFI_PUT_8(flash->base, CFI_QUERY_ADDR, CFI_QUERY_MODE);

@@ -5,7 +5,7 @@ COMP = loader/platforms/e2100l
 
 # Source files for this component
 C_FILES = 
-S_FILES = start.S flushcache.S
+S_FILES = start.S
 
 # Add the files to the compile source path
 DIR = ${TOPDIR}/${COMP}

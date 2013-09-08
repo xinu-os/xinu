@@ -1,8 +1,6 @@
 #ifndef  _ARM_H_
 #define  _ARM_H_
 
-#define CONTEXT_WORDS 15 /* r0-r11, cpsr, lr, pc */
-
 /* Definitions of mode bits in the ARM program status register.  See: A2.2
  * "Processor Modes" of the ARM Architecture Reference Manual; also A2.5.7 "The
  * mode bits".  */

@@ -9,7 +9,7 @@ PLATFORM_NAME := Linksys WRT160NL
 MIPS_RELEASE                         := 2
 MIPS_ENDIANNESS                      := big
 MIPS_PLATFORM_DEFINES_DEFAULT_TARGET := yes
-include templates/mips/platformVars
+include arch/mips/platformVars
 
 # Embedded Xinu components to build into kernel image
 APPCOMPS := apps        \

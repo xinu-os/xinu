@@ -1,24 +1,33 @@
 /**
- * @file flushcache.S
- *
- * The overall structure for the flushcache function and calculations
- * used in the function were developed based on portions of: 
- * "See Mips Run, 2nd Edition" by Dominic Sweetman, published by Elsevier
- *
+ * @file start.S
+ * This is where the firmware environment begins to execute code.
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
-	
+
 #include <mips.h>
+#include <interrupt.h>
+
+.globl _start
 	
-.text
-	.align	4
-	.globl flushcache
+/**
+ * The firmware will load the image into temporary
+ * memory via TFTP and will then jump to this (_start) label.
+ * The boot loader (_start) flushes L1 instruction and data caches.
+ */
+_start:
+	.func _start
+	/* Clear and invalidate the L1 instruction and data caches    */
+	jal   flushcache
+	
+	/* Pass control to Xinu kernel.                               */
+	j     _startup
+	.endfunc
 
 /**
  * Intialize and flush the L1 instruction and data caches.
  */
-	.ent flushcache
 flushcache:
+	.func flushcache
 
 	/* Intialize instruction cache */
 
@@ -178,4 +187,98 @@ flushcache:
 	bne   t0, t1, 1b
 
 	jr    ra
-	.end flushcache
+	.endfunc
+
+#define NULLSTK 8192
+
+/**
+ * _startup sets up the stack pointer and clears the stack for the
+ * null process.  Additionally, the BSS (uninitialized data) section
+ * is cleared prior to calling the null process.
+ */
+_startup:
+	.func _startup
+	/* Copy IRQ transfer handler to reserved memory location      */
+	la    a0, IRQ_ADDR     /* Destination address                 */
+	la    a1, intdispatch  /* Starting address                    */
+	la    a2, (32*4)       /* Length of vector                    */
+	jal   copyhandler
+
+	/* Clear Xinu-defined trap and interrupt vectors              */
+	la    a0, TRAPVEC_ADDR
+	la    a1, IRQVEC_END
+	jal   memzero
+	
+	/* Clear interrupt related registers in the coprocessor       */	
+	mtc0  zero, CP0_STATUS /* Clear interrupt masks               */
+	mtc0  zero, CP0_CAUSE  /* Clear interrupt cause register      */
+
+	/* Clear and invalidate the L1 instruction and data caches    */
+	jal   flushcache
+		
+	/* Set up Stack segment (see function summary)                */
+ 	li    s0, NULLSTK      /* Stack is NULLSTK bytes              */
+	la    a0, _end
+ 	addu  s0, s0, a0       /* Find top of stack (_end + NULLSTK)  */
+
+	/* Word align the top of the stack                            */
+	subu  s1, s0, 1
+	srl   s1, 4
+	sll   s1, 4
+	
+	/* Initialize the stack and frame pointers                    */
+	move  sp, s1
+	move  fp, s1
+	
+	/* Zero out NULLSTK space below new stack pointer             */
+	move  a1, s0
+	jal   memzero 
+
+	/* Clear the BSS section.                                     */
+	la    a0, _bss
+	la    a1, _end
+	jal   memzero
+
+	/* Store processor ID                                         */
+	mfc0  v0, CP0_PRID
+	la    t0, cpuid
+	sw    v0, 0(t0)
+
+	/* Store bottom of the heap                                   */
+	la    t0, memheap
+	sw    s0, 0(t0)
+
+	j     nulluser         /* start the null user process         */
+ 	.endfunc
+
+/**
+ * @fn void copyhandler(int *dst, int *src, uint bytes)
+ * Copy text (code) from source to detination (in word-size chunks).
+ * @param dst   location to store the source code
+ * @param src   location holding the source code
+ * @param bytes size of source code to copy
+ */
+copyhandler:
+	.func copyhandler
+	lw    v0, 0(a1)
+	sw    v0, 0(a0)
+	addiu a1, a1, 4
+	addiu a0, a0, 4
+	addiu a2, a2, -4
+	bgtz  a2, copyhandler
+	jr    ra
+	.endfunc
+
+/**
+ * @fn void memzero(int *dstBegin, int *dstEnd)
+ * Zero memory from dstBegin to dstEnd (non-inclusive).	
+ * @param dstBegin start of the memory area of zero
+ * @param dstEnd   end of the memory area to zero
+ */
+memzero:
+	.func memzero
+	sw    zero, 0(a0)
+	addiu a0, a0, 4
+	blt   a0, a1, memzero
+	jr    ra
+	.endfunc

@@ -112,7 +112,6 @@ void dispatch(long cause, long *frame)
  */
 void enable_irq(irqmask irqnumber)
 {
-    int enable_cpuirq(int);
 #ifdef PIC8259
     uint irqmisc;
     uchar *picMask = (uchar *)PIC_MASTER_IMR;
@@ -146,7 +145,6 @@ void enable_irq(irqmask irqnumber)
  */
 void disable_irq(irqmask irqnumber)
 {
-    int disable_cpuirq(int);
 #ifdef PIC8259
     uint irqmisc;
     uchar *picMask = (uchar *)PIC_MASTER_IMR;

@@ -106,20 +106,20 @@ which it is compiled to run at.  See the existing examples in platforms/.
 
 --------------------------------------------------------------------------------
 
-                                   Templates
+                                 Architectures
 
 Multiple Xinu platforms may have the same underlying "architecture", such as ARM
-or MIPS.  If the architecture of your platform is already listed in templates/,
+or MIPS.  If the architecture of your platform is already listed in arch/,
 then there are two shortcuts you may be able to take:
 
 - "platformVars" can be shortened by including the corresponding "platformVars"
-  in templates/, which will handle many of the definitions for you.
+  in arch/, which will handle many of the definitions for you.
 - If you do not include a linker script ("ld.script") in platforms/, then the
-  linker script in templates/ will be used, if present.  (This requires
-  including the corresponding template "platformVars".)  This script may be
-  sufficient for your platform.
+  linker script in arch/ will be used, if present.  (This requires including the
+  corresponding architecture "platformVars".)  This script may be sufficient for
+  your platform.
 
-The exact contents of the "platformVars" in templates/ is dependent on the
+The exact contents of the "platformVars" in arch/ is dependent on the
 architecture; see the existing examples.
 
 --------------------------------------------------------------------------------

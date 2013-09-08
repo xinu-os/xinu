@@ -8,24 +8,25 @@
 #include <stddef.h>
 #include <string.h>
 #include <framebuffer.h>
-#include <kernel.h> /* for kprintf() */
-#include <interrupt.h> /* for memory_barrier() */
+#include <bcm2835.h>
 
 /* Draws a colored pixel at given (x, y) coordinates. */
 
 void drawPixel(int x, int y, ulong color)
 {
-	memory_barrier();
 
 	//check if somebody tried to draw something out of range.
 	if ( (y < DEFAULT_HEIGHT) && (x < DEFAULT_WIDTH) && (y >= 0) && (x >= 0) ) {
+	    pre_peripheral_write_mb();
 
 	    // compute address of pixel to write.
 	    // framebuffer address + (y*pitch)+(x*(depth/8))
-	    ulong *address = (ulong *)(framebufferAddress + (y * pitch) + (x * (BIT_DEPTH/8)));
+	    volatile ulong *address = (volatile ulong *)(framebufferAddress +
+                                                     (y * pitch) +
+                                                     (x * (BIT_DEPTH/8)));
         *address = color;
 
-	    memory_barrier();
+	    post_peripheral_write_mb();
     }
 }
 

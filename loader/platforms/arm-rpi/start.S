@@ -7,7 +7,8 @@
 
 
 #include <arm.h>     /* For ARM_MODE_SYS */
-#include <thread.h>  /* For INITSTK      */
+
+#define NULLSTK 8192
 
 .section .init
 	.globl _start
@@ -103,7 +104,7 @@ bssloopa:
 	blo bssloopb	/* if still below, go backwards and loop */
 
 	/* Put the null thread's stack directly after the kernel image.  */
-	add sp, r1, #INITSTK
+	add sp, r1, #NULLSTK
 
 	/* The remaining memory available to the ARM will be Xinu's "memheap"
 	 * region, which is used for dynamic memory allocation.  Set its

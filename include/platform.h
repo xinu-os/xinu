@@ -8,6 +8,7 @@
 #define _PLATFORM_H_
 
 #include <stddef.h>
+#include <stdarg.h>
 
 /** Maximum length of platform name and family strings, including the
  * null-terminator.  */
@@ -68,8 +69,6 @@ extern struct platform platform;
 #define MAXADDR_WRT54GL  0x01000000 /**< GL   has 16MB RAM */
 #define MAXADDR_WRT350N  0x02000000 /**< 350N has 32MB RAM */
 #define MAXADDR_WRT160NL 0x02000000 /**< 160NL has 32MB RAM */
-#define MAXADDR_RASPI    0x0BFFFFFF  /** Default value only; we grab the actual
-                                         value from the bootloader tags.  */
 
 /* Time Base Frequency */
 #define CLKFREQ_DEFAULT  100000000
@@ -77,14 +76,15 @@ extern struct platform platform;
 #define CLKFREQ_WRT54GL  100000000
 #define CLKFREQ_WRT350N  150000000
 #define CLKFREQ_WRT160NL 200000000
-#define CLKFREQ_BCM2835  1000000
-
 
 /* UART DLL (Divisor Latch LS) */
 #define UART_DLL_DEFAULT    0x0B
 #define UART_DLL_WRT54G     0x0E
 #define UART_DLL_WRT54GL    0x0B
 #define UART_DLL_WRT350N    0x29
-#define UART_DLL_SCC        0x36
+
+/* Used internally by create()  */
+void *arch_setup_stack(void *stackaddr, void *procaddr,
+                       void *retaddr, uint nargs, va_list ap);
 
 #endif                          /* _PLATFORM_H_ */

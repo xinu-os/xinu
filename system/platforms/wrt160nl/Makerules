@@ -6,12 +6,12 @@ COMP = system/platforms/wrt160nl
 # Source files for this component
 
 # Important system components
-S_FILES = startup.S pause.S
+S_FILES = pause.S
 C_FILES = platforminit.c
 
 # Files for process control
 S_FILES += ctxsw.S
-C_FILES += create.c 
+C_FILES += arch_setup_stack.c
 
 # Files for preemption and interrupts
 S_FILES += clkupdate.S intutils.S intdispatch.S halt.S

@@ -11,13 +11,13 @@ S_FILES = ctxsw.S          \
           memory_barrier.S \
           pause.S
 
-C_FILES = bcm2835_power.c  \
-          create.c         \
-          dispatch.c       \
-          kexec.c          \
-          platforminit.c   \
-          timer.c          \
-          usb_dwc_hcd.c    \
+C_FILES = arch_setup_stack.c \
+          bcm2835_power.c    \
+          dispatch.c         \
+          kexec.c            \
+          platforminit.c     \
+          timer.c            \
+          usb_dwc_hcd.c      \
           watchdog.c
 
 # Add the files to the compile source path
