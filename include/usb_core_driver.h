@@ -131,12 +131,6 @@ struct usb_xfer_request
     semaphore deferer_thread_sema;
 };
 
-static inline void
-__check_usb_xfer_request_word_aligned(void)
-{
-    STATIC_ASSERT(IS_WORD_ALIGNED(sizeof(struct usb_xfer_request)));
-}
-
 /**
  * @ingroup usbcore
  *

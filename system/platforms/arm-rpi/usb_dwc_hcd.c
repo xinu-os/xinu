@@ -79,11 +79,15 @@
 #include <usb_std_defs.h>
 #include "bcm2835.h"
 
+/** Round a number up to the next multiple of the word size.  */
+#define WORD_ALIGN(n) (((n) + sizeof(ulong) - 1) & ~(sizeof(ulong) - 1))
+
+/** Determines whether a pointer is word-aligned or not.  */
+#define IS_WORD_ALIGNED(ptr) ((ulong)(ptr) % sizeof(ulong) == 0)
 
 /** Pointer to the memory-mapped registers of the Synopsys DesignWare Hi-Speed
  * USB 2.0 OTG Controller.  */
 static volatile struct dwc_regs * const regs = (void*)DWC_REGS_BASE;
-
 
 /**
  * Maximum packet size of any USB endpoint.  1024 is the maximum allowed by USB
@@ -156,7 +160,7 @@ static struct usb_xfer_request *channel_pending_xfers[DWC_NUM_CHANNELS];
 
 /** Aligned buffers for DMA.  */
 static uint8_t aligned_bufs[DWC_NUM_CHANNELS][WORD_ALIGN(USB_MAX_PACKET_SIZE)]
-                                __word_aligned;
+                                __aligned(4);
 
 /* Find index of first set bit in a nonzero word.  */
 static inline ulong first_set_bit(ulong word)

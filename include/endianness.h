@@ -1,3 +1,10 @@
+/**
+ * @file endianness.h
+ *
+ * Little-to-big and big-to-little endianness conversions.
+ */
+/* Embedded Xinu, Copyright (C) 2013.  All rights reserved. */
+
 #ifndef _ENDIANNESS_H_
 #define _ENDIANNESS_H_
 
@@ -13,11 +20,7 @@ bswap16(uint16_t n)
 static inline uint32_t
 bswap32(uint32_t n)
 {
-#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)
-    return __builtin_bswap32(n);
-#else
     return (n << 24) | ((n & 0xff00) << 8) | ((n & 0xff0000) >> 8) | (n >> 24);
-#endif
 }
 
 #if BYTE_ORDER == BIG_ENDIAN

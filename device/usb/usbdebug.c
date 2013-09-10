@@ -324,7 +324,7 @@ usb_get_ascii_string(struct usb_device *dev, uint32_t iString,
     struct {
         struct usb_string_descriptor desc;
         uint16_t padding[128];
-    } buf __word_aligned;
+    } buf;
     uint16_t lang_id;
     usb_status_t status;
     uint i;

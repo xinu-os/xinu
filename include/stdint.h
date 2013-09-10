@@ -1,7 +1,12 @@
+/**
+ * @file stdint.h
+ *
+ * Signed and unsigned integer types of exact width.
+ */
+/* Embedded Xinu, Copyright (C) 2013.  All rights reserved. */
+
 #ifndef _STDINT_H_
 #define _STDINT_H_
-
-/* Signed and unsigned integer types of exact width  */
 
 typedef signed char          int8_t;
 typedef short                int16_t;

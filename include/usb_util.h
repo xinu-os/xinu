@@ -13,39 +13,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/** Type-independent macro to calculate the minimum of 2 values.  */
-#define min(a, b) ({ __typeof__(a) _a = (a); __typeof__(b) _b = (b); \
-                            (_a < _b) ? _a : _b; })
-
-/** Type-independent macro to calculate the maximum of 2 values.  */
-#define max(a, b) ({ __typeof__(a) _a = (a); __typeof__(b) _b = (b); \
-                            (_a > _b) ? _a : _b; })
-
-/** Pack a structure with no padding.  */
-#define __packed                    __attribute__((packed))
-
-/** Align the member or buffer on a word boundary.  */
-#define __word_aligned              __attribute__((aligned(sizeof(ulong))))
-
-/** Provide compiler warnings like with printf().  */
-#define __printf_format(fmt, vargs) __attribute__((format(printf, fmt, vargs)))
-
-/** Round a number up to the next multiple of the word size.  */
-#define WORD_ALIGN(n) (((n) + sizeof(ulong) - 1) & ~(sizeof(ulong) - 1))
-
-/** Determines whether a pointer is word-aligned or not.  */
-#define IS_WORD_ALIGNED(ptr) ((ulong)(ptr) % sizeof(ulong) == 0)
-
-/** Perform integer division, rounding up the quotient.  */
-#define DIV_ROUND_UP(num, denom) (((num) + (denom) - 1) / (denom))
-
-/** Get the number of elements in an array (not dynamically allocated)  */
-#define ARRAY_LEN(array) (sizeof(array) / sizeof((array)[0]))
-
-/** Assert that something is true at compilation time.  This generates no code
- * in the resulting binary.  */
-#define STATIC_ASSERT(condition) ((void)sizeof(char[1 - 2*!(condition)]))
-
 struct usb_device;
 
 /**********************************************************************/

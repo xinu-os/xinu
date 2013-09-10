@@ -479,7 +479,7 @@ usb_get_descriptor(struct usb_device *dev, uint8_t bRequest, uint8_t bmRequestTy
     if (buflen > sizeof(struct usb_descriptor_header))
     {
         /* Get descriptor length.  */
-        struct usb_descriptor_header hdr __word_aligned;
+        struct usb_descriptor_header hdr;
 
         status = usb_control_msg(dev, NULL, bRequest, bmRequestType,
                                  wValue, wIndex, &hdr, sizeof(hdr));
@@ -557,7 +557,7 @@ usb_get_configuration_descriptor(struct usb_device *dev, uint8_t configuration_i
 static usb_status_t
 usb_read_configuration_descriptor(struct usb_device *dev, uint8_t configuration)
 {
-    struct usb_configuration_descriptor desc __word_aligned;
+    struct usb_configuration_descriptor desc;
     usb_status_t status;
     int interface_idx;
     int endpoint_idx;
