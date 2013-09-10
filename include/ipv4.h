@@ -9,6 +9,7 @@
 
 #include <stddef.h>
 #include <network.h>
+#include <stdint.h>
 
 /* Tracing macros */
 //#define TRACE_IPv4     TTY1
@@ -88,17 +89,17 @@
 
 struct ipv4Pkt             /**< IPv4 Packet Variables                   */
 {
-    uchar ver_ihl;           /**< IPv4 Version and Internet Header Len  */
-    uchar tos;               /**< IPv4 Type of Service                  */
-    ushort len;              /**< IPv4 packet length including IHL      */
-    ushort id;               /**< IPv4 identification                   */
-    ushort flags_froff;      /**< IPv4 Flags and Fragment offset        */
-    uchar ttl;               /**< IPv4 time to live                     */
-    uchar proto;             /**< IPv4 protocol                         */
-    ushort chksum;           /**< IPv4 checksum                         */
-    uchar src[IPv4_ADDR_LEN];  /**< IPv4 source                           */
-    uchar dst[IPv4_ADDR_LEN];  /**< IPv4 destination                      */
-    uchar opts[1];           /**< Options and padding is variable       */
+    uint8_t   ver_ihl;            /**< IPv4 Version and Internet Header Len  */
+    uint8_t   tos;                /**< IPv4 Type of Service                  */
+    uint16_t  len;                /**< IPv4 packet length including IHL      */
+    uint16_t  id;                 /**< IPv4 identification                   */
+    uint16_t  flags_froff;        /**< IPv4 Flags and Fragment offset        */
+    uint8_t   ttl;                /**< IPv4 time to live                     */
+    uint8_t   proto;              /**< IPv4 protocol                         */
+    uint16_t  chksum;             /**< IPv4 checksum                         */
+    uint8_t   src[IPv4_ADDR_LEN]; /**< IPv4 source                           */
+    uint8_t   dst[IPv4_ADDR_LEN]; /**< IPv4 destination                      */
+    uint8_t   opts[1];            /**< Options and padding is variable       */
 };
 
 /* Function prototypes */

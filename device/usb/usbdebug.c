@@ -240,7 +240,7 @@ usb_direction_to_string(enum usb_direction dir)
  * points with question marks.
  */
 static void
-utf16le_to_ascii(const u16 utf16le_str[], uint nchars, char *ascii_str)
+utf16le_to_ascii(const uint16_t utf16le_str[], uint nchars, char *ascii_str)
 {
     uint i;
 
@@ -282,8 +282,8 @@ utf16le_to_ascii(const u16 utf16le_str[], uint nchars, char *ascii_str)
  *      See usb_get_descriptor().
  */
 usb_status_t
-usb_get_string_descriptor(struct usb_device *dev, u8 index, u16 lang_id,
-                          struct usb_string_descriptor *buf, u16 buflen)
+usb_get_string_descriptor(struct usb_device *dev, uint8_t index, uint16_t lang_id,
+                          struct usb_string_descriptor *buf, uint16_t buflen)
 {
     return usb_get_descriptor(dev,
                               USB_DEVICE_REQUEST_GET_DESCRIPTOR,
@@ -318,14 +318,14 @@ usb_get_string_descriptor(struct usb_device *dev, u8 index, u16 lang_id,
  *      empty.
  */
 usb_status_t
-usb_get_ascii_string(struct usb_device *dev, u32 iString,
-                     char *strbuf, u32 strbufsize)
+usb_get_ascii_string(struct usb_device *dev, uint32_t iString,
+                     char *strbuf, uint32_t strbufsize)
 {
     struct {
         struct usb_string_descriptor desc;
-        u16 padding[128];
+        uint16_t padding[128];
     } buf __word_aligned;
-    u16 lang_id;
+    uint16_t lang_id;
     usb_status_t status;
     uint i;
     uint num_languages;
@@ -340,7 +340,7 @@ usb_get_ascii_string(struct usb_device *dev, u32 iString,
 
     /* Make sure the list of available languages is nonempty.  */
     num_languages = (buf.desc.bLength - sizeof(struct usb_descriptor_header)) /
-                        sizeof(u16);
+                        sizeof(uint16_t);
     if (num_languages == 0)
     {
         usb_dev_error(dev, "String descriptor language list is empty\n");
@@ -369,7 +369,7 @@ usb_get_ascii_string(struct usb_device *dev, u32 iString,
 
     /* "Translate" the string from UTF-16LE to ASCII.  */
     num_chars = min((buf.desc.bLength - sizeof(struct usb_descriptor_header)) /
-                                sizeof(u16), strbufsize - 1);
+                                sizeof(uint16_t), strbufsize - 1);
     utf16le_to_ascii(buf.desc.bString, num_chars, strbuf);
     strbuf[num_chars] = '\0';
     return USB_STATUS_SUCCESS;
@@ -387,7 +387,7 @@ usb_get_ascii_string(struct usb_device *dev, u32 iString,
  *      will be changed on the next call to this function.
  */
 static const char *
-usb_bcd_version_to_string(u16 bcdUSB)
+usb_bcd_version_to_string(uint16_t bcdUSB)
 {
     static char string[3 + 1 + 2 + 1 + 2 + 1];
     char *p = string;

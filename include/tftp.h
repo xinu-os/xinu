@@ -8,6 +8,7 @@
 
 #include <stddef.h>
 #include <network.h>
+#include <stdint.h>
 
 #define TFTP_OPCODE_RRQ   1
 #define TFTP_OPCODE_WRQ   2
@@ -49,7 +50,7 @@ do                                                                    \
 
 struct tftpPkt
 {
-    ushort opcode;
+    uint16_t opcode;
     union
     {
         struct
@@ -58,12 +59,12 @@ struct tftpPkt
         } RRQ;
         struct
         {
-            ushort block_number;
-            uchar data[TFTP_BLOCK_SIZE];
+            uint16_t block_number;
+            uint8_t data[TFTP_BLOCK_SIZE];
         } DATA;
         struct
         {
-            ushort block_number;
+            uint16_t block_number;
         } ACK;
     };
 };

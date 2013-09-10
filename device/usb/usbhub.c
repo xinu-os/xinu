@@ -71,7 +71,7 @@ struct usb_port
     struct usb_hub *hub;
 
     /** Number of this port (1-based)  */
-    u8 number;
+    uint8_t number;
 
     /** Pointer to the USB device attached to this port, or NULL if there is
      * none.  */
@@ -95,7 +95,7 @@ struct usb_hub
 
     /** Reserve space for the variable-length data at the end of the hub
      * descriptor.  That is, 'descriptor' may overflow into this field.  */
-    u8 descriptor_varData[64];
+    uint8_t descriptor_varData[64];
 
     /** Array of this hub's ports.  Only the first descriptor.bNbrPorts entries
      * will actually be used.  */
@@ -107,7 +107,7 @@ struct usb_hub
 #define MAX_NUSBHUBS 16
 
 /** Hub status change data buffers.  */
-static u8                      hub_status_change_data[MAX_NUSBHUBS][8];
+static uint8_t                 hub_status_change_data[MAX_NUSBHUBS][8];
 
 /** Hub status change transfer requests.  */
 static struct usb_xfer_request hub_status_change_requests[MAX_NUSBHUBS];
@@ -117,7 +117,7 @@ static struct usb_hub          hub_structs[MAX_NUSBHUBS];
 
 /** Bitmask of hubs that have status changes pending.  Note: this can be
  * modified from an interrupt handler in hub_status_changed().  */
-static u32 hub_status_change_pending;
+static uint32_t hub_status_change_pending;
 
 /** Semaphore for signaling hub thread when a status change has occurred.  */
 static semaphore hub_status_change_sema;
@@ -233,8 +233,8 @@ static usb_status_t
 port_change_feature(struct usb_port *port, enum usb_port_feature feature,
                     bool enable)
 {
-    u8 bRequest = (enable) ? USB_HUB_REQUEST_SET_FEATURE :
-                             USB_HUB_REQUEST_CLEAR_FEATURE;
+    uint8_t bRequest = (enable) ? USB_HUB_REQUEST_SET_FEATURE :
+                                  USB_HUB_REQUEST_CLEAR_FEATURE;
     return usb_control_msg(port->hub->device, NULL,
                            bRequest,
                            USB_BMREQUESTTYPE_DIR_OUT |
@@ -551,7 +551,7 @@ hub_thread(void)
 
             if (req->status == USB_STATUS_SUCCESS)
             {
-                u32 portmask;
+                uint32_t portmask;
                 uint i;
 
                 usb_dev_debug(req->dev, "Processing hub status change\n");
@@ -562,7 +562,7 @@ hub_thread(void)
                 portmask = 0;
                 for (i = 0; i < req->actual_size; i++)
                 {
-                    portmask |= (u32)((u8*)req->recvbuf)[i] << (i * 8);
+                    portmask |= (uint32_t)((uint8_t*)req->recvbuf)[i] << (i * 8);
                 }
 
                 /* Process ports on which a status change was detected.  */

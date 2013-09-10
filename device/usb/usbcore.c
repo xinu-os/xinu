@@ -130,7 +130,7 @@ usb_alloc_xfer_request(uint bufsize)
         return NULL;
     }
     usb_init_xfer_request(req);
-    req->sendbuf = (u8*)(req + 1);
+    req->sendbuf = (uint8_t*)(req + 1);
     req->size = bufsize;
     return req;
 }
@@ -393,8 +393,8 @@ signal_control_msg_done(struct usb_xfer_request *req)
 usb_status_t
 usb_control_msg(struct usb_device *dev,
                 const struct usb_endpoint_descriptor *endpoint_desc,
-                u8 bRequest, u8 bmRequestType,
-                u16 wValue, u16 wIndex, void *data, u16 wLength)
+                uint8_t bRequest, uint8_t bmRequestType,
+                uint16_t wValue, uint16_t wIndex, void *data, uint16_t wLength)
 {
     usb_status_t status;
     struct usb_xfer_request *req;
@@ -470,11 +470,11 @@ usb_control_msg(struct usb_device *dev,
  *      is less than the size of the descriptor header itself.
  */
 usb_status_t
-usb_get_descriptor(struct usb_device *dev, u8 bRequest, u8 bmRequestType,
-                   u16 wValue, u16 wIndex, void *buf, u16 buflen)
+usb_get_descriptor(struct usb_device *dev, uint8_t bRequest, uint8_t bmRequestType,
+                   uint16_t wValue, uint16_t wIndex, void *buf, uint16_t buflen)
 {
     usb_status_t status;
-    u16 len;
+    uint16_t len;
 
     if (buflen > sizeof(struct usb_descriptor_header))
     {
@@ -510,7 +510,7 @@ usb_get_descriptor(struct usb_device *dev, u8 bRequest, u8 bmRequestType,
 /* Read a USB device's device descriptor, or a prefix of it, into
  * dev->descriptor.  */
 static usb_status_t
-usb_read_device_descriptor(struct usb_device *dev, u16 maxlen)
+usb_read_device_descriptor(struct usb_device *dev, uint16_t maxlen)
 {
     /* Note: we do not really need to use usb_get_descriptor() here because we
      * never read more than the minimum length of the device descriptor.  */
@@ -526,8 +526,8 @@ usb_read_device_descriptor(struct usb_device *dev, u16 maxlen)
 /* Read the specified configuration descriptor, or a prefix of it, from a USB
  * device into a buffer.  */
 static usb_status_t
-usb_get_configuration_descriptor(struct usb_device *dev, u8 configuration_idx,
-                                 void *buf, u16 buflen)
+usb_get_configuration_descriptor(struct usb_device *dev, uint8_t configuration_idx,
+                                 void *buf, uint16_t buflen)
 {
     return usb_control_msg(dev, NULL, USB_DEVICE_REQUEST_GET_DESCRIPTOR,
                            USB_BMREQUESTTYPE_DIR_IN |
@@ -555,7 +555,7 @@ usb_get_configuration_descriptor(struct usb_device *dev, u8 configuration_idx,
  *      by usb_control_msg().
  */
 static usb_status_t
-usb_read_configuration_descriptor(struct usb_device *dev, u8 configuration)
+usb_read_configuration_descriptor(struct usb_device *dev, uint8_t configuration)
 {
     struct usb_configuration_descriptor desc __word_aligned;
     usb_status_t status;
@@ -598,7 +598,7 @@ usb_read_configuration_descriptor(struct usb_device *dev, u8 configuration)
          i + sizeof(struct usb_descriptor_header) <= desc.wTotalLength;
          i += hdr->bLength)
     {
-        hdr = (struct usb_descriptor_header*)((u8*)dev->config_descriptor + i);
+        hdr = (struct usb_descriptor_header*)((uint8_t*)dev->config_descriptor + i);
 
         if (hdr->bLength < sizeof(struct usb_descriptor_header))
         {
@@ -681,7 +681,7 @@ out_invalid:
 
 /* Sets the bus address of a USB device.  */
 static usb_status_t
-usb_set_address(struct usb_device *dev, u8 address)
+usb_set_address(struct usb_device *dev, uint8_t address)
 {
     usb_status_t status;
     status = usb_control_msg(dev, NULL, /* default control endpoint */
@@ -702,7 +702,7 @@ usb_set_address(struct usb_device *dev, u8 address)
  * bConfigurationValue field in one of the device's configuration descriptors.
  */
 static usb_status_t
-usb_set_configuration(struct usb_device *dev, u8 configuration)
+usb_set_configuration(struct usb_device *dev, uint8_t configuration)
 {
     usb_status_t status;
 
@@ -875,7 +875,7 @@ usb_status_t
 usb_attach_device(struct usb_device *dev)
 {
     usb_status_t status;
-    u8 address;
+    uint8_t address;
 
     /* To communicate with the USB device using control transfers, we need to
      * know the maximum packet size supported by the device.  This is nontrivial

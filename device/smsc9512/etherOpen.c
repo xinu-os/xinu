@@ -87,7 +87,7 @@ devcall etherOpen(device *devptr)
             req->dev = udev;
             /* Assign Tx endpoint, checked in smsc9512_bind_device() */
             req->endpoint_desc = udev->endpoints[0][1];
-            req->sendbuf = (u8*)req + sizeof(struct usb_xfer_request);
+            req->sendbuf = (uint8_t*)req + sizeof(struct usb_xfer_request);
             req->completion_cb_func = smsc9512_tx_complete;
             req->private = ethptr;
             reqs[i] = req;

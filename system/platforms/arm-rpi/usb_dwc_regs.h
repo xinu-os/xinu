@@ -37,17 +37,17 @@
 struct dwc_regs {
 
     /* 0x000 : OTG Control */
-    u32 otg_control;
+    uint32_t otg_control;
 
     /* 0x004 : OTG Interrupt */
-    u32 otg_interrupt;
+    uint32_t otg_interrupt;
 
     /**
      * 0x008 : AHB Configuration Register.
      *
      * This register configures some of the interactions the DWC has with the
      * rest of the system.  */
-    u32 ahb_configuration;
+    uint32_t ahb_configuration;
 
 /** Enable interrupts from the USB controller.  Disabled by default.  */
 #define DWC_AHB_INTERRUPT_ENABLE  (1 << 0)
@@ -74,7 +74,7 @@ struct dwc_regs {
 #define DWC_AHB_DMA_ENABLE        (1 << 5)
 
     /* 0x01c : Core USB configuration */
-    u32 core_usb_configuration;
+    uint32_t core_usb_configuration;
 
 
     /**
@@ -82,7 +82,7 @@ struct dwc_regs {
      *
      * Software can use this register to cause the DWC to reset itself.
      */
-    u32 core_reset;
+    uint32_t core_reset;
 
     /**
      * TODO
@@ -107,16 +107,16 @@ struct dwc_regs {
      * register.
      */
     union dwc_core_interrupts {
-        u32 val;
+        uint32_t val;
         struct {
-            u32 stuff             : 3;
+            uint32_t stuff             : 3;
 
             /**
              * Start of Frame.  TODO
              */
-            u32 sof_intr          : 1;
+            uint32_t sof_intr          : 1;
 
-            u32 morestuff         : 20;
+            uint32_t morestuff         : 20;
 
             /**
              * Host port status changed.  Software must examine the Host Port
@@ -124,7 +124,7 @@ struct dwc_regs {
              * the host port and clear any flags in it that indicate a status
              * change.
              */
-            u32 port_intr         : 1;     /* Bit 24 */
+            uint32_t port_intr         : 1;     /* Bit 24 */
 
             /**
              * Channel interrupt occurred.  Software must examine the Host All
@@ -132,9 +132,9 @@ struct dwc_regs {
              * pending interrupts, then handle and clear the interrupts for
              * these channels.
              */
-            u32 host_channel_intr : 1;     /* Bit 25 */
+            uint32_t host_channel_intr : 1;     /* Bit 25 */
 
-            u32 evenmorestuff     : 6;
+            uint32_t evenmorestuff     : 6;
         };
     } core_interrupts;
 
@@ -148,10 +148,10 @@ struct dwc_regs {
     union dwc_core_interrupts core_interrupt_mask;
 
     /* 0x01c : Receive Status Queue Read */
-    u32 receive_status;
+    uint32_t receive_status;
 
     /* 0x020 : Receive Status Queue Read & Pop */
-    u32 receive_status_pop;
+    uint32_t receive_status_pop;
 
     /**
      * 0x024 : Receive FIFO Size Register.
@@ -162,7 +162,7 @@ struct dwc_regs {
      * the note in the documentation for the hwcfg3 register about configuring
      * the dynamic FIFOs.
      */
-    u32 rx_fifo_size;
+    uint32_t rx_fifo_size;
 
     /**
      * 0x028 : Non Periodic Transmit FIFO Size Register.
@@ -176,31 +176,31 @@ struct dwc_regs {
      * the note in the documentation for the hwcfg3 register about configuring
      * the dynamic FIFOs.
      */
-    u32 nonperiodic_tx_fifo_size;
+    uint32_t nonperiodic_tx_fifo_size;
 
     /* 0x02c : Non Periodic Transmit FIFO/Queue Status Register */
-    u32 nonperiodic_tx_fifo_status;
+    uint32_t nonperiodic_tx_fifo_status;
 
     /* 0x030 */
-    u32 i2c_control;
+    uint32_t i2c_control;
 
     /* 0x034 */
-    u32 phy_vendor_control;
+    uint32_t phy_vendor_control;
 
     /* 0x038 */
-    u32 gpio;
+    uint32_t gpio;
 
     /* 0x03c */
-    u32 user_id;
+    uint32_t user_id;
 
     /* 0x040 */
-    u32 vendor_id;
+    uint32_t vendor_id;
 
     /* 0x044 */
-    u32 hwcfg1;
+    uint32_t hwcfg1;
 
     /* 0x048 */
-    u32 hwcfg2;
+    uint32_t hwcfg2;
 
     /**
      * 0x04c : Hardware Configuration 3 Register.
@@ -223,25 +223,25 @@ struct dwc_regs {
      * The low 16 bits of this register contain various flags that are not
      * documented here as we don't use any in our driver.
      */
-    u32 hwcfg3;
+    uint32_t hwcfg3;
 
     /* 0x050 */
-    u32 hwcfg4;
+    uint32_t hwcfg4;
 
     /* 0x054 */
-    u32 core_lpm_configuration;
+    uint32_t core_lpm_configuration;
 
     /* 0x058 */
-    u32 global_powerDn;
+    uint32_t global_powerDn;
 
     /* 0x05c */
-    u32 global_fifo_config;
+    uint32_t global_fifo_config;
 
     /* 0x060 */
-    u32 adp_control;
+    uint32_t adp_control;
 
     /* 0x064 */
-    u32 reserved_0x64[39];
+    uint32_t reserved_0x64[39];
 
     /**
      * 0x100 : Host Periodic Transmit FIFO Size Register.
@@ -255,10 +255,10 @@ struct dwc_regs {
      * the note in the documentation for the hwcfg3 register about configuring
      * the dynamic FIFOs.
      */
-    u32 host_periodic_tx_fifo_size;
+    uint32_t host_periodic_tx_fifo_size;
 
     /* TODO */
-    u32 stuff[191];
+    uint32_t stuff[191];
 
     /** 
      * @name Host registers
@@ -271,19 +271,19 @@ struct dwc_regs {
     /**@{*/
 
     /* 0x400 */
-    u32 host_configuration;
+    uint32_t host_configuration;
 
     /* 0x404 */
-    u32 host_frame_interval;
+    uint32_t host_frame_interval;
 
     /* 0x408 */
-    u32 host_frame_number;
+    uint32_t host_frame_number;
 
     /* 0x40c */
-    u32 host_reserved_0x40c;
+    uint32_t host_reserved_0x40c;
 
     /* 0x410 */
-    u32 host_fifo_status;
+    uint32_t host_fifo_status;
 
     /**
      * 0x414 : Host All Channels Interrupt Register.
@@ -293,7 +293,7 @@ struct dwc_regs {
      * interrupts by writing to this register; use the channel-specific
      * interrupt registers instead.
      */
-    u32 host_channels_interrupt;
+    uint32_t host_channels_interrupt;
 
     /**
      * 0x418 : Host All Channels Interrupt Mask Register.
@@ -303,13 +303,13 @@ struct dwc_regs {
      * enabled.  Software can change this register.  Defaults to all 0's after a
      * reset.
      */
-    u32 host_channels_interrupt_mask;
+    uint32_t host_channels_interrupt_mask;
 
     /* 0x41c */
-    u32 host_frame_list;
+    uint32_t host_frame_list;
 
     /* 0x420 */
-    u32 host_reserved_0x420[8];
+    uint32_t host_reserved_0x420[8];
 
     /**
      * 0x440 : Host Port Control and Status Register.
@@ -324,7 +324,7 @@ struct dwc_regs {
      * writing 1.
      */
     union dwc_host_port_ctrlstatus {
-        u32 val;
+        uint32_t val;
         struct {
             /**
              *  1: a device is connected to this port.
@@ -332,7 +332,7 @@ struct dwc_regs {
              *
              *  Changed by hardware only.
              */
-            u32 connected : 1; /* Bit 0 */
+            uint32_t connected : 1; /* Bit 0 */
 
             /**
              * Set by hardware when connected bit changes.  Software can write
@@ -340,7 +340,7 @@ struct dwc_regs {
              * generates an interrupt that can be enabled by setting port_intr
              * in the core_interrupt_mask register.
              */
-            u32 connected_changed : 1; /* Bit 1 */
+            uint32_t connected_changed : 1; /* Bit 1 */
 
             /**
              * 1: port is enabled.
@@ -350,7 +350,7 @@ struct dwc_regs {
              *
              * Note: Writing 1 here appears to disable the port.
              */
-            u32 enabled : 1; /* Bit 2 */
+            uint32_t enabled : 1; /* Bit 2 */
 
             /**
              * Set by hardware when enabled bit changes.  Software can write 1
@@ -358,7 +358,7 @@ struct dwc_regs {
              * generates an interrupt that can be enabled by setting port_intr
              * in the core_interrupt_mask register.
              */
-            u32 enabled_changed : 1; /* Bit 3 */
+            uint32_t enabled_changed : 1; /* Bit 3 */
 
             /**
              * 1: overcurrent condition active on this port
@@ -366,7 +366,7 @@ struct dwc_regs {
              *
              * Changed by hardware only.
              */
-            u32 overcurrent : 1; /* Bit 4 */
+            uint32_t overcurrent : 1; /* Bit 4 */
 
             /**
              * Set by hardware when the overcurrent bit changes.  The software
@@ -374,33 +374,33 @@ struct dwc_regs {
              * hardware generates the interrupt that can be enabled by setting
              * port_intr in the core_interrupt_mask register.
              */
-            u32 overcurrent_changed : 1; /* Bit 5 */
+            uint32_t overcurrent_changed : 1; /* Bit 5 */
 
             /**
              * Set by software to set resume signalling.
              */
-            u32 resume : 1; /* Bit 6 */
+            uint32_t resume : 1; /* Bit 6 */
 
             /**
              * Set by software to suspend the port.
              */
-            u32 suspended : 1; /* Bit 7 */
+            uint32_t suspended : 1; /* Bit 7 */
 
             /**
              * Software can set this to start a reset on this port.  Software
              * must clear this after waiting 60 milliseconds for the reset is
              * complete.
              */
-            u32 reset : 1; /* Bit 8 */
+            uint32_t reset : 1; /* Bit 8 */
 
-            u32 reserved : 1; /* Bit 9 */
+            uint32_t reserved : 1; /* Bit 9 */
 
             /**
              * Current logic of data lines (10: logic of D+; 11: logic of D-).
              *
              * Changed by hardware only.
              */
-            u32 line_status : 2; /* Bits 10-11*/
+            uint32_t line_status : 2; /* Bits 10-11*/
 
             /**
              * 1: port is powered.
@@ -409,9 +409,9 @@ struct dwc_regs {
              * Software can change this bit to power on (1) or power off (0)
              * the port.
              */
-            u32 powered : 1; /* Bit 12 */
+            uint32_t powered : 1; /* Bit 12 */
 
-            u32 test_control : 4; /* Bits 13-16 */
+            uint32_t test_control : 4; /* Bits 13-16 */
 
             /**
              * Speed of attached device (if any).  This should only be
@@ -421,14 +421,14 @@ struct dwc_regs {
              *
              * Changed by hardware only.
              */
-            u32 speed : 2; /* Bits 17-18 */
+            uint32_t speed : 2; /* Bits 17-18 */
 
-            u32 reserved2 : 13; /* Bits 19-32 */
+            uint32_t reserved2 : 13; /* Bits 19-32 */
 
         };
     } host_port_ctrlstatus;
 
-    u32 host_reserved_0x444[47];
+    uint32_t host_reserved_0x444[47];
 
     /**
      * 0x500 : Array of host channels.  Each host channel can be used to
@@ -453,41 +453,41 @@ struct dwc_regs {
          * moved to a different channel.
          */
         union dwc_host_channel_characteristics {
-            u32 val;
+            uint32_t val;
             struct {
                 /**
                  * Maximum packet size the endpoint is capable of sending or
                  * receiving.  Must be programmed by software before starting
                  * the transfer.
                  */
-                u32 max_packet_size     : 11; /* Bits 0-10  */
+                uint32_t max_packet_size     : 11; /* Bits 0-10  */
 
                 /**
                  * Endpoint number (low 4 bits of bEndpointAddress).  Must be
                  * programmed by software before starting the transfer.
                  */
-                u32 endpoint_number     : 4;  /* Bits 11-14 */
+                uint32_t endpoint_number     : 4;  /* Bits 11-14 */
 
                 /**
                  * Endpoint direction (high bit of bEndpointAddress).  Must be
                  * programmed by software before starting the transfer.
                  */
-                u32 endpoint_direction  : 1;  /* Bit  15    */
+                uint32_t endpoint_direction  : 1;  /* Bit  15    */
 
-                u32 reserved            : 1;  /* Bit  16    */
+                uint32_t reserved            : 1;  /* Bit  16    */
 
                 /**
                  * 1 when the device being communicated with is attached at low
                  * speed; 0 otherwise.  Must be programmed by software before
                  * starting the transfer.
                  */
-                u32 low_speed           : 1;  /* Bit  17    */
+                uint32_t low_speed           : 1;  /* Bit  17    */
 
                 /**
                  * Endpoint type (low 2 bits of bmAttributes).  Must be
                  * programmed by software before starting the transfer.
                  */
-                u32 endpoint_type       : 2;  /* Bits 18-19 */
+                uint32_t endpoint_type       : 2;  /* Bits 18-19 */
 
                 /**
                  * Maximum number of transactions that can be executed per
@@ -496,14 +496,14 @@ struct dwc_regs {
                  * high-speed interrupt and isochronous endpoints.  Must be
                  * programmed by software before starting the transfer.
                  */
-                u32 packets_per_frame   : 2;  /* Bits 20-21 */
+                uint32_t packets_per_frame   : 2;  /* Bits 20-21 */
 
                 /**
                  * USB device address of the device on which the endpoint is
                  * located.  Must be programmed by software before starting the
                  * transfer.
                  */
-                u32 device_address      : 7;  /* Bits 22-28 */
+                uint32_t device_address      : 7;  /* Bits 22-28 */
 
                 /**
                  * Just before enabling the channel (for all transactions),
@@ -512,14 +512,14 @@ struct dwc_regs {
                  * issue frame overrun errors on some transactions.  TODO: what
                  * exactly does this do?
                  */
-                u32 odd_frame           : 1;  /* Bit  29    */
+                uint32_t odd_frame           : 1;  /* Bit  29    */
 
                 /**
                  * Software can set this to 1 to halt the channel.  Not needed
                  * during normal operation as the channel halts automatically
                  * when a transaction completes or an error occurs.
                  */
-                u32 channel_disable     : 1;  /* Bit  30    */
+                uint32_t channel_disable     : 1;  /* Bit  30    */
 
                 /**
                  * Software can set this to 1 to enable the channel, thereby
@@ -528,7 +528,7 @@ struct dwc_regs {
                  * transfer registers, and possibly other registers (depending
                  * on the transfer) have been programmed.
                  */
-                u32 channel_enable      : 1;  /* Bit  31    */
+                uint32_t channel_enable      : 1;  /* Bit  31    */
             };
         } characteristics;
 
@@ -546,13 +546,13 @@ struct dwc_regs {
          * times to send all the packets of a single transfer.
          */
         union dwc_host_channel_split_control {
-            u32 val;
+            uint32_t val;
             struct {
                 /**
                  * 0-based index of the port on the high-speed hub on which the
                  * low or full-speed device is attached.
                  */
-                u32 port_address          : 7;  /* Bits 0-6   */
+                uint32_t port_address          : 7;  /* Bits 0-6   */
 
                 /**
                  * USB device address of the high-speed hub that acts as the
@@ -563,12 +563,12 @@ struct dwc_regs {
                  * (towards the root hub) until a high-speed hub is found and
                  * use its device address here.
                  */
-                u32 hub_address           : 7;  /* Bits 7-13  */
+                uint32_t hub_address           : 7;  /* Bits 7-13  */
 
                 /**
                  * TODO: what exactly does this do?
                  */
-                u32 transaction_position  : 2;  /* Bits 14-15 */
+                uint32_t transaction_position  : 2;  /* Bits 14-15 */
 
                 /**
                  *  0: Do a Start Split transaction
@@ -579,14 +579,14 @@ struct dwc_regs {
                  * begin with a Start Split transaction and alternate this bit
                  * for each transaction until the transfer is complete.
                  */
-                u32 complete_split        : 1;  /* Bit  16    */
+                uint32_t complete_split        : 1;  /* Bit  16    */
 
-                u32 reserved              : 14; /* Bits 17-30 */
+                uint32_t reserved              : 14; /* Bits 17-30 */
 
                 /**
                  * Set to 1 to enable Split Transactions.
                  */
-                u32 split_enable          : 1;  /* Bit  31    */
+                uint32_t split_enable          : 1;  /* Bit  31    */
             };
         } split_control;
 
@@ -605,7 +605,7 @@ struct dwc_regs {
          * and by any system-specific interrupt controller.
          */
         union dwc_host_channel_interrupts {
-            u32 val;
+            uint32_t val;
             struct {
                 /**
                  * The requested USB transfer has successfully completed.
@@ -629,7 +629,7 @@ struct dwc_regs {
                  *   bytes of data have been successfully transferred or a
                  *   shorter-than-expected packet was received.
                  */
-                u32 transfer_completed       : 1;  /* Bit 0     */
+                uint32_t transfer_completed       : 1;  /* Bit 0     */
 
                 /**
                  * The channel has halted.  After this bit has been set, the
@@ -664,19 +664,19 @@ struct dwc_regs {
                  *   data toggle error, tranasction error, stall condition, or
                  *   frame overrun error.
                  */
-                u32 channel_halted           : 1;  /* Bit 1     */
+                uint32_t channel_halted           : 1;  /* Bit 1     */
 
                 /**
                  * An error occurred on the ARM Advanced High-Performance Bus
                  * (AHB).
                  */
-                u32 ahb_error                : 1;  /* Bit 2     */
+                uint32_t ahb_error                : 1;  /* Bit 2     */
 
                 /**
                  * The device issued a STALL handshake packet (endpoint is
                  * halted or control pipe request is not supported).
                  */
-                u32 stall_response_received  : 1;  /* Bit 3     */
+                uint32_t stall_response_received  : 1;  /* Bit 3     */
 
                 /**
                  * The device issued a NAK handshake packet (receiving device
@@ -689,46 +689,46 @@ struct dwc_regs {
                  * on hubs and HID devices) must be done in software, even if
                  * the actual transactions themselves are interrupt-driven.
                  */
-                u32 nak_response_received    : 1;  /* Bit 4     */
+                uint32_t nak_response_received    : 1;  /* Bit 4     */
 
                 /**
                  * The device issued an ACK handshake packet (receiving device
                  * acknowledged error-free packet).
                  */
-                u32 ack_response_received    : 1;  /* Bit 5     */
+                uint32_t ack_response_received    : 1;  /* Bit 5     */
 
                 /**
                  * The device issued a NYET handshake packet.
                  */
-                u32 nyet_response_received   : 1;  /* Bit 6     */
+                uint32_t nyet_response_received   : 1;  /* Bit 6     */
 
                 /**
                  * From our experience this seems to usually indicate that
                  * software programmed the channel incorrectly.
                  */
-                u32 transaction_error        : 1;  /* Bit 7     */
+                uint32_t transaction_error        : 1;  /* Bit 7     */
 
                 /**
                  * Unexpected bus activity occurred.
                  */
-                u32 babble_error             : 1;  /* Bit 8     */
+                uint32_t babble_error             : 1;  /* Bit 8     */
 
                 /**
                  * TODO
                  */
-                u32 frame_overrun            : 1;  /* Bit 9     */
+                uint32_t frame_overrun            : 1;  /* Bit 9     */
 
                 /**
                  * When issuing a series of DATA transactions to an endpoint,
                  * the correct DATA0 or DATA1 packet ID was not specified in the
                  * packet_id member of the transfer register.
                  */
-                u32 data_toggle_error        : 1;  /* Bit 10    */
+                uint32_t data_toggle_error        : 1;  /* Bit 10    */
 
-                u32 buffer_not_available     : 1;  /* Bit 11    */
-                u32 excess_transaction_error : 1;  /* Bit 12    */
-                u32 frame_list_rollover      : 1;  /* Bit 13    */
-                u32 reserved                 : 18; /* Bits 14-31 */
+                uint32_t buffer_not_available     : 1;  /* Bit 11    */
+                uint32_t excess_transaction_error : 1;  /* Bit 12    */
+                uint32_t frame_list_rollover      : 1;  /* Bit 13    */
+                uint32_t reserved                 : 18; /* Bits 14-31 */
             };
         } interrupts;
 
@@ -748,7 +748,7 @@ struct dwc_regs {
          * be programmed before beginning the transfer.
          */
         union dwc_host_channel_transfer {
-            u32 val;
+            uint32_t val;
             struct {
                 /**
                  * Size of the data to send or receive, in bytes.  Software must
@@ -775,7 +775,7 @@ struct dwc_regs {
                  * times [the original packet count minus packet_count] if
                  * packet_count is nonzero.
                  */
-                u32 size         : 19; /* Bits 0-18  */
+                uint32_t size         : 19; /* Bits 0-18  */
 
                 /**
                  * Number of packets left to transmit or maximum number of
@@ -791,7 +791,7 @@ struct dwc_regs {
                  * than after the Start Split.  If the final received packet of
                  * an IN transfer is short, it is still counted.
                  */
-                u32 packet_count : 10; /* Bits 19-28 */
+                uint32_t packet_count : 10; /* Bits 19-28 */
 
                 /**
                  * High 2 bits of the Packet ID used in the USB protocol.
@@ -817,12 +817,12 @@ struct dwc_regs {
                  * transfer is complete.  When doing so, software must save this
                  * field so that it can be re-programmed correctly.
                  */
-                u32 packet_id    : 2;  /* Bits 29-30 */
+                uint32_t packet_id    : 2;  /* Bits 29-30 */
 
                 /**
                  * TODO
                  */
-                u32 do_ping      : 1;  /* Bit  31    */
+                uint32_t do_ping      : 1;  /* Bit  31    */
             };
         } transfer;
 
@@ -846,24 +846,24 @@ struct dwc_regs {
          * in our experience the behavior is the same when simply using ARM
          * physical addresses.
          */
-        u32 dma_address;
+        uint32_t dma_address;
 
-        u32 reserved_1;
-        u32 reserved_2;
+        uint32_t reserved_1;
+        uint32_t reserved_2;
     } host_channels[DWC_NUM_CHANNELS];
 
-    u32 host_reserved_after_channels[(0x800 - 0x500 -
+    uint32_t host_reserved_after_channels[(0x800 - 0x500 -
                         (DWC_NUM_CHANNELS * sizeof(struct dwc_host_channel))) /
-                         sizeof(u32)];
+                         sizeof(uint32_t)];
 
     /**@}*/
 
     /* 0x800 */
 
-    u32 reserved_0x800[(0xe00 - 0x800) / sizeof(u32)];
+    uint32_t reserved_0x800[(0xe00 - 0x800) / sizeof(uint32_t)];
 
     /* 0xe00 : Power and Clock Gating Control Register */
-    u32 power;
+    uint32_t power;
 };
 
 /* Make sure the registers are declared correctly.  This is dummy code that will

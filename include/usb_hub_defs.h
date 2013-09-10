@@ -16,13 +16,13 @@
 /** Standard format of USB hub descriptors.  See Table 11-13 in Section 11.23 of
  * the USB 2.0 specification.  */
 struct usb_hub_descriptor {
-    u8  bDescLength;
-    u8  bDescriptorType;
-    u8  bNbrPorts;
-    u16 wHubCharacteristics;
-    u8  bPwrOn2PwrGood;
-    u8  bHubContrCurrent;
-    u8  varData[]; /* Variable length field; 64 should be the maximum possible
+    uint8_t  bDescLength;
+    uint8_t  bDescriptorType;
+    uint8_t  bNbrPorts;
+    uint16_t wHubCharacteristics;
+    uint8_t  bPwrOn2PwrGood;
+    uint8_t  bHubContrCurrent;
+    uint8_t  varData[]; /* Variable length field; 64 should be the maximum possible
                       length (255 ports => 2 x 32 bytes of data) */
 } __packed;
 
@@ -30,31 +30,31 @@ struct usb_hub_descriptor {
  * */
 struct usb_port_status {
     union {
-        u16 wPortStatus;
+        uint16_t wPortStatus;
         struct {
-            u16 connected : 1;
-            u16 enabled : 1;
-            u16 suspended : 1;
-            u16 overcurrent : 1;
-            u16 reset : 1;
-            u16 wPortStatus_reserved1 : 3;
-            u16 powered : 1;
-            u16 low_speed_attached : 1;
-            u16 high_speed_attached : 1;
-            u16 test_mode : 1;
-            u16 indicator_control : 1;
-            u16 wPortStatus_reserved2 : 3;
+            uint16_t connected : 1;
+            uint16_t enabled : 1;
+            uint16_t suspended : 1;
+            uint16_t overcurrent : 1;
+            uint16_t reset : 1;
+            uint16_t wPortStatus_reserved1 : 3;
+            uint16_t powered : 1;
+            uint16_t low_speed_attached : 1;
+            uint16_t high_speed_attached : 1;
+            uint16_t test_mode : 1;
+            uint16_t indicator_control : 1;
+            uint16_t wPortStatus_reserved2 : 3;
         };
     };
     union {
-        u16 wPortChange;
+        uint16_t wPortChange;
         struct {
-            u16 connected_changed : 1;
-            u16 enabled_changed : 1;
-            u16 suspended_changed : 1;
-            u16 overcurrent_changed : 1;
-            u16 reset_changed : 1;
-            u16 wPortChange_reserved : 11;
+            uint16_t connected_changed : 1;
+            uint16_t enabled_changed : 1;
+            uint16_t suspended_changed : 1;
+            uint16_t overcurrent_changed : 1;
+            uint16_t reset_changed : 1;
+            uint16_t wPortChange_reserved : 11;
         };
     };
 } __packed;
@@ -82,19 +82,19 @@ enum usb_port_feature {
  * */
 struct usb_hub_status {
     union {
-        u16 wHubStatus;
+        uint16_t wHubStatus;
         struct {
-            u16 local_power : 1;
-            u16 overcurrent : 1;
-            u16 wHubStatus_reserved : 14;
+            uint16_t local_power : 1;
+            uint16_t overcurrent : 1;
+            uint16_t wHubStatus_reserved : 14;
         };
     };
     union {
-        u16 wHubChange;
+        uint16_t wHubChange;
         struct {
-            u16 local_power_changed : 1;
-            u16 overcurrent_changed : 1;
-            u16 wHubChange_reserved : 14;
+            uint16_t local_power_changed : 1;
+            uint16_t overcurrent_changed : 1;
+            uint16_t wHubChange_reserved : 14;
         };
     };
 } __packed;

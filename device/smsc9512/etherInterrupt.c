@@ -67,9 +67,9 @@ void smsc9512_rx_complete(struct usb_xfer_request *req)
     ethptr->rxirq++;
     if (req->status == USB_STATUS_SUCCESS)
     {
-        const u8 *data, *edata;
-        u32 recv_status;
-        u32 frame_length;
+        const uint8_t *data, *edata;
+        uint32_t recv_status;
+        uint32_t frame_length;
 
         /* For each Ethernet frame in the received USB data... */
         for (data = req->recvbuf, edata = req->recvbuf + req->actual_size;
@@ -111,7 +111,7 @@ void smsc9512_rx_complete(struct usb_xfer_request *req)
                 struct ethPktBuffer *pkt;
 
                 pkt = bufget(ethptr->inPool);
-                pkt->buf = pkt->data = (u8*)(pkt + 1);
+                pkt->buf = pkt->data = (uint8_t*)(pkt + 1);
                 pkt->length = frame_length - ETH_CRC_LEN;
                 memcpy(pkt->buf, data + SMSC9512_RX_OVERHEAD, pkt->length);
                 ethptr->in[(ethptr->istart + ethptr->icount) % ETH_IBLEN] = pkt;

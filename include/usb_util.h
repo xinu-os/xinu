@@ -11,15 +11,7 @@
 
 #include <kernel.h>
 #include <stddef.h>
-
-/** Unsigned integer type of exactly 8 bits.  */
-typedef uchar  u8;
-
-/** Unsigned integer type of exactly 16 bits.  */
-typedef ushort u16;
-
-/** Unsigned integer type of exactly 32 bits.  */
-typedef uint   u32;
+#include <stdint.h>
 
 /** Type-independent macro to calculate the minimum of 2 values.  */
 #define min(a, b) ({ __typeof__(a) _a = (a); __typeof__(b) _b = (b); \
@@ -53,14 +45,6 @@ typedef uint   u32;
 /** Assert that something is true at compilation time.  This generates no code
  * in the resulting binary.  */
 #define STATIC_ASSERT(condition) ((void)sizeof(char[1 - 2*!(condition)]))
-
-static inline void
-__usb_check_uint_types(void)
-{
-    STATIC_ASSERT(sizeof(u8)  == 1);
-    STATIC_ASSERT(sizeof(u16) == 2);
-    STATIC_ASSERT(sizeof(u32) == 4);
-}
 
 struct usb_device;
 

@@ -155,7 +155,7 @@ static semaphore chfree_sema;
 static struct usb_xfer_request *channel_pending_xfers[DWC_NUM_CHANNELS];
 
 /** Aligned buffers for DMA.  */
-static u8 aligned_bufs[DWC_NUM_CHANNELS][WORD_ALIGN(USB_MAX_PACKET_SIZE)]
+static uint8_t aligned_bufs[DWC_NUM_CHANNELS][WORD_ALIGN(USB_MAX_PACKET_SIZE)]
                                 __word_aligned;
 
 /* Find index of first set bit in a nonzero word.  */
@@ -253,9 +253,9 @@ dwc_soft_reset(void)
 static void
 dwc_setup_dma_mode(void)
 {
-    const u32 rx_words = 1024;  /* Size of Rx FIFO in 4-byte words */
-    const u32 tx_words = 1024;  /* Size of Non-periodic Tx FIFO in 4-byte words */
-    const u32 ptx_words = 1024; /* Size of Periodic Tx FIFO in 4-byte words */
+    const uint32_t rx_words = 1024;  /* Size of Rx FIFO in 4-byte words */
+    const uint32_t tx_words = 1024;  /* Size of Non-periodic Tx FIFO in 4-byte words */
+    const uint32_t ptx_words = 1024; /* Size of Periodic Tx FIFO in 4-byte words */
 
     /* First configure the Host Controller's FIFO sizes.  This is _required_
      * because the default values (at least in Broadcom's instantiation of the
@@ -464,7 +464,7 @@ dwc_host_port_status_changed(void)
         root_hub_status_change_request = NULL;
         usb_debug("Host port status changed; "
                   "responding to status changed transfer on root hub\n");
-        *(u8*)req->recvbuf = 0x2; /* 0x2 means Port 1 status changed (bit 0 is
+        *(uint8_t*)req->recvbuf = 0x2; /* 0x2 means Port 1 status changed (bit 0 is
                                      used for the hub itself) */
         req->actual_size = 1;
         req->status = USB_STATUS_SUCCESS;
@@ -488,7 +488,7 @@ dwc_host_port_status_changed(void)
 static usb_status_t
 dwc_root_hub_standard_request(struct usb_xfer_request *req)
 {
-    u16 len;
+    uint16_t len;
     const struct usb_control_setup_data *setup = &req->setup_data;
 
     switch (setup->bRequest)
@@ -534,7 +534,7 @@ dwc_root_hub_standard_request(struct usb_xfer_request *req)
         case USB_DEVICE_REQUEST_GET_CONFIGURATION:
             if (setup->wLength >= 1)
             {
-                *(u8*)req->recvbuf = req->dev->configuration;
+                *(uint8_t*)req->recvbuf = req->dev->configuration;
                 req->actual_size = 1;
             }
             return USB_STATUS_SUCCESS;
@@ -626,7 +626,7 @@ dwc_clear_host_port_feature(enum usb_port_feature feature)
 static usb_status_t
 dwc_root_hub_class_request(struct usb_xfer_request *req)
 {
-    u16 len;
+    uint16_t len;
     const struct usb_control_setup_data *setup = &req->setup_data;
     switch (setup->bRequest)
     {
@@ -982,7 +982,7 @@ dwc_channel_start_xfer(uint chan, struct usb_xfer_request *req)
     if (IS_WORD_ALIGNED(data))
     {
         /* Can DMA directly from source or to destination if word-aligned.  */
-        chanptr->dma_address = (u32)data;
+        chanptr->dma_address = (uint32_t)data;
     }
     else
     {
@@ -990,7 +990,7 @@ dwc_channel_start_xfer(uint chan, struct usb_xfer_request *req)
          * destination is not word-aligned.  If the attempted transfer size
          * overflows this alternate buffer, cap it to the greatest number of
          * whole packets that fit.  */
-        chanptr->dma_address = (u32)aligned_bufs[chan];
+        chanptr->dma_address = (uint32_t)aligned_bufs[chan];
         if (transfer.size > sizeof(aligned_bufs[chan]))
         {
             transfer.size = sizeof(aligned_bufs[chan]) -
@@ -1606,7 +1606,7 @@ dwc_interrupt_handler(void)
     {
         /* One or more channels has an interrupt pending.  */
 
-        u32 chintr;
+        uint32_t chintr;
         uint chan;
 
         /* A bit in the "Host All Channels Interrupt Register" is set if an

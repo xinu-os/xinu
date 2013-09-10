@@ -43,18 +43,18 @@
 //#define SMSC9512_MAX_RX_REQUESTS (DIV_ROUND_UP(60 * 1518, SMSC9512_DEFAULT_HS_BURST_CAP_SIZE))
 #define SMSC9512_MAX_RX_REQUESTS 1
 
-usb_status_t smsc9512_write_reg(struct usb_device *udev, u32 index, u32 data);
+usb_status_t smsc9512_write_reg(struct usb_device *udev, uint32_t index, uint32_t data);
 
-usb_status_t smsc9512_read_reg(struct usb_device *udev, u32 index, u32 *data);
+usb_status_t smsc9512_read_reg(struct usb_device *udev, uint32_t index, uint32_t *data);
 
-usb_status_t smsc9512_modify_reg(struct usb_device *udev, u32 index,
-                                 u32 mask, u32 set);
-usb_status_t smsc9512_set_reg_bits(struct usb_device *udev, u32 index, u32 set);
+usb_status_t smsc9512_modify_reg(struct usb_device *udev, uint32_t index,
+                                 uint32_t mask, uint32_t set);
+usb_status_t smsc9512_set_reg_bits(struct usb_device *udev, uint32_t index, uint32_t set);
 
 usb_status_t smsc9512_wait_device_attached(ushort minor);
 
-usb_status_t smsc9512_set_mac_address(struct usb_device *udev, const u8 *macaddr);
-usb_status_t smsc9512_get_mac_address(struct usb_device *udev, u8 *macaddr);
+usb_status_t smsc9512_set_mac_address(struct usb_device *udev, const uint8_t *macaddr);
+usb_status_t smsc9512_get_mac_address(struct usb_device *udev, uint8_t *macaddr);
 
 struct usb_xfer_request;
 
@@ -63,9 +63,9 @@ void smsc9512_tx_complete(struct usb_xfer_request *req);
 
 
 static inline void
-__smsc9512_dump_reg(struct usb_device *udev, u32 index, const char *name)
+__smsc9512_dump_reg(struct usb_device *udev, uint32_t index, const char *name)
 {
-    u32 val = 0;
+    uint32_t val = 0;
     smsc9512_read_reg(udev, index, &val);
     kprintf("SMSC9512: %s = 0x%08x\n", name, val);
 }
@@ -599,13 +599,13 @@ __smsc9512_dump_reg(struct usb_device *udev, u32 index, const char *name)
 /****************************************************************************/
 
 /* Interrupt Endpoint status word bitfields */
-#define INT_ENP_TX_STOP                ((u32)BIT(17))
-#define INT_ENP_RX_STOP                ((u32)BIT(16))
-#define INT_ENP_PHY_INT                ((u32)BIT(15))
-#define INT_ENP_TXE                    ((u32)BIT(14))
-#define INT_ENP_TDFU                   ((u32)BIT(13))
-#define INT_ENP_TDFO                   ((u32)BIT(12))
-#define INT_ENP_RXDF                   ((u32)BIT(11))
+#define INT_ENP_TX_STOP                ((uint32_t)BIT(17))
+#define INT_ENP_RX_STOP                ((uint32_t)BIT(16))
+#define INT_ENP_PHY_INT                ((uint32_t)BIT(15))
+#define INT_ENP_TXE                    ((uint32_t)BIT(14))
+#define INT_ENP_TDFU                   ((uint32_t)BIT(13))
+#define INT_ENP_TDFO                   ((uint32_t)BIT(12))
+#define INT_ENP_RXDF                   ((uint32_t)BIT(11))
 
 /***********************************/
 

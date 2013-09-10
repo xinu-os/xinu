@@ -26,14 +26,14 @@
  *      code.
  */
 usb_status_t
-smsc9512_write_reg(struct usb_device *udev, u32 index, u32 data)
+smsc9512_write_reg(struct usb_device *udev, uint32_t index, uint32_t data)
 {
     return usb_control_msg(udev, NULL,
                            SMSC9512_VENDOR_REQUEST_WRITE_REGISTER,
                            USB_BMREQUESTTYPE_DIR_OUT |
                                USB_BMREQUESTTYPE_TYPE_VENDOR |
                                USB_BMREQUESTTYPE_RECIPIENT_DEVICE,
-                           0, index, &data, sizeof(u32));
+                           0, index, &data, sizeof(uint32_t));
 }
 
 /**
@@ -53,14 +53,14 @@ smsc9512_write_reg(struct usb_device *udev, u32 index, u32 data)
  *      code.
  */
 usb_status_t
-smsc9512_read_reg(struct usb_device *udev, u32 index, u32 *data)
+smsc9512_read_reg(struct usb_device *udev, uint32_t index, uint32_t *data)
 {
     return usb_control_msg(udev, NULL,
                            SMSC9512_VENDOR_REQUEST_READ_REGISTER,
                            USB_BMREQUESTTYPE_DIR_IN |
                                USB_BMREQUESTTYPE_TYPE_VENDOR |
                                USB_BMREQUESTTYPE_RECIPIENT_DEVICE,
-                           0, index, data, sizeof(u32));
+                           0, index, data, sizeof(uint32_t));
 }
 
 /**
@@ -85,10 +85,11 @@ smsc9512_read_reg(struct usb_device *udev, u32 index, u32 *data)
  *      code.
  */
 usb_status_t
-smsc9512_modify_reg(struct usb_device *udev, u32 index, u32 mask, u32 set)
+smsc9512_modify_reg(struct usb_device *udev, uint32_t index,
+                    uint32_t mask, uint32_t set)
 {
     usb_status_t status;
-    u32 val;
+    uint32_t val;
 
     status = smsc9512_read_reg(udev, index, &val);
     if (status != USB_STATUS_SUCCESS)
@@ -118,7 +119,7 @@ smsc9512_modify_reg(struct usb_device *udev, u32 index, u32 mask, u32 set)
  *      code.
  */
 usb_status_t
-smsc9512_set_reg_bits(struct usb_device *udev, u32 index, u32 set)
+smsc9512_set_reg_bits(struct usb_device *udev, uint32_t index, uint32_t set)
 {
     return smsc9512_modify_reg(udev, index, 0xffffffff, set);
 }
@@ -139,10 +140,10 @@ smsc9512_set_reg_bits(struct usb_device *udev, u32 index, u32 set)
  *      modified.
  */
 usb_status_t
-smsc9512_set_mac_address(struct usb_device *udev, const u8 *macaddr)
+smsc9512_set_mac_address(struct usb_device *udev, const uint8_t *macaddr)
 {
     usb_status_t status;
-    u32 addrl, addrh;
+    uint32_t addrl, addrh;
 
     addrl = macaddr[0] | macaddr[1] << 8 | macaddr[2] << 16 | macaddr[3] << 24;
     addrh = macaddr[4] | macaddr[5] << 8;
@@ -170,10 +171,10 @@ smsc9512_set_mac_address(struct usb_device *udev, const u8 *macaddr)
  *      code.
  */
 usb_status_t
-smsc9512_get_mac_address(struct usb_device *udev, u8 *macaddr)
+smsc9512_get_mac_address(struct usb_device *udev, uint8_t *macaddr)
 {
     usb_status_t status;
-    u32 addrl, addrh;
+    uint32_t addrl, addrh;
 
     status = smsc9512_read_reg(udev, ADDRL, &addrl);
     if (status != USB_STATUS_SUCCESS)

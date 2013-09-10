@@ -143,49 +143,49 @@ enum usb_sublanguage_id {
 /** Standard SETUP data for a USB control request.  See Table 9-2 in Section 9.3
  * of the USB 2.0 specification.  */
 struct usb_control_setup_data {
-    u8  bmRequestType;
-    u8  bRequest;
-    u16 wValue;
-    u16 wIndex;
-    u16 wLength;
+    uint8_t  bmRequestType;
+    uint8_t  bRequest;
+    uint16_t wValue;
+    uint16_t wIndex;
+    uint16_t wLength;
 } __packed;
 
 /** Fields that begin every standard USB descriptor.  */
 struct usb_descriptor_header {
-    u8 bLength;
-    u8 bDescriptorType;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
 } __packed;
 
 /** Standard format of USB device descriptors.  See Table 9-8 in 9.6.1 of the
  * USB 2.0 specification.  */
 struct usb_device_descriptor {
-    u8  bLength;
-    u8  bDescriptorType;
-    u16 bcdUSB;
-    u8  bDeviceClass;
-    u8  bDeviceSubClass;
-    u8  bDeviceProtocol;
-    u8  bMaxPacketSize0;
-    u16 idVendor;
-    u16 idProduct;
-    u16 bcdDevice;
-    u8  iManufacturer;
-    u8  iProduct;
-    u8  iSerialNumber;
-    u8  bNumConfigurations;
+    uint8_t  bLength;
+    uint8_t  bDescriptorType;
+    uint16_t bcdUSB;
+    uint8_t  bDeviceClass;
+    uint8_t  bDeviceSubClass;
+    uint8_t  bDeviceProtocol;
+    uint8_t  bMaxPacketSize0;
+    uint16_t idVendor;
+    uint16_t idProduct;
+    uint16_t bcdDevice;
+    uint8_t  iManufacturer;
+    uint8_t  iProduct;
+    uint8_t  iSerialNumber;
+    uint8_t  bNumConfigurations;
 } __packed;
 
 /** Standard format of USB configuration descriptors.  See Table 9-10 in Section
  * 9.6.3 of the USB 2.0 specification.  */
 struct usb_configuration_descriptor {
-    u8  bLength;
-    u8  bDescriptorType;
-    u16 wTotalLength;
-    u8  bNumInterfaces;
-    u8  bConfigurationValue;
-    u8  iConfiguration;
-    u8  bmAttributes;
-    u8  bMaxPower;
+    uint8_t  bLength;
+    uint8_t  bDescriptorType;
+    uint16_t wTotalLength;
+    uint8_t  bNumInterfaces;
+    uint8_t  bConfigurationValue;
+    uint8_t  iConfiguration;
+    uint8_t  bmAttributes;
+    uint8_t  bMaxPower;
 } __packed;
 
 /* Values for bmAttributes in struct usb_configuration_descriptor */
@@ -197,34 +197,34 @@ struct usb_configuration_descriptor {
 /** Standard format of USB interface descriptors.  See Table 9-12 in Section
  * 9.6.6 of the USB 2.0 specification.  */
 struct usb_interface_descriptor {
-    u8 bLength;
-    u8 bDescriptorType;
-    u8 bInterfaceNumber;
-    u8 bAlternateSetting;
-    u8 bNumEndpoints;
-    u8 bInterfaceClass;
-    u8 bInterfaceSubClass;
-    u8 bInterfaceProtocol;
-    u8 iInterface;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bInterfaceNumber;
+    uint8_t bAlternateSetting;
+    uint8_t bNumEndpoints;
+    uint8_t bInterfaceClass;
+    uint8_t bInterfaceSubClass;
+    uint8_t bInterfaceProtocol;
+    uint8_t iInterface;
 } __packed;
 
 /** Standard format of USB endpoint descriptors.  See Table 9-13 in Section
  * 9.6.6 of the USB 2.0 specification.  */
 struct usb_endpoint_descriptor {
-    u8 bLength;
-    u8 bDescriptorType;
-    u8 bEndpointAddress;
-    u8 bmAttributes;
-    u16 wMaxPacketSize;
-    u8 bInterval;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bEndpointAddress;
+    uint8_t bmAttributes;
+    uint16_t wMaxPacketSize;
+    uint8_t bInterval;
 } __packed;
 
 /** Standard format of USB string descriptors.  See Table 9-16 in Section 9.7 of
  * the USB 2.0 specification.  */
 struct usb_string_descriptor {
-    u8  bLength;
-    u8  bDescriptorType;
-    u16 bString[]; /* UTF-16LE encoded string
+    uint8_t  bLength;
+    uint8_t  bDescriptorType;
+    uint16_t bString[]; /* UTF-16LE encoded string
                       (spec ambigiously just says "UNICODE") */
 } __packed;
 
@@ -235,7 +235,7 @@ struct usb_string_descriptor {
  * usb_device_request::USB_DEVICE_REQUEST_GET_STATUS control message.
  * Documented in Section 9.4.6 of the USB 2.0 specification.  */
 struct usb_device_status {
-    u16 wStatus;
+    uint16_t wStatus;
 } __packed;
 
 /**

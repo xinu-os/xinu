@@ -118,11 +118,11 @@ struct usb_xfer_request
      * by embedding the usb_xfer_request in another struct.          *
      *****************************************************************/
     void *cur_data_ptr;
-    u8 complete_split : 1;
-    u8 short_attempt  : 1;
-    u8 need_sof       : 1;
-    u8 control_phase  : 2;
-    u8 next_data_pid  : 2;
+    uint8_t complete_split : 1;
+    uint8_t short_attempt  : 1;
+    uint8_t need_sof       : 1;
+    uint8_t control_phase  : 2;
+    uint8_t next_data_pid  : 2;
     uint attempted_size;
     uint attempted_packets_remaining;
     uint attempted_bytes_remaining;
@@ -268,7 +268,7 @@ struct usb_device
     struct usb_device *parent;
 
     /** Current configuration index of this USB device.  Set by USB core.  */
-    u8 configuration;
+    uint8_t configuration;
 
     /** Device descriptor of this device.  Set by USB core.  */
     struct usb_device_descriptor descriptor;
@@ -343,23 +343,24 @@ usb_submit_xfer_request(struct usb_xfer_request *req);
 usb_status_t
 usb_control_msg(struct usb_device *dev,
                 const struct usb_endpoint_descriptor *desc,
-                u8 bRequest, u8 bmRequestType,
-                u16 wValue, u16 wIndex, void *data, u16 wLength);
+                uint8_t bRequest, uint8_t bmRequestType,
+                uint16_t wValue, uint16_t wIndex, void *data, uint16_t wLength);
 
 usb_status_t
-usb_get_descriptor(struct usb_device *dev, u8 bRequest, u8 bmRequestType,
-                   u16 wValue, u16 wIndex, void *buf, u16 buflen);
+usb_get_descriptor(struct usb_device *dev, uint8_t bRequest,
+		   uint8_t bmRequestType, uint16_t wValue, uint16_t wIndex,
+		   void *buf, uint16_t buflen);
 
 /* The following functions are available only in non-embedded builds of the USB
  * code.  */
 #if !USB_EMBEDDED
 usb_status_t
-usb_get_string_descriptor(struct usb_device *dev, u8 index, u16 lang_id,
-                          struct usb_string_descriptor *buf, u16 buflen);
+usb_get_string_descriptor(struct usb_device *dev, uint8_t index, uint16_t lang_id,
+                          struct usb_string_descriptor *buf, uint16_t buflen);
 
 usb_status_t
-usb_get_ascii_string(struct usb_device *dev, u32 iString,
-                     char *strbuf, u32 strbufsize);
+usb_get_ascii_string(struct usb_device *dev, uint32_t iString,
+                     char *strbuf, uint32_t strbufsize);
 
 const char *
 usb_device_description(const struct usb_device *dev);

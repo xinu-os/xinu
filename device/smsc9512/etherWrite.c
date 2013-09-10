@@ -16,8 +16,8 @@ devcall etherWrite(device *devptr, const void *buf, uint len)
 {
     struct ether *ethptr;
     struct usb_xfer_request *req;
-    u8 *sendbuf;
-    u32 tx_cmd_a, tx_cmd_b;
+    uint8_t *sendbuf;
+    uint32_t tx_cmd_a, tx_cmd_b;
 
     ethptr = &ethertab[devptr->minor];
     if (ethptr->state != ETH_STATE_UP ||
