@@ -23,11 +23,12 @@
 void *memset(void *s, int c, size_t n)
 {
     unsigned char *p = s;
+    unsigned char byte = c;
     size_t i;
 
     for (i = 0; i < n; i++)
     {
-        p[i] = c;
+        p[i] = byte;
     }
     return s;
 }
