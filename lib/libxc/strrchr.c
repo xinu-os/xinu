@@ -23,7 +23,7 @@
 char *strrchr(const char *s, int c)
 {
     char *r = NULL;
-    unsigned char ch = c;
+    char ch = c;
 
     do
     {

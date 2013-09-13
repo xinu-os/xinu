@@ -22,7 +22,7 @@
  */
 char *strchr(const char *s, int c)
 {
-    unsigned char ch = c;
+    char ch = c;
     do
     {
         if (*s == ch)
