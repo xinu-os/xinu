@@ -196,9 +196,6 @@ endif
 # Path to platform-specific configuration file
 CONFIG := platforms/$(PLATFORM)/xinu.conf
 
-# Program to use to build documentation
-DOCGEN   := doxygen
-
 KERNARC  := kernel.a
 MAIN_SRC := $(TOPDIR)/system/main.c
 
@@ -261,12 +258,7 @@ DATA_OBJ := $(patsubst %,%.o,$(DATA_SRC))
 # effect of compilation or assembly.
 DEPFLAGS := -MMD -MP
 
-###########################
-# Documentation Variables #
-###########################
-DOCGEN_CONFIG := Doxyfile
-DOCS := $(shell grep ^OUTPUT_DIRECTORY $(DOCGEN_CONFIG) | awk '{ print $$3 }')
-
+# Settings to define the "proper" indentation style of Xinu
 INDENT := indent
 INDENT_TYPES := -T uchar -T ushort -T uint -T ulong -T bool -T message    \
                -T irqmask -T semaphore -T mailbox -T qid_type -T tid_typ \
@@ -337,41 +329,6 @@ ifneq ($(filter uart-%,$(DEVICES)),)
   DEVDOCCOMPS += device/uart
 endif
 
-Doxygen.INPUT:
-	@echo -e "\tGenerating Doxygen input list"
-	rm -f $@
-	echo INPUT += Doxymain.c                             >> $@
-	echo INPUT += $(TOPDIR)/system/*.c                   >> $@
-	echo INPUT += $(TOPDIR)/device/Doxy*.c               >> $@
-	echo INPUT += $(TOPDIR)/include                      >> $@
-	echo INPUT += $(addprefix $(LIBDIR)/,$(LIBS))        >> $@
-	echo INPUT += $(addprefix $(TOPDIR)/,$(APPCOMPS))    >> $@
-	echo INPUT += $(addprefix $(TOPDIR)/,$(DEVDOCCOMPS)) >> $@
-	echo INPUT += $(TOPDIR)/system/platforms/$(PLATFORM) >> $@
-	echo INPUT += $(TOPDIR)/loader/platforms/$(PLATFORM) >> $@
-
-Doxygen.INCLUDE_PATH:
-	@echo -e "\tGenerating Doxygen include path"
-	rm -f $@
-	echo INCLUDE_PATH += $(TOPDIR)/include                      >> $@
-	echo INCLUDE_PATH += $(TOPDIR)/system/platforms/$(PLATFORM) >> $@
-
-Doxygen.PROJECT_NUMBER:
-	@echo -e "\tGenerating Doxygen release number"
-	rm -f $@
-	if [ -n "$(PLATFORM_NAME)" ]; then            \
-		release="$(PLATFORM_NAME) release";   \
-	else                                          \
-		release="Release";                    \
-	fi;                                           \
-	echo PROJECT_NUMBER = \"$$release "($$(date +%Y-%m-%d))"\" >> $@
-
-DOCGEN_GEN_CONF := Doxygen.INPUT Doxygen.INCLUDE_PATH Doxygen.PROJECT_NUMBER
-
-docs: $(DOCGEN_GEN_CONF) $(CONFC)
-	@echo -e "\tBuilding documentation"
-	$(DOCGEN) $(DOCGEN_CONFIG)
-
 debug:
 	@echo -e "\tBuilding debug mode"
 	$(MAKE) DEBUG="-DDEBUG $(BUGFLAG)"
@@ -381,16 +338,11 @@ help:
 
 libclean: $(LIBS:%=%-clean)
 
-docsclean:
-	@echo -e "\tCleaning documentation"
-	rm -rf $(DOCS)
-	rm -f $(DOCGEN_GEN_CONF)
-
 confclean:
 	@echo -e "\tCleaning configuration"
 	$(MAKE) -C config/ clean
 
-realclean: clean docsclean libclean confclean $(PLATCLEAN)
+realclean: clean libclean confclean $(PLATCLEAN)
 	@echo -e "\tCleaning EVERYTHING"
 	rm -f ../include/conf.h
 	rm -f ../system/conf.c
@@ -443,7 +395,7 @@ DEPFILES := $(DEPFILES:%.S=%.d)
 # they may simply decide that the libraries are already up to date and not
 # rebuild them.  We also include the version header because it contains a
 # timestamp of the build that must be updated every time the kernel is built.
-.PHONY: $(LIB_ARC) $(TOPDIR)/include/version.h $(DOCGEN_GEN_CONF)
+.PHONY: $(LIB_ARC) $(TOPDIR)/include/version.h
 
 # Ensure the default `make' target is set correctly--- it's supposed to be
 # $(BOOTIMAGE) and defined in "platformVars".
