@@ -71,7 +71,6 @@ tid_typ create(void *procaddr, uint ssize, int priority,
     thrptr->prio = priority;
     thrptr->stkbase = saddr;
     thrptr->stklen = ssize;
-    thrptr->stkptr = saddr;
     strlcpy(thrptr->name, name, TNMLEN);
     thrptr->parent = gettid();
     thrptr->hasmsg = FALSE;
