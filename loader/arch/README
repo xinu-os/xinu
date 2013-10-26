@@ -1,0 +1,4 @@
+This directory contains CPU-architecture-specific code.
+
+Note that a CPU architecture may be shared among one or more
+Embedded Xinu "platforms" (see ../platforms/ ).
