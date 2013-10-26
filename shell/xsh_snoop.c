@@ -116,7 +116,7 @@ shellcmd xsh_snoop(int nargs, char *args[])
     strlcpy(devname, "ALL", DEVMAXNAME);
 
     /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
+    if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
         usage(args[0]);
         return 0;
@@ -265,23 +265,23 @@ shellcmd xsh_snoop(int nargs, char *args[])
     }
     else
     {
-        if (0 == strncmp(type, "ARP", 4))
+        if (0 == strcmp(type, "ARP"))
         {
             cap.type = SNOOP_FILTER_ARP;
         }
-        else if (0 == strncmp(type, "IPv4", 5))
+        else if (0 == strcmp(type, "IPv4"))
         {
             cap.type = SNOOP_FILTER_IPv4;
         }
-        else if (0 == strncmp(type, "UDP", 4))
+        else if (0 == strcmp(type, "UDP"))
         {
             cap.type = SNOOP_FILTER_UDP;
         }
-        else if (0 == strncmp(type, "TCP", 4))
+        else if (0 == strcmp(type, "TCP"))
         {
             cap.type = SNOOP_FILTER_TCP;
         }
-        else if (0 == strncmp(type, "ICMP", 5))
+        else if (0 == strcmp(type, "ICMP"))
         {
             cap.type = SNOOP_FILTER_ICMP;
         }

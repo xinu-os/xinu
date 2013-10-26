@@ -303,7 +303,7 @@ thread shell(int indescrp, int outdescrp, int errdescrp)
         /* Lookup first token in the command table */
         for (i = 0; i < ncommand; i++)
         {
-            if (0 == strncmp(commandtab[i].name, tok[0], SHELL_BUFLEN))
+            if (0 == strcmp(commandtab[i].name, tok[0]))
             {
                 break;
             }

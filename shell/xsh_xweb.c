@@ -36,7 +36,7 @@ shellcmd xsh_xweb(int nargs, char *args[])
     interface = NULL;
 
     /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
+    if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
         printf("Usage: %s [<DEVICE>|-h]\n\n", args[0]);
         printf("Description:\n");
@@ -57,7 +57,7 @@ shellcmd xsh_xweb(int nargs, char *args[])
 #ifdef NHTTP
 
     /* Halt XWeb thread */
-    if (nargs == 2 && strncmp(args[1], "-h", 3) == 0)
+    if (nargs == 2 && strcmp(args[1], "-h") == 0)
     {
         /* Kill all main XWeb threads */
         for (i = 0; i < NTHREAD; i++)

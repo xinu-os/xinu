@@ -58,7 +58,7 @@ shellcmd xsh_memstat(int nargs, char *args[])
     print = PRINT_DEFAULT;
 
     /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
+    if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
         usage(args[0]);
         return 0;
@@ -67,7 +67,7 @@ shellcmd xsh_memstat(int nargs, char *args[])
     tid = BADTID;
     for (i = 1; i < nargs; i++)
     {
-        if (0 == strncmp(args[i], "-t", 2))
+        if (0 == strcmp(args[i], "-t"))
         {
             if (i + 1 < nargs)
             {
@@ -81,15 +81,15 @@ shellcmd xsh_memstat(int nargs, char *args[])
                 return 1;
             }
         }
-        else if (0 == strncmp(args[i], "-r", 2))
+        else if (0 == strcmp(args[i], "-r"))
         {
             print |= PRINT_REGION;
         }
-        else if (0 == strncmp(args[i], "-k", 2))
+        else if (0 == strcmp(args[i], "-k"))
         {
             print |= PRINT_KERNEL;
         }
-        else if (0 == strncmp(args[i], "-q", 2))
+        else if (0 == strcmp(args[i], "-q"))
         {
             print &= ~(PRINT_DEFAULT);
         }

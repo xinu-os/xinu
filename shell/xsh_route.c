@@ -41,7 +41,7 @@ shellcmd xsh_route(int nargs, char *args[])
     }
 
     /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
+    if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
         printf("\nUsage: %s ", args[0]);
         printf("[add <DESTINATION> <GATEWAY> <MASK> <INTERFACE>] ");
@@ -58,10 +58,10 @@ shellcmd xsh_route(int nargs, char *args[])
         return OK;
     }
 
-    if (nargs == 6 && strncmp(args[1], "add", 4) == 0)
+    if (nargs == 6 && strcmp(args[1], "add") == 0)
     {
         /* Parse destination */
-        if (strncmp(args[2], "default", 7) == 0)
+        if (strcmp(args[2], "default") == 0)
         {
             args[2] = "";
         }
@@ -94,7 +94,7 @@ shellcmd xsh_route(int nargs, char *args[])
             {
                 netptr = &netiftab[i];
                 pdev = (device *)&devtab[netptr->dev];
-                if (strncmp(pdev->name, args[5], 6) == 0)
+                if (strcmp(pdev->name, args[5]) == 0)
                 {
                     if (SYSERR == rtAdd(&dst, &gateway, &mask, netptr))
                     {
@@ -110,10 +110,10 @@ shellcmd xsh_route(int nargs, char *args[])
                 args[5]);
         return SYSERR;
     }
-    else if (nargs == 3 && strncmp(args[1], "del", 3) == 0)
+    else if (nargs == 3 && strcmp(args[1], "del") == 0)
     {
         /* Parse destination */
-        if (strncmp(args[2], "default", 7) == 0)
+        if (strcmp(args[2], "default") == 0)
         {
             args[2] = "";
         }
@@ -145,7 +145,7 @@ shellcmd xsh_route(int nargs, char *args[])
             printf("%-16s", c);
 
             netaddrsprintf(c, &rttab[i].gateway);
-            if (strncmp(c, "NULL", 5) == 0)
+            if (strcmp(c, "NULL") == 0)
                 sprintf(c, "*");
             printf("%-16s", c);
 

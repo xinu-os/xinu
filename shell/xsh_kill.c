@@ -23,7 +23,7 @@ shellcmd xsh_kill(int nargs, char *args[])
     tid_typ tid;                /* tid for thread to kill */
 
     /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
+    if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
         printf("Usage: %s <PID>\n\n", args[0]);
         printf("Description:\n");

@@ -40,7 +40,7 @@ shellcmd xsh_telnetserver(int nargs, char *args[])
 
     bzero(thrname, TNMLEN);
     /* parse arguments to find port number */
-    if ((2 == nargs) && (strncmp(args[1], "--help", 7) == 0))
+    if ((2 == nargs) && (strcmp(args[1], "--help") == 0))
     {
         printf("Usage: %s [-d device] [-p port] [-h]\n\n", args[0]);
         printf("Description:\n");
@@ -57,7 +57,7 @@ shellcmd xsh_telnetserver(int nargs, char *args[])
     }
 
     /* Halt telnet server */
-    if ((2 == nargs) && (0 == strncmp(args[1], "-h", 3)))
+    if ((2 == nargs) && (0 == strcmp(args[1], "-h")))
     {
         /* Kill all main telnet server threads */
         for (i = 0; i < NTHREAD; i++)
@@ -95,14 +95,14 @@ shellcmd xsh_telnetserver(int nargs, char *args[])
     /* set user options if specified */
     for (i = 1; i < nargs; i++)
     {
-        if (strncmp(args[i], "-d", 3) == 0)
+        if (strcmp(args[i], "-d") == 0)
         {
             i++;
             if (i >= nargs)
                 return argErr(args[0], "");
             descrp = getdev(args[i]);
         }
-        else if (strncmp(args[i], "-p", 3) == 0)
+        else if (strcmp(args[i], "-p") == 0)
         {
             i++;
             if (i >= nargs)

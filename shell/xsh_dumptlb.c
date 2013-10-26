@@ -22,7 +22,7 @@
 shellcmd xsh_dumptlb(int nargs, char **args)
 {
     /* check if user requests help */
-    if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
+    if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
         printf("Usage: %s\n\n", args[0]);
         printf("Description:\n");

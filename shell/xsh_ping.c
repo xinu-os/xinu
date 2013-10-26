@@ -43,7 +43,7 @@ shellcmd xsh_ping(int nargs, char *args[])
     char str[50];
 
     /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && strncmp(args[1], "--help", 7) == 0)
+    if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
         printf("Usage: ping <IP>\n\n");
         printf("Description:\n");
@@ -68,7 +68,7 @@ shellcmd xsh_ping(int nargs, char *args[])
     i = 1;
     while (i < nargs)
     {
-        if (0 == strncmp(args[i], "-c", 3))
+        if (0 == strcmp(args[i], "-c"))
         {
             i++;
             if (i < nargs)
@@ -81,7 +81,7 @@ shellcmd xsh_ping(int nargs, char *args[])
                 return SHELL_ERROR;
             }
         }
-        else if (0 == strncmp(args[i], "-i", 3))
+        else if (0 == strcmp(args[i], "-i"))
         {
             i++;
             if (i < nargs)
@@ -104,7 +104,7 @@ shellcmd xsh_ping(int nargs, char *args[])
     }
 
     netaddrsprintf(str, &target);
-    if (0 == strncmp(str, "ERROR", 6))
+    if (0 == strcmp(str, "ERROR"))
     {
         fprintf(stderr, "ping: destination IP address required.\n");
         return SHELL_ERROR;

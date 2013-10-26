@@ -55,7 +55,7 @@ shellcmd xsh_nc(int nargs, char *args[])
     int dev;
 
     /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && 0 == strncmp(args[1], "--help", 7))
+    if (nargs == 2 && 0 == strcmp(args[1], "--help"))
     {
         usage(args[0]);
         return 0;

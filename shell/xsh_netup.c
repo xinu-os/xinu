@@ -48,7 +48,7 @@ shellcmd xsh_netup(int nargs, char *args[])
     int result;
 
     /* Help */
-    if ((2 == nargs) && (0 == strncmp(args[1], "--help", 7)))
+    if ((2 == nargs) && (0 == strcmp(args[1], "--help")))
     {
         usage(args[0]);
         return SHELL_OK;

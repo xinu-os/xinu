@@ -45,13 +45,13 @@ shellcmd xsh_tar(int nargs, char *args[])
         return 1;
     }
 
-    if (0 == strncmp("--help", args[1], 7))
+    if (0 == strcmp(args[1], "--help"))
     {
         tarHelp(args[0]);
         return 0;
     }
 
-    if (0 == strncmp("ls", args[1], 2))
+    if (0 == strcmp(args[1], "ls"))
     {
         size = tarListFiles(archive, (char *)filelist, NFILES);
 

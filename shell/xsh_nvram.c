@@ -33,12 +33,12 @@ shellcmd xsh_nvram(int nargs, char *args[])
         fprintf(stderr, "error: device does not appear to have nvram.\n");
     }
 
-    if (2 == nargs && 0 == strncmp(args[1], "list", 5))
+    if (2 == nargs && 0 == strcmp(args[1], "list"))
     {
         xsh_nvramList();
         return 0;
     }
-    else if (3 == nargs && 0 == strncmp(args[1], "get", 4))
+    else if (3 == nargs && 0 == strcmp(args[1], "get"))
     {
         value = nvramGet(args[2]);
         if (value)
@@ -52,15 +52,15 @@ shellcmd xsh_nvram(int nargs, char *args[])
             return 1;
         }
     }
-    else if (3 == nargs && 0 == strncmp(args[1], "set", 4))
+    else if (3 == nargs && 0 == strcmp(args[1], "set"))
     {
         return xsh_nvramSet(args[2]);
     }
-    else if (3 == nargs && 0 == strncmp(args[1], "unset", 6))
+    else if (3 == nargs && 0 == strcmp(args[1], "unset"))
     {
         return nvramUnset(args[2]);
     }
-    else if (2 == nargs && 0 == strncmp(args[1], "commit", 7))
+    else if (2 == nargs && 0 == strcmp(args[1], "commit"))
     {
         return nvramCommit();
     }
