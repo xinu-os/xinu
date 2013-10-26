@@ -19,9 +19,10 @@
  *
  * @return
  *      ::SYSERR if @p nbytes was 0 or there is no memory to satisfy the
- *      request; otherwise returns a pointer to the <b>topmost word</b> of the
- *      allocated memory region.  The intention is that this is the base of a
- *      stack growing down.  Free the stack with stkfree() when done with it.
+ *      request; otherwise returns a pointer to the <b>topmost (highest address)
+ *      word</b> of the allocated memory region.  The intention is that this is
+ *      the base of a stack growing down.  Free the stack with stkfree() when
+ *      done with it.
  */
 void *stkget(uint nbytes)
 {
