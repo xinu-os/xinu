@@ -1,5 +1,5 @@
 /**
- * @file arch_setup_stack.c
+ * @file setupStack.c
  */
 /* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
@@ -8,8 +8,8 @@
 
 /** Set up the context record and arguments on the stack for a new thread
  * (MIPS version)  */
-void *arch_setup_stack(void *stackaddr, void *procaddr,
-                       void *retaddr, uint nargs, va_list ap)
+void *setupStack(void *stackaddr, void *procaddr,
+                 void *retaddr, uint nargs, va_list ap)
 {
     uint i;
     uint nargs_space;

@@ -11,7 +11,7 @@ S_FILES = ctxsw.S          \
           memory_barrier.S \
           pause.S
 
-C_FILES = arch_setup_stack.c \
+C_FILES = setupStack.c       \
           bcm2835_power.c    \
           dispatch.c         \
           kexec.c            \

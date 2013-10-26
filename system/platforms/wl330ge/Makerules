@@ -11,7 +11,7 @@ C_FILES = platforminit.c
 
 # Files for process control
 S_FILES += ctxsw.S
-C_FILES += arch_setup_stack.c
+C_FILES += setupStack.c
 
 # Files for preemption and interrupts
 S_FILES += clkupdate.S intutils.S intdispatch.S halt.S
