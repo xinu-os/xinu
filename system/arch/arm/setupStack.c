@@ -34,11 +34,11 @@ void *setupStack(void *stackaddr, void *procaddr,
         reg_nargs = nargs;
     }
 
-    /* Possibly skip a word to ensure the stack is aligned on 8-byte boundary.
-     */
-    if ((CONTEXT_WORDS + spilled_nargs) % 2 != 0)
+    /* Possibly skip a word to ensure the stack is aligned on 8-byte boundary
+     * after the new thread pops off the context record.  */
+    if ((ulong)saddr & 0x4)
     {
-        *--saddr = 0;
+        --saddr;
     }
 
     /* Construct the context record for the new thread.  */

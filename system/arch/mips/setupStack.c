@@ -4,6 +4,7 @@
 /* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <platform.h>
+#include <kernel.h>
 #include <mips.h>
 
 /** Set up the context record and arguments on the stack for a new thread
@@ -12,43 +13,31 @@ void *setupStack(void *stackaddr, void *procaddr,
                  void *retaddr, uint nargs, va_list ap)
 {
     uint i;
-    uint nargs_space;
     ulong *saddr = stackaddr;
 
     /* In the default calling MIPS convention used by gcc, registers $a0 through
-     * $a3 are used to pass arguments and any additional arguments spell into
-     * the stack.  We do not, however, consider $a0 through $a3 to be part of
-     * the context record itself.  Instead, they (along with any additional
-     * arguments) are placed after the after the context record.  ctxsw() still
-     * loads $a0 through $a3 unconditionally.  Normally this loads garbage, but
-     * when switching to a new thread this action will load up to the first four
-     * arguments of the new thread procedure.
+     * $a3 are used to pass arguments and any additional arguments spill into
+     * the stack.  However, immediately prior (lower address) to any spilled
+     * arguments, the caller must still leave 4 words of space so that callee
+     * can temporarily store arguments there if it chooses.
      *
-     * What this means here is that we always leave space for $a0 through $a3.
-     *
-     * Also note that the MIPS stack should be 8-byte aligned, which in some
-     * cases requires that an additional padding word be inserted.
+     * Therefore, we do not consider $a0 through $a3 to be part of the context
+     * record itself, but they are still loaded by ctxsw().  This will load up
+     * to the first four arguments when starting a new thread.
      */
 
-    nargs_space = nargs;
-    if (nargs_space < 4)
+    saddr -= max(nargs, 4);
+
+    /* The MIPS stack should be 8-byte aligned on entry to all procedures.  */
+    if ((ulong)saddr & 0x4)
     {
-        nargs_space = 4;
-    }
-    else if (nargs_space % 2 != CONTEXT_WORDS % 2)
-    {
-        nargs_space++;
+        --saddr;
     }
 
-    saddr -= nargs_space;
-
+    /* Save arguments on stack.  */
     for (i = 0; i < nargs; i++)
     {
         saddr[i] = va_arg(ap, ulong);
-    }
-    for (; i < nargs_space; i++)
-    {
-        saddr[i] = 0;
     }
 
     /* Construct context record.  */
