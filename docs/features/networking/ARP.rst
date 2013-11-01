@@ -1,8 +1,8 @@
 ARP
 ===
 
-As part of its :doc:`networking subsystem <Networking>`, XINU supports
-the **Address Resolution Protocol** (**ARP**), which allows protocol
+As part of its :doc:`networking subsystem <index>`, XINU supports the
+**Address Resolution Protocol** (**ARP**), which allows protocol
 addresses (e.g. IPv4 addresses) to be translated into hardware
 addresses (e.g. MAC addresses).
 
@@ -28,7 +28,7 @@ to sleep until the ARP daemon wakes it up after receiving the
 corresponding reply, or until a designated timeout has elapsed.
 
 Shell commands
-==============
+--------------
 
 To print the ARP table, run the **arp** command from the :doc:`XINU
 shell <Shell>`:

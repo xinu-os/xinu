@@ -2,7 +2,7 @@ DHCP
 ====
 
 **DHCP** (**Dynamic Host Configuration Protocol**) support has been
-added to XINU as part of its :doc:`networking subsystem <Networking>`.
+added to XINU as part of its :doc:`networking subsystem <index>`.
 Currently, only IPv4 client support--- that is, acquiring IPv4 address
 information--- is supported. The code is located in
 :source:`network/dhcpc`, and the API is declared in

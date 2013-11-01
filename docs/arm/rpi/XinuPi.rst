@@ -14,51 +14,35 @@ documented or even undocumented. This includes the documentation here
 as well as XinuPi source code and the documentation generated from
 comments in it.
 
-.. contents::
-   :local:
-
-Acquiring hardware
-------------------
+Acquiring the Raspberry Pi hardware
+-----------------------------------
 
 See :doc:`Raspberry-Pi` for information about the hardware itself.
 
-Downloading and compiling
--------------------------
+.. _xinupi_getting_started:
 
-XinuPi is currently only available in source code form and only in the
-:doc:`Embedded Xinu git repository </development/Git-Repository>`. To obtain the
-code, install `git <http://git-scm.com/>`__ and run:
+Downloading, compiling, and running XinuPi
+------------------------------------------
 
-.. code-block:: none
+Information about downloading and compiling Embedded Xinu can be found
+in :doc:`/Getting-Started`.  To compile for the Raspberry Pi platform
+(that is, to build "XinuPi"), you will need to set
+``PLATFORM=arm-rpi`` when you run **make**.  You will also need an ARM
+cross compiler (i.e.  binutils and gcc built with
+``--target=arm-none-eabi``); more information can be found in
+:ref:`cross_compiler`.
 
-    git clone https://github.com/xinu-os/xinu
-    cd xinu
+Note: currently, the Raspberry Pi support is only present in the
+development version (from git) and not any released tarballs.
 
-Note that this in fact the code for "Embedded Xinu" and not for
-"XinuPi" specifically. That is, the Raspberry Pi is one of several
-platforms that Embedded Xinu supports (and builds targeting it are
-referred to as "XinuPi").
+The compilation process will produce a file ``compile/xinu.boot``,
+which can be copied to ``kernel.img`` on the SD card of a Raspberry Pi
+to run it (see :ref:`raspberry_pi_booting`).
 
-To compile XinuPi, run::
+.. _xinupi_features:
 
-     make -C compile PLATFORM=arm-rpi
-
-``PLATFORM=arm-rpi`` is necessary to instruct the build system to
-target the Raspberry Pi. Additional arguments can be passed to
-**make**, such as the ``COMPILER_ROOT`` to specify the location of a
-GCC compiler targeting ARM (defaults to "``arm-none-eabi-``", meaning
-that no explicit setting is needed if "``arm-none-eabi-gcc``" and the
-corresponding binutils are already on the shell ``$PATH``).
-
-The compilation process produces a file ``compile/xinu.boot``, which
-can be copied to ``kernel.img`` on the SD card of a Raspberry Pi to
-run it (see :ref:`Raspberry_Pi#Booting <Raspberry-Pi#Booting>`).
-
-XinuPi is licensed under a BSD-style license; see the copyright
-information in the source distribution for more details.
-
-Features and implementation
----------------------------
+XinuPi features and implementation
+----------------------------------
 
 -  The core of XinuPi provides a preemptive multitasking operating
    system for the Raspberry Pi. See

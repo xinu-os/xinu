@@ -19,6 +19,18 @@ incorporate Embedded Xinu into a course for his or her department's
 curriculum. Each of the models is based on an existing course that has
 been run at Marquette or one of our partner schools.
 
+Workshops
+---------
+
+Workshops have been held regarding teaching with Embedded Xinu. For
+example, the `Teaching With Embedded Xinu Workshop
+<http://www.cs.olemiss.edu/acmse2010/pdf/xinu.pdf>`__ at `ACMSE 2010
+<http://www.cs.olemiss.edu/acmse2010/Home.htm>`__ in Oxford,
+Mississippi (Ole Miss campus) shared ready-made curriculum resources
+that have been used successfully to teach hardware systems, operating
+systems, realtime/embedded systems, networking, and compilers with the
+Embedded Xinu platform at several colleges/universities.
+
 Operating Systems Tracks
 ------------------------
 

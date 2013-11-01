@@ -76,10 +76,10 @@ Other useful hardware and accessories include the following:
 -  Case to enclose the Raspberry Pi in. This protects the board and adds
    aesthetic value; otherwise it has no purpose.
 
-.. _Raspberry-Pi#Booting:
+.. _raspberry_pi_booting:
 
-Booting
--------
+Booting the Raspberry Pi
+------------------------
 
 The Raspberry Pi can only boot from its SD card, not from any external
 devices, and it requires several files in order to do so. Several boot
@@ -94,7 +94,7 @@ distributable, at least when using them on Raspberry Pis) must exist:
 -  ``loader.bin`` is a second-stage bootloader. Apparently, this file is
    no longer required.
 -  ``start.elf`` is the GPU
-   firmware. `Download link <https://github.com/raspberrypi/firmware/raw/master/boot/start.elf`__.
+   firmware. `Download link <https://github.com/raspberrypi/firmware/raw/master/boot/start.elf>`__.
 
 The following text files are optional:
 

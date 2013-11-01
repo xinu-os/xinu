@@ -1,19 +1,5 @@
-Networking
-==========
-
-Supported Protocols
--------------------
-
-- :doc:`ARP`
-- :doc:`DHCP`
-- :doc:`ICMP`
-- :doc:`Routing`
-- :doc:`TCP`
-- :doc:`TFTP`
-- :doc:`UDP`
-
-Design
-------
+Networking stack design
+=======================
 
 The new network stack design does not have a NET device. The read and
 write device function paradigm does not map well to the network stack.
@@ -89,9 +75,6 @@ transport layer (``udpSend()``, ``tcpSend()``, etc) are not passed to
 the routing thread. The transport layer calls ``ipv4Send()`` which
 performs a route table lookup, sets up the IP packet header and calls
 ``netSend()``.
-
-Network Graphic
----------------
 
 .. image:: XINUNetStack-Screen.jpeg
    :width: 600px

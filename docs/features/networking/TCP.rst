@@ -14,10 +14,10 @@ be controlled using the generic XINU device functions such as
 Debugging
 ---------
 
-The TCP module contains :doc:`Trace statements <Trace>` for debugging.
-To enable, uncomment the following line in :source:`include/tcp.h`,
-and optionally change the device (such as TTY1) to which messages will
-be logged::
+The TCP module contains :doc:`Trace statements </development/Trace>`
+for debugging.  To enable, uncomment the following line in
+:source:`include/tcp.h`, and optionally change the device (such as
+TTY1) to which messages will be logged::
 
     // #define TRACE_TCP  TTY1
 

@@ -9,7 +9,7 @@ two main forms of documentation:
 2. Comments in the source code itself, including Doxygen-compatible
    comments describing function parameters and behaviors.
 
-This page focuses on (1); for information about (2) see
+This section focuses on (1); for information about (2) see
 :doc:`Kernel-Normal-Form`.
 
 .. contents::

@@ -1,7 +1,7 @@
 ICMP
 ====
 
-As part of its :doc:`Networking subsystem <Networking>`, XINU supports
+As part of its :doc:`Networking subsystem <index>`, XINU supports
 the **Internet Control Message Protocol** (**ICMP**).  The support can
 be found in the :source:`network/icmp/` directory.  This module
 features an ICMP daemon that runs on start up and responds to ICMP

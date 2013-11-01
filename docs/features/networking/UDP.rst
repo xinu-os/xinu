@@ -14,10 +14,10 @@ using the generic XINU device functions such as ``open()``,
 Debugging
 ---------
 
-The UDP module contains :doc:`Trace statements <Trace>` for debugging.
-To enable, uncomment the following line in :source:`include/udp.h`,
-and optionally change the device (such as TTY1) to which messages will
-be logged::
+The UDP module contains :doc:`Trace statements </development/Trace>`
+for debugging.  To enable, uncomment the following line in
+:source:`include/udp.h`, and optionally change the device (such as
+TTY1) to which messages will be logged::
 
     // #define TRACE_UDP  TTY1
 

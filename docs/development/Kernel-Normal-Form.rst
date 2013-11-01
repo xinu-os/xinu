@@ -1,7 +1,7 @@
 Kernel Normal Form (KNF)
 ========================
 
-This page describes major aspects of the preferred style for kernel
+This section describes major aspects of the preferred style for kernel
 source files in the Xinu operating system source tree.
 
 .. contents::

@@ -90,9 +90,9 @@ Library
 XINU libraries are built using the recursive make paradigm. Since the
 libraries do not change commonly they are not removed between builds
 unless specially requested. In the master Makefile all relevant
-variables are exported (including the location of the cross-compiler, C
-and assembly flags), the library Makefile then uses those to build its
-files and create an archive of the object files.
+variables are exported (including the location of the cross-compiler,
+C and assembly flags), the library Makefile then uses those to build
+its files and create an archive of the object files.
 
 This allows all important build variables to be in one location and not
 leave possible dependency issues if something were to change in the

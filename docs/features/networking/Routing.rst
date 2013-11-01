@@ -1,8 +1,8 @@
 Routing
 =======
 
-As part of its :doc:`Networking subsystem <Networking>`, XINU supports
-IPv4 :wikipedia:`routing`.
+As part of its :doc:`Networking subsystem <index>`, XINU supports IPv4
+:wikipedia:`routing`.
 
 At the center of the routing module is the *routing daemon*, which
 repeatedly retrieves packets from a :doc:`mailbox <Mailboxes>` on
@@ -59,9 +59,9 @@ Relevant source code:
 Debugging
 ---------
 
-The routing subsystem contains :doc:`Trace statements <Trace>` for
-debugging.  To enable, uncomment the following line in
-:source:`include/route.h`, and optionally change the device (such as
-TTY1) to which messages will be logged::
+The routing subsystem contains :doc:`Trace statements
+</development/Trace>` for debugging.  To enable, uncomment the
+following line in :source:`include/route.h`, and optionally change the
+device (such as TTY1) to which messages will be logged::
 
     // #define TRACE_RT TTY1
