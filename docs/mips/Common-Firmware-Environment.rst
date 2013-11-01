@@ -149,7 +149,7 @@ server for an IP address and set up the router.
 
 ::
 
-    CFE> ifconfig -auto eth0 � �
+    CFE> ifconfig -auto eth0
     Device eth0:  hwaddr 00-16-B6-28-7D-4F, ipaddr 192.168.5.2, mask 255.255.254.0
             gateway 192.168.5.220, nameserver 192.168.5.220, domain xinu.mu.edu
     *** command status = 0
