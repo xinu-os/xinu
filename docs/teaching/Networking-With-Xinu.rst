@@ -81,37 +81,37 @@ Course Outline
       - Assignments
     * - 01
       - History of networking and the Internet & specializations of net-centric computing
-      - :doc:`Networking Standards <Assignment--Networking-Standards>`
+      - :doc:`Networking Standards <assignments/Networking-Standards>`
     * - 02
       - Networking standards & 7-layer ISO model
-      - :doc:`Packet Demultiplexing <Assignment--Packet-Demultiplexing>`
+      - :doc:`Packet Demultiplexing <assignments/Packet-Demultiplexing>`
     * - 03
       - Ethernet & Address Resolution Protocol
-      - :doc:`Implementing ARP <Assignment--ARP>`
+      - :doc:`Implementing ARP <assignments/ARP>`
     * - 04
       - Internet Protocol
-      - :doc:`Implementing IP & ICMP <Assignment--IP-ICMP>`
+      - :doc:`Implementing IP & ICMP <assignments/IP-ICMP>`
     * - 05
       - Internet Protocol and Internet Control Message Protocol
       -
     * - 06
       - Internet Packet Traversal, Security Concerns for IP & ARP
-      - :doc:`IP, ICMP, and ARP Applications <Assignment--IP-ICMP-ARP-Applications>`
+      - :doc:`IP, ICMP, and ARP Applications <assignments/IP-ICMP-ARP-Applications>`
     * - 07
       - Datagrams - UDP
-      - :doc:`UDP Development and Implementation <Assignment--UDP-Implementation>`
+      - :doc:`UDP Development and Implementation <assignments/UDP-Implementation>`
     * - 08
       - Datagrams - UDP, Dynamic Host Configuration Protocol
       -
     * - 09
       - Dynamic Host Configuration Protocol
-      - :doc:`DHCP Development and Implementation <Assignment--DHCP-Implementation>`
+      - :doc:`DHCP Development and Implementation <assignments/DHCP-Implementation>`
     * - 10
       - Streams - TCP
       -
     * - 11
       - Security Concerns for UDP and TCP
-      - :doc:`TCP Development and Implementation <Assignment--TCP-Implementation>`
+      - :doc:`TCP Development and Implementation <assignments/TCP-Implementation>`
     * - 12
       - Interaction Protocols for Networked Devices
       -
@@ -120,9 +120,9 @@ Course Outline
       -
     * - 14
       - Network Based Application Development
-      - :doc:`Network Based Applications <Assignment--Networking-Applications>`
+      - :doc:`Network Based Applications <assignments/Networking-Applications>`
     * - 15
-      - Networking Future            
+      - Networking Future
       -
 
 Student Outcomes from Completion of Course Assignments

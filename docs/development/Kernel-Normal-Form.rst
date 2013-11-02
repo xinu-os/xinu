@@ -214,12 +214,12 @@ risk of bugs occurring when adding new lines to a statement.
         a = i + 1;
         b *= a;
     }
-     
+
     if (NULL != value)
     {
         *value = new_value;
     }
-     
+
     while (TRUE)
     {
         /* Do nothing. */

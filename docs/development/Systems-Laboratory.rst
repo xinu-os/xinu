@@ -88,7 +88,7 @@ Conference Proceedings and Journals
 
 - Matt Netkow and Dennis Brylow. Xest: An Automated Framework for
   Regression Testing of Embedded Software. In Proceedings of
-  `WESE 2010 `http://www.artist-embedded.org/artist/-WESE-10-.html`__
+  `WESE 2010 <http://www.artist-embedded.org/artist/-WESE-10-.html>`__
   6th Workshop on Embedded Systems Education, pages 40-47, Scottsdale,
   Arizona, October 2010.  `(link)
   <http://www.artist-embedded.org/docs/Events/2010/WESE/Proceedings_WESE_2010.pdf>`__

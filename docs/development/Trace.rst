@@ -19,8 +19,8 @@ form located in its main header:
     #define [MODULE]_TRACE(...)
     #endif
 
-For example, the :doc:`Routing` module declares ``TRACE_RT`` and
-``RT_TRACE(...)`` in :source:`include/route.h`.
+For example, the :doc:`/features/networking/Routing` module declares
+``TRACE_RT`` and ``RT_TRACE(...)`` in :source:`include/route.h`.
 
 ``TRACE_[MODULE]`` defines the device to which ``[MODULE]_TRACE(...)``
 writes.  If undefined, no tracing is performed.  The line defining

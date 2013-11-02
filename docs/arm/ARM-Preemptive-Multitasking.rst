@@ -9,10 +9,10 @@ architecture` platforms that it has been ported to, such as the
 Thread context
 --------------
 
-The format and size of the :ref:`thread context
-<Preemptive-Multitasking#Multiple-threads>` used for ARM ports of
-Embedded Xinu rests on two factors: the registers available on the ARM
-architecture, and the standard ARM calling convention [#calling]_.
+The format and size of the :ref:`thread context <thread_context>`
+used for ARM ports of Embedded Xinu rests on two factors: the
+registers available on the ARM architecture, and the standard ARM
+calling convention [#calling]_.
 
 -  ARM processors have 16 "general-purpose" registers numbered ``r0`` - ``r15``,
    as well as the Current Program Status Register (``cpsr``). However,
@@ -57,9 +57,9 @@ Preemption
 ----------
 
 The means of generating a timer interrupt for :ref:`preemption
-<Preemptive-Multitasking#Preemption>` is not standard to the ARM
-architecture; instead, software must make use of a board-specific or
-chip-specific device such as the :doc:`rpi/BCM2835-System-Timer`.
+<preemption>` is not standard to the ARM architecture; instead,
+software must make use of a board-specific or chip-specific device
+such as the :doc:`rpi/BCM2835-System-Timer`.
 
 Notes
 -----

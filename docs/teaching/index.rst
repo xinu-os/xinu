@@ -6,30 +6,12 @@ Teaching with Embedded Xinu
    :hidden:
 
    *
+   assignments/index
 
-Overview
---------
-
-Several pages in this documentation allow instructors to develop and
-build a classroom or laboratory setting enabling the modification and
-use of Embedded Xinu.
-
-The set of pages linked to here help an instructor understand how to
+The pages linked to here help an instructor understand how to
 incorporate Embedded Xinu into a course for his or her department's
-curriculum. Each of the models is based on an existing course that has
-been run at Marquette or one of our partner schools.
-
-Workshops
----------
-
-Workshops have been held regarding teaching with Embedded Xinu. For
-example, the `Teaching With Embedded Xinu Workshop
-<http://www.cs.olemiss.edu/acmse2010/pdf/xinu.pdf>`__ at `ACMSE 2010
-<http://www.cs.olemiss.edu/acmse2010/Home.htm>`__ in Oxford,
-Mississippi (Ole Miss campus) shared ready-made curriculum resources
-that have been used successfully to teach hardware systems, operating
-systems, realtime/embedded systems, networking, and compilers with the
-Embedded Xinu platform at several colleges/universities.
+curriculum.  Each of the models is based on an existing course that
+has been run at Marquette or one of our partner schools.
 
 Operating Systems Tracks
 ------------------------
@@ -106,6 +88,26 @@ hardware and see these programs actually interacting with a real
 runtime. In modern programming these high level language features are
 vital, and it is important for students to see what the processor and
 runtime are doing when they use these features in their own programs.
+
+Building a Backend Pool
+-----------------------
+
+Regardless of the exact instructional model chosen, the instructor may
+wish to set up a classroom or laboratory setting enabling easy
+modification and use of Embedded Xinu.  More information can be found
+in :doc:`Laboratory`.
+
+Workshops
+---------
+
+Workshops have been held regarding teaching with Embedded Xinu. For
+example, the `Teaching With Embedded Xinu Workshop
+<http://www.cs.olemiss.edu/acmse2010/pdf/xinu.pdf>`__ at `ACMSE 2010
+<http://www.cs.olemiss.edu/acmse2010/Home.htm>`__ in Oxford,
+Mississippi (Ole Miss campus) shared ready-made curriculum resources
+that have been used successfully to teach hardware systems, operating
+systems, realtime/embedded systems, networking, and compilers with the
+Embedded Xinu platform at several colleges/universities.
 
 Acknowledgements
 ----------------

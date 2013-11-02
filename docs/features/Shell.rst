@@ -103,7 +103,7 @@ Command         Description
 
 A full list of commands can be obtained from the shell by running the
 ``help`` command.  Help on a specific command can be obtained using
-``COMMAND --help`` or ``help COMMAND``. 
+``COMMAND --help`` or ``help COMMAND``.
 
 Adding commands
 ---------------

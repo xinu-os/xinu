@@ -60,9 +60,10 @@ definitions:
   these with ``-Wa,``.  For the GNU assembler see ``man as`` or ``info
   as`` for available flags.
 
-- ``LDFLAGS`` can be modified to add additional linker flags.  These will be passed
-  directly to the linker, so do not prefix these with ``-Wl,``.  For the GNU
-  linker see ``man ld'` or ``info ld`' for available flags.
+- ``LDFLAGS`` can be modified to add additional linker flags.  These
+  will be passed directly to the linker, so do not prefix these with
+  ``-Wl,``.  For the GNU linker see ``man ld'` or ``info ld`` for
+  available flags.
 
 - ``LDLIBS`` can be modified to add needed external libraries.
   Besides possibly adding libgcc (``-lgcc``) if your architecture has
@@ -88,8 +89,8 @@ Still furthermore, you can optionally set the following variables:
 - ``PLATCLEAN`` to be the name of a platform-specific target that will
   be executed when ``make realclean`` is run.
 
-- ``LIBXC_OVERRIDE_CFILES`` (see :ref:`Standard C
-  Library#Platform-specific overrides` for explanation).
+- ``LIBXC_OVERRIDE_CFILES``
+  (see :ref:`libxc_overrides` for explanation).
 
 - ``PLATFORM_NAME`` to change the release provided at the top of the
   generated documentation.

@@ -13,4 +13,5 @@ Embedded Xinu documentation contents
    mips/index
    arm/index
    teaching/index
+   projects/index
    development/index

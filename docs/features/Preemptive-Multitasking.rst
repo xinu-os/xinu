@@ -7,7 +7,8 @@ threads are executing at the same time on the same processor. Support
 for preemptive multitasking consists of support for multiple threads
 combined with a preemption mechanism.
 
-.. _Preemptive-Multitasking#Multiple-threads:
+.. _multiple_threads:
+.. _thread_context:
 
 Multiple threads
 ----------------
@@ -39,9 +40,8 @@ create contexts that are compatible, at least to the extent that
 Other articles describe this in more detail for specific architectures:
 
 - :doc:`/arm/ARM-Preemptive-Multitasking`
-- :doc:`/mips/MIPS-Preemptive-Multitasking`
 
-.. _Preemptive-Multitasking#Preemption:
+.. _preemption:
 
 Preemption
 ----------

@@ -81,6 +81,10 @@ routines.
 Memory protection
 -----------------
 
+.. note::
+
+   This section applies to MIPS platforms only.
+
 Since XINU has limited resources to work with it does not provide a
 virtual memory system. It does take advantage of separate address
 spaces for each user thread running in the system, which provides
@@ -100,7 +104,7 @@ Translation lookaside buffer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
-   
+
    This section applies to MIPS platforms only.
 
 To facilitate memory protection, XINU uses the translation lookaside

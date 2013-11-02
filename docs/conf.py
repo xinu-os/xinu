@@ -249,3 +249,7 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+rst_epilog = """
+.. |EX| replace:: :doc:`Embedded Xinu </Introduction>`
+"""

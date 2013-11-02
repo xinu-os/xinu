@@ -6,11 +6,9 @@ switched to `git <http://git-scm.com/>`__ as the preferred
 :wikipedia:`source code management system <Revision control>`.
 
 The official public repository is hosted on Github. To get the code,
-install git and run:
+install git and run::
 
-.. code-block:: none
-
-    git clone https://github.com/xinu-os/xinu
+    $ git clone https://github.com/xinu-os/xinu
 
 This will generate the directory ``xinu/`` containing a local copy of
 the repository. Note that this is a standalone repository that can be

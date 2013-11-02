@@ -5,17 +5,17 @@ Memory on MIPS-based processors is broken into several segments,
 consuming the entire 32-address space. These segments are arranged as
 follows:
 
--  `User Segment <#User_Segment>`__ (USEG), 2 GB **mapped** and
+-  `User Segment`_ (USEG), 2 GB **mapped** and
    **cached**, addresses ``0x0000 0000`` through ``0x7FFF FFFF``
--  `Kernel Segment 0 <#Kernel_Segment_0>`__ (KSEG0), 512 MB **unmapped**
-   and **cached**, addresses ``0x8000 0000`` through ``0x9FFF FFFF``
--  `Kernel Segment 1 <#Kernel_Segment_1>`__ (KSEG1), 512 MB **unmapped**
-   and **uncached**, addresses ``0xA000 0000`` through ``0xBFFF FFFF``
--  `Kernel Segment 2 <#Kernel_Segment_2>`__ (KSEG2), 1 GB **mapped** and
-   **cached**, addresses ``0xC000 0000`` through ``0xFFFF FFFF``
+-  `Kernel Segment 0`_ (KSEG0), 512 MB **unmapped** and **cached**,
+   addresses ``0x8000 0000`` through ``0x9FFF FFFF``
+-  `Kernel Segment 1`_ (KSEG1), 512 MB **unmapped** and **uncached**,
+   addresses ``0xA000 0000`` through ``0xBFFF FFFF``
+-  `Kernel Segment 2`_ (KSEG2), 1 GB **mapped** and **cached**,
+   addresses ``0xC000 0000`` through ``0xFFFF FFFF``
 
-Note that the WRT54GL only has 16 MB of main memory, so a 1-1 mapping is
-not be available above ``0x..FF FFFF``.
+Note that the :doc:`WRT54GL` only has 16 MB of main memory, so a 1-1
+mapping is not be available above ``0x..FF FFFF``.
 
 User Segment
 ------------
@@ -46,21 +46,22 @@ instructions long and begins at ``0x8000 0000``.
 User Segment under Xinu
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-`Embedded Xinu <Embedded Xinu>`__ has basic `memory
-management <memory management>`__ as of the 2.0 release (stored in the
-``mem/`` directory). During initialization, the kernel allocates some
-amount of memory (defined in ``xinu.conf`` as UHEAP\_SIZE) to act as the
-user memory heap. Once this memory is initialized, calls to ``malloc``
-and ``free`` will use the user heap for memory allocation and
-automatically insert mappings into the system page table. All mappings
-are 1-1 since there is no backing store for a virtual memory subsystem,
-though it would be possible to provide each thread with a private
-address space this requires lots of memory overhead.
+Embedded Xinu has basic `memory management
+</features/Memory-Management>`_ as of the 2.0 release.  During
+initialization, the kernel allocates some amount of memory (defined in
+``xinu.conf`` as ``UHEAP_SIZE``) to act as the user memory heap. Once
+this memory is initialized, calls to ``malloc`` and ``free`` will use
+the user heap for memory allocation and automatically insert mappings
+into the system page table. All mappings are 1-1 since there is no
+backing store for a virtual memory subsystem, though it would be
+possible to provide each thread with a private address space this
+requires lots of memory overhead.
 
-Exception code to handle TLB faults is in the ``tlbMissHandler``
-function and simply performs a lookup of the faulting address in the
-system page table, checks to see if it is valid and in the correct
-address space, and inserts the mapping in the TLB hardware.
+Exception code to handle TLB faults is in the
+:source:`tlbMissHandler() <mem/tlbMissHandler.c>` function and simply
+performs a lookup of the faulting address in the system page table,
+checks to see if it is valid and in the correct address space, and
+inserts the mapping in the TLB hardware.
 
 Kernel Segments
 ---------------
@@ -74,25 +75,25 @@ access (DMA) because there may be caching considerations.
 
 In brief:
 
--  `KSEG0 <#Kernel_Segment_0>`__ uses **unmapped** and **cached** memory
+-  `KSEG0 <Kernel Segment 0>`_ uses **unmapped** and **cached** memory
    accesses,
--  `KSEG1 <#Kernel_Segment_1>`__ uses **unmapped** and **uncached**
+-  `KSEG1 <Kernel Segment 1>`_ uses **unmapped** and **uncached**
    memory accesses, and
--  `KSEG2 <#Kernel_Segment_2>`__ uses **mapped** and **cached** memory
+-  `KSEG2 <Kernel Segment 2>`_ uses **mapped** and **cached** memory
    accesses.
 
 Kernel Segment 0
 ~~~~~~~~~~~~~~~~
 
 The first kernel segment, or KSEG0, is the range of memory addresses
-from ``0x8000 0000`` through ``0x9FFF FFFF``. This memory **unmapped**
-and **cached**, meaning that when the processor attempts to access an
-address in this range it will not consult the memory manager for a
-mapping, but will store and modifications in the on-chip memory cache.
-**Note** that when allocating memory for a device driver that will be
-using DMA, the caching effects could lead to major headaches. If memory
-is being given to a hardware backend it should be mapped into the range
-of `KSEG1 <#Kernel_Segment_1>`__.
+from ``0x8000 0000`` through ``0x9FFF FFFF``. This memory is
+**unmapped** and **cached**, meaning that when the processor attempts
+to access an address in this range it will not consult the memory
+manager for a mapping, but will store and modifications in the on-chip
+memory cache.  **Note** that when allocating memory for a device
+driver that will be using DMA, the caching effects could lead to major
+headaches. If memory is being given to a hardware backend it should be
+mapped into the range of `KSEG1 <Kernel Segment 1>`_.
 
 On many MIPS processors the first page (4096 bytes) of KSEG0 is
 considered to be reserved system space where small amounts of
@@ -114,14 +115,14 @@ memory however it sees fit.
 KSEG0 under Xinu
 ^^^^^^^^^^^^^^^^
 
-`Embedded Xinu <Embedded Xinu>`__ uses KSEG0 extensively for kernel
-operations. As the WRT54GL uses a 32-bit MIPS processor, Embedded Xinu
-loads a quick TLB handler into memory at ``0x8000 0000`` and a generic
+Embedded Xinu uses KSEG0 extensively for kernel operations. As the
+:doc:`WRT54GL` uses a 32-bit MIPS processor, Embedded Xinu loads a
+quick TLB handler into memory at ``0x8000 0000`` and a generic
 exception handler at ``0x8000 0180``, both of these are limited to 32
 instructions and jump to higher level C code when needed. It is
 important to note that Embedded Xinu also makes use of reserved memory
-starting at ``0x8000 0200`` to store an array of exception handler entry
-points (32-bit function pointers for 32 possible exceptions) and
+starting at ``0x8000 0200`` to store an array of exception handler
+entry points (32-bit function pointers for 32 possible exceptions) and
 ``0x8000 0280`` to store an array of interrupt handler entry points
 (32-bit function pointers for 8 possible interrupts).
 
@@ -133,19 +134,19 @@ memory segments are in the following order (as defined by
 after the BSS segment and finally initializes a dynamic memory heap for
 the remaining physical memory addresses.
 
-The kernel memory allocator (``memget`` and ``memfree``), will allocate
-memory from the kernel heap as requested. Since Embedded Xinu uses a
-single page table, all kernel addresses will be mapped read-only in all
-address spaces, giving a user thread the ability to read from but not
-write to kernel memory.
+The :doc:`kernel memory allocator </features/Memory-Management>` will
+allocate memory from the kernel heap as requested. Since Embedded Xinu
+uses a single page table, all kernel addresses will be mapped
+read-only in all address spaces, giving a user thread the ability to
+read from but not write to kernel memory.
 
 Kernel Segment 1
 ~~~~~~~~~~~~~~~~
 
 The second kernel segment, or KSEG1, is the range of memory addresses
-from 0xA000 0000 through 0xBFFF FFFF. This memory **unmapped** and
-**uncached**, meaning that when the processor attempts to access an
-address in this range it will not consult the memory manager for a
+from ``0xA000 0000`` through ``0xBFFF FFFF``. This memory **unmapped**
+and **uncached**, meaning that when the processor attempts to access
+an address in this range it will not consult the memory manager for a
 mapping and it *will* bypass the on-chip memory cache for memory loads
 and stores.
 
@@ -161,17 +162,17 @@ the operating system and some hardware device.
 KSEG1 under Xinu
 ^^^^^^^^^^^^^^^^
 
-Embedded Xinu uses several hardware devices that are mapped out-of-range
-of physical memory and some hardware devices that use dynamically
-allocated memory for sharing. Some devices on the WRT54GL that are
-beyond the range of physical memory are:
+Embedded Xinu uses several hardware devices that are mapped
+out-of-range of physical memory and some hardware devices that use
+dynamically allocated memory for sharing. Some devices on the
+:doc:`WRT54GL` that are beyond the range of physical memory are:
 
--  Broadcom I/O controllor registers at ``0xB800 0000``,
+-  Broadcom I/O controller registers at ``0xB800 0000``,
 -  UART registers at ``0xB800 0300`` and ``0xB800 0400``,
 -  Broadcom Ethernet 47xx registers at ``0xB800 1000``,
 -  Broadcom Wireless LAN controller registers at ``0xB800 5000``,
 -  Broadcom 47xx RoboSwitch registers at ``0xB800 6000``, and
--  `Flash memory <Flash memory>`__ (4 MB) read mapped beginning at
+-  :doc:`Flash memory <Flash-Memory>` (4 MB) read mapped beginning at
    ``0xBC00 0000``.
 
 Certain drivers (such as the Ethernet driver), also take advantage of
@@ -187,9 +188,10 @@ Kernel Segment 2
 ~~~~~~~~~~~~~~~~
 
 The third kernel segment, or KSEG2, is the range of memory addresses
-from 0xC000 0000 through 0xFFFF FFFF. This memory is both **mapped** and
-**cached**, meaning that the processor will consult the memory manager
-for a mapping and store memory modifications in the on-chip cache.
+from ``0xC000 0000`` through ``0xFFFF FFFF``. This memory is both
+**mapped** and **cached**, meaning that the processor will consult the
+memory manager for a mapping and store memory modifications in the
+on-chip cache.
 
 Like the user segment of memory any attempt to access memory in KSEG2
 will result in the processor querying the memory manager and the TLB to
@@ -213,5 +215,5 @@ to KSEG2 might exist in future versions.
 References
 ----------
 
-Sweetman, Dominic. *See MIPS Run*. San Francisco: Morgan Kaufmann
-Publishers, 2007.
+* Sweetman, Dominic. *See MIPS Run*. San Francisco: Morgan Kaufmann
+  Publishers, 2007.

@@ -5,13 +5,13 @@ As part of its :doc:`Networking subsystem <index>`, XINU supports IPv4
 :wikipedia:`routing`.
 
 At the center of the routing module is the *routing daemon*, which
-repeatedly retrieves packets from a :doc:`mailbox <Mailboxes>` on
-which packets can be placed using :source:`rtRecv()
-<network/route/rtRecv.c>` and routes them to their destinations (or
-sends special packets such as :doc:`ICMP` unreachable packets) by
-calling :source:`rtSend() <network/route/rtSend.c>`.  To route
-packets, the routing daemon makes use of a routing table.  Routing
-table entries can be programatically added and removed with
+repeatedly retrieves packets from a :doc:`mailbox
+</features/Mailboxes>` on which packets can be placed using
+:source:`rtRecv() <network/route/rtRecv.c>` and routes them to their
+destinations (or sends special packets such as :doc:`ICMP` unreachable
+packets) by calling :source:`rtSend() <network/route/rtSend.c>`.  To
+route packets, the routing daemon makes use of a routing table.
+Routing table entries can be programatically added and removed with
 :source:`rtAdd() <network/route/rtAdd.c>` and :source:`rtRemove()
 <network/route/rtRemove.c>`, respectively.  The shell command
 **route** relies on both these functions.
@@ -23,7 +23,7 @@ To add a route to the route entry table use **route add** with the
 following parameters:
 
 .. code-block:: none
-   
+
     route add <destination> <gateway> <mask> <interface>
 
 Example:
@@ -45,7 +45,7 @@ the destination as the third parameter:
 .. code-block:: none
 
     route del <destination>
-    
+
 Example:
 
 .. code-block:: none

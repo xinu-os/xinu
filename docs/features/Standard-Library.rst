@@ -75,7 +75,7 @@ libraries in the following ways:
   when they expected behavior equivalent to
   :source:`strlcpy() <lib/libxc/strlcpy.c>`.
 
-.. _ Standard C Library#Platform-specific overrides:
+.. _libxc_overrides:
 
 Platform-specific overrides
 ---------------------------

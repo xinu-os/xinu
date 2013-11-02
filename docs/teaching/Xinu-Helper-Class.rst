@@ -1,9 +1,9 @@
 Xinu Helper Class
-=================
+==================
 
-Here is the full Java source code for the *Xinu.java* helper class.
+Here is the full Java source code for the ``Xinu.java`` helper class.
 
-::
+.. code-block:: java
 
     import java.util.Scanner;
     public class Xinu

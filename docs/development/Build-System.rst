@@ -1,13 +1,13 @@
 Build System
 ============
 
-Building `Embedded XINU <Embedded XINU>`__ is as simple as typing
-``make`` in the ``compile`` directory. However, if you want to
-understand how the build system works you'll need to acquaint yourself
-with the ``Makefile``. It should be noted that this is not a recursive
-build process (make only calls another make process when building the
-libraries and a few other special cases), but rather a single Makefile
-that sources rules to build logically separated components.
+Building |EX| is as simple as typing ``make`` in the ``compile``
+directory. However, if you want to understand how the build system
+works you'll need to acquaint yourself with the ``Makefile``. It
+should be noted that this is not a recursive build process (make only
+calls another make process when building the libraries and a few other
+special cases), but rather a single Makefile that sources rules to
+build logically separated components.
 
 This is a description of the build process for building the trunk
 version of XINU and may not be applicable to all versions.

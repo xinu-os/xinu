@@ -1,5 +1,5 @@
-Getting Started
-===============
+Getting started with Embedded Xinu
+==================================
 
 This section describes how to download and compile :doc:`Embedded Xinu
 </Introduction>`, assuming you are using a UNIX operating system such
@@ -53,7 +53,7 @@ If you do not have "real embedded hardware" available and simply would
 like to try out Embedded Xinu from your laptop or desktop, you can use
 the :doc:`mipsel-qemu <mips/Mipsel-qemu>` platform, which allows you
 to run a little-endian MIPS build of Embedded Xinu from within the
-`QEMU processor emulator <http://wiki.qemu.org/Main_Page>`__.
+`QEMU processor emulator <http://qemu.org>`__.
 
 .. _cross_compiler:
 
@@ -69,15 +69,15 @@ Currently, only the `gcc compiler <http://gcc.gnu.org>`__ is
 supported.  We have not yet tested clang as an alternative to gcc,
 although there is little reason why it should not work.
 
-Install cross-compiler from repository
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Option 1: Install cross-compiler from repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some Linux distributions already have popular cross compilers
 available in their software repositories.  When available, this can be
 used as a quick alternative to building from source.
 
-Building cross-compiler from source
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Option 2: Build cross-compiler from source
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section documents how to build and install binutils and gcc from
 source in a cross-compiler configuration.
@@ -144,7 +144,7 @@ and :wikipedia:`linker <Linker (computing)>` must be installed.
    step 6.  Normally, it is also possible to install software into a
    user's home directory, which does not require the ``sudo``
    privilege.)
-   
+
    The argument given to ``--target`` is the target which the binutils
    will target, and must be set appropriately for the desired Embedded
    Xinu platform.  A few of the available targets are:
@@ -251,7 +251,7 @@ The above should go in a shell startup file such as ``$HOME/.bashrc``.
 
 Test the compiler by creating a file ``test.c``:
 
-.. code-block:: lang c
+.. code-block:: c
 
     void f(void)
     {
@@ -269,9 +269,10 @@ messages.
 Compiling Embedded Xinu
 -----------------------
 
-Briefly, compiling Embedded Xinu requires running **make** to process
-the ``Makefile`` in the ``compile/`` directory and specifying an
-appropriate ``PLATFORM``, for example:
+Having built a cross-compiler if needed, compiling Embedded Xinu now
+requires running **make** to process the ``Makefile`` in the
+``compile/`` directory and specifying an appropriate ``PLATFORM``, for
+example:
 
 .. code-block:: none
 

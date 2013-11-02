@@ -31,7 +31,7 @@ Shell commands
 --------------
 
 To print the ARP table, run the **arp** command from the :doc:`XINU
-shell <Shell>`:
+shell </features/Shell>`:
 
 .. code-block:: none
 

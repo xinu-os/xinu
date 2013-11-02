@@ -1,0 +1,8 @@
+Assignments
+===========
+
+.. toctree::
+   :glob:
+   :hidden:
+
+   *

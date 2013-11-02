@@ -77,78 +77,78 @@ Course Outline
      - Assignments Track Three
    * - 01
      - C (basics) and OS Structures, Processes
-     - :doc:`C Basics    <Assignment--C-Basics>`
-     - :doc:`C Basics    <Assignment--C-Basics>`
-     - :doc:`C Basics    <Assignment--C-Basics>`
+     - :doc:`C Basics    <assignments/C-Basics>`
+     - :doc:`C Basics    <assignments/C-Basics>`
+     - :doc:`C Basics    <assignments/C-Basics>`
    * - 02
-     - C (functions, control flow) and Processes                    
+     - C (functions, control flow) and Processes
      -
      -
      -
    * - 03
      - C (pointers, arrays, structs) and Threads
-     - :doc:`C Structs and Pointers <Assignment--C-Structs-and-Pointers>`
-     - :doc:`C Structs and Pointers <Assignment--C-Structs-and-Pointers>`
-     - :doc:`C Structs and Pointers <Assignment--C-Structs-and-Pointers>`
+     - :doc:`C Structs and Pointers <assignments/C-Structs-and-Pointers>`
+     - :doc:`C Structs and Pointers <assignments/C-Structs-and-Pointers>`
+     - :doc:`C Structs and Pointers <assignments/C-Structs-and-Pointers>`
    * - 04
      - CPU Scheduling
-     - :doc:`Synchronous Serial Driver <Assignment--Synchronous-Serial-Driver>`
-     - :doc:`Synchronous Serial Driver <Assignment--Synchronous-Serial-Driver>`
+     - :doc:`Synchronous Serial Driver <assignments/Synchronous-Serial-Driver>`
+     - :doc:`Synchronous Serial Driver <assignments/Synchronous-Serial-Driver>`
      - :doc:`SCC Serial Communication`
    * - 05
-     - CPU Scheduling             
+     - CPU Scheduling
      -
      -
      -
    * - 06
      - Process Synchronization
      - :doc:`Context Switch and Non-Preemptive Scheduling
-       <Assignment--Context-Switch-and-Non-Preemptive-Scheduling>`
+       <assignments/Context-Switch-and-Non-Preemptive-Scheduling>`
      - :doc:`Context Switch and Non-Preemptive Scheduling
-       <Assignment--Context-Switch-and-Non-Preemptive-Scheduling>`
+       <assignments/Context-Switch-and-Non-Preemptive-Scheduling>`
      - :doc:`Context Switch and Non-Preemptive Scheduling
-       <Assignment--Context-Switch-and-Non-Preemptive-Scheduling>`
+       <assignments/Context-Switch-and-Non-Preemptive-Scheduling>`
    * - 07
      - Deadlocks
      - :doc:`Priority Scheduling and Process Termination
-       <Assignment--Priority-Scheduling-and-Process-Termination>`
+       <assignments/Priority-Scheduling-and-Process-Termination>`
      - :doc:`Priority Scheduling & Preemption
-       <Assignment--Priority-Scheduling-and-Preemption>`
+       <assignments/Priority-Scheduling-and-Preemption>`
      - :doc:`Priority Scheduling & Preemption
-       <Assignment--Priority-Scheduling-and-Preemption>`
+       <assignments/Priority-Scheduling-and-Preemption>`
    * - 08
-     - Main Memory and Virtual Memory                               
+     - Main Memory and Virtual Memory
      -
      -
      -
    * - 09
      - File System Interface
      - :doc:`Preemption & Synchronization
-       <Assignment--Preemption-and-Synchronization>`
+       <assignments/Preemption-and-Synchronization>`
      - :doc:`Interprocess Communication
-       <Assignment--Synchronization-and-Interprocess-Communication>`
-       or :doc:`LL/SC <Assignment--LL-SC>`
+       <assignments/Synchronization-and-Interprocess-Communication>`
+       or :doc:`LL/SC <assignments/LL-SC>`
      - :doc:`Interprocess Communication
-       <Assignment--Synchronization-and-Interprocess-Communication>`
+       <assignments/Synchronization-and-Interprocess-Communication>`
    * - 10
-     - File System Implementation                                   
+     - File System Implementation
      -
      -
      -
    * - 11
      - Mass-Storage Structure
-     - :doc:`Delta Queues <Assignment--Delta-Queues>`
-     - :doc:`Delta Queues <Assignment--Delta-Queues>`
-     - :doc:`Delta Queues <Assignment--Delta-Queues>`
+     - :doc:`Delta Queues <assignments/Delta-Queues>`
+     - :doc:`Delta Queues <assignments/Delta-Queues>`
+     - :doc:`Delta Queues <assignments/Delta-Queues>`
    * - 12
      - I/O Systems
-     - :doc:`Heap Memory <Assignment--Heap-Memory>`
-     - :doc:`Heap Memory <Assignment--Heap-Memory>`
-     - :doc:`Heap Memory <Assignment--Heap-Memory>`
+     - :doc:`Heap Memory <assignments/Heap-Memory>`
+     - :doc:`Heap Memory <assignments/Heap-Memory>`
+     - :doc:`Heap Memory <assignments/Heap-Memory>`
    * - 13
      - Protection, Security and Distributed System Structures
-     - :doc:`Asynchronous Device Driver <Assignment--Asynchronous-Device-Driver>`
-     - :doc:`Ultra-Tiny File System <Assignment--Ultra-Tiny-File-System>`
+     - :doc:`Asynchronous Device Driver <assignments/Asynchronous-Device-Driver>`
+     - :doc:`Ultra-Tiny File System <assignments/Ultra-Tiny-File-System>`
      - Parallel Execution Speedup
    * - 14
      - Distributed System Structures
@@ -157,8 +157,8 @@ Course Outline
      -
    * - 15
      - Distributed File Systems
-     - :doc:`Ultra-Tiny File System <Assignment--Ultra-Tiny-File-System>`
-     - :doc:`Basic Networking - Ping <Assignment--Basic-Networking---Ping>`
+     - :doc:`Ultra-Tiny File System <assignments/Ultra-Tiny-File-System>`
+     - :doc:`Basic Networking - Ping <assignments/Basic-Networking---Ping>`
      - Inter-core Message Passing
 
 Books

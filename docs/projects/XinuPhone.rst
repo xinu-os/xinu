@@ -55,7 +55,7 @@ You can build your own XinuPhone with readily available discrete
 components!
 
 Schematics
-~~~~~~~~~~
+^^^^^^^^^^
 
 |Xinuphone-schematic-page1.png|
 
@@ -71,7 +71,7 @@ Click on the sheet for a higher resolution image or see the downloads
 below for a PDF rendering.
 
 Design Notes
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 -  Components are specified to EIA E96 standard values for resistors (1%
    tolerance) and E24 values for capacitors.

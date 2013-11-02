@@ -70,7 +70,7 @@ Course Outline
 
    * - Week
      - Topics
-     - Assignments   
+     - Assignments
    * - 01
      - C (basics) and OS Structures, Processes
      - Extending Xinu #1
@@ -78,37 +78,37 @@ Course Outline
      - C (functions, control flow) and Processes
      -
    * - 03
-     - C (pointers, arrays, structs) and Threads   
+     - C (pointers, arrays, structs) and Threads
      -
    * - 04
      - CPU Scheduling
      - Extending Xinu #2
    * - 05
-     - CPU Scheduling   
+     - CPU Scheduling
      -
    * - 06
-     - Process Synchronization 
+     - Process Synchronization
      -
    * - 07
-     - Deadlocks   
+     - Deadlocks
      -
    * - 08
      - Main Memory and Virtual Memory
      - Extending Xinu #3
    * - 09
-     - File System Interface   
+     - File System Interface
      -
    * - 10
-     - File System Implementation   
+     - File System Implementation
      -
    * - 11
-     - Mass-Storage Structure  
+     - Mass-Storage Structure
      -
    * - 12
      - I/O Systems
      - Extending Xinu #4
    * - 13
-     - Protection, Security and Distributed System Structures  
+     - Protection, Security and Distributed System Structures
      -
    * - 14
      - Distributed System Structures

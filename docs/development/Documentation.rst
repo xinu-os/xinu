@@ -4,8 +4,8 @@ Documentation
 Welcome to the documentation documentation!  Embedded Xinu contains
 two main forms of documentation:
 
-1. "reStructuredText" (.rst) files located under the top-level docs/
-   directory, separate from the source code.
+1. "reStructuredText" (.rst) files located under the top-level
+   ``docs/`` directory.
 2. Comments in the source code itself, including Doxygen-compatible
    comments describing function parameters and behaviors.
 
@@ -18,16 +18,38 @@ This section focuses on (1); for information about (2) see
 Building the documentation
 --------------------------
 
-To build the documentation, you will need to install the `Sphinx
-documentation tool <http://sphinx-doc.org>`__.   On Linux systems you
-should find it in the repositories.  After doing so, build the
-documentation with::
+The documentation for the latest development version of Embedded Xinu
+can be read at http://embedded-xinu.readthedocs.org/en/latest/,
+and it is automatically updated.
 
-    cd docs
-    make html
+To build the documentation locally, you will need to install the
+`Sphinx documentation tool <http://sphinx-doc.org>`__.   On Linux
+systems you should find it in the repositories.
 
-``html/index.html`` will then contain the main page.  (The above
-assumes that HTML output is desired.)
+HTML
+~~~~
+
+Build the HTML documentation with:
+
+.. code-block:: none
+
+    $ cd docs
+    $ make html
+
+Point your browser at ``_build/html/index.html``.
+
+PDF
+~~~
+
+LaTeX is required for generating the PDF documentation.  Build it
+with:
+
+.. code-block:: none
+
+    $ cd docs
+    $ make latexpdf
+
+The generated PDF file will be ``_build/latex/EmbeddedXinu.pdf``.
 
 Editing and writing documentation
 ---------------------------------
@@ -86,7 +108,7 @@ separated from the generic documentation (e.g. in ``features/``).
 
 Although not all platforms support networking, networking above the
 device driver level is more or less platform independent and should be
-documented in ``features/``.
+documented in ``features/networking/``.
 
 Every file is supposed to be listed in a `TOC tree
 <http://sphinx-doc.org/markup/toctree.html>`__.  However, the

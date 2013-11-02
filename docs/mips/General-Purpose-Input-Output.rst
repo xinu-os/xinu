@@ -1,32 +1,30 @@
-General Purpose Input and Output
+General purpose input and output
 ================================
 
-General Purpose Input and Output is a simple method of communication.
-Currently the shell implements the led and gpiostat commands to use
-these ports.
+.. note::
+
+   This page appears to have been written with :doc:`WRT54GL` routers
+   in mind and may not be applicable to other platforms.
+
+**General Purpose Input and Output** (**GPIO**) is a simple method of
+communication.  Currently the shell implements the **led** and
+**gpiostat** commands to use these ports.
 
 Port Assignments
 ----------------
 
-+----------+--------------------+
-| Pin      | Assignment         |
-+==========+====================+
-| GPIO 0   | WLAN LED           |
-+----------+--------------------+
-| GPIO 1   | Power LED          |
-+----------+--------------------+
-| GPIO 2   | Cisco LED White    |
-+----------+--------------------+
-| GPIO 3   | Cisco LED Orange   |
-+----------+--------------------+
-| GPIO 4   | Cisco Button       |
-+----------+--------------------+
-| GPIO 5   | *Unkown*           |
-+----------+--------------------+
-| GPIO 6   | Reset Button       |
-+----------+--------------------+
-| GPIO 7   | DMZ LED            |
-+----------+--------------------+
+========   ===================
+Pin        Assignment
+========   ===================
+GPIO 0     WLAN LED
+GPIO 1     Power LED
+GPIO 2     Cisco LED White
+GPIO 3     Cisco LED Orange
+GPIO 4     Cisco Button
+GPIO 5     *Unknown*
+GPIO 6     Reset Button
+GPIO 7     DMZ LED
+========   ===================
 
 Registers
 ---------

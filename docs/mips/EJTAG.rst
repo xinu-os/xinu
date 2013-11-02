@@ -37,11 +37,10 @@ Specific Implementations
 So far, development has focused exclusively on the WRT54GL. For anyone
 investigating the capabilities of the WRT54GL EJTAG system, note the
 instruction register size is a full 8 bits, not the 5 bits required by
-specification. Believing the 54GL CP0 Debug Program Counter register to
-be returning erroneous addresses, headers are being added to a 54G v.8,
-and a 350N v.1. For IDCODEs and implementation register values check
-`EJTAG ID Codes and Implementation
-Registers <EJTAG ID Codes and Implementation Registers>`__.
+specification. Believing the 54GL CP0 Debug Program Counter register
+to be returning erroneous addresses, headers are being added to a 54G
+v.8, and a 350N v.1. For IDCODEs and implementation register values
+check :doc:`EJTAG-ID-Codes-and-Implementation-Registers`.
 
 Probes
 ------
@@ -57,16 +56,28 @@ cable can be no longer than 6" (not 6'). This is partially substantiated
 by photographs "out there" of similar 6 inch cables used with a variety
 of devices.
 
-`thumb\|900px\|center\|Total Embedded buffered
-cable <Image:Te_jtag_cable.png>`__ `thumb\|700px\|center\|"wiggler"
-clone from OpenWRT <Image:Wiggler.png>`__
-`thumb\|400px\|center\|unbuffered cable from OpenWRT; used by de-brick
-utility <Image:JTAGunbuffered.png>`__ `thumb\|700px\|center\|Our current
-buffer/wiggler setup <Image:Xinu-Wiggler.png>`__
+.. figure:: Te_jtag_cable.png
+   :width: 900px
+
+   Total Embedded buffered cable
+
+.. figure:: Wiggler.png
+   :width: 700px
+
+   "wiggler" clone from OpenWRT
+
+.. figure:: JTAGunbuffered.png
+   :width: 400px
+
+   unbuffered cable from OpenWRT; used by de-brick utility
+
+.. figure:: Xinu-Wiggler.png
+   :width: 700px
+
+   Our current buffer/wiggler setup
 
 See also
 --------
 
--  `EJTAG ID Codes and Implementation
-   Registers <EJTAG ID Codes and Implementation Registers>`__
+- :doc:`EJTAG-ID-Codes-and-Implementation-Registers`
 

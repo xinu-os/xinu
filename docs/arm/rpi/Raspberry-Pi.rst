@@ -6,7 +6,7 @@ Raspberry Pi
    :align: right
 
    A freshly unpacked Raspberry Pi with additional SDHC card.
-    
+
 The **Raspberry Pi** is an inexpensive credit-card sized computer
 designed for educational use. This page provides information about the
 Raspberry Pi in the context of those looking to run :doc:`XinuPi` on

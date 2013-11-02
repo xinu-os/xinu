@@ -1,10 +1,18 @@
-UART Driver
+UART driver
 ===========
 
-`right\|450px <Image:UartAsyncDriver.png>`__ The UART driver is a
-char-oriented driver designed to work with a `National Semiconductor
-16550 UART <National Semiconductor 16550 UART>`__. The driver is
-responsible for receiving and sending bytes of data asynchronously.
+.. note::
+
+   This page appears to have been written with :doc:`WRT54GL` routers
+   in mind and may or may not be applicable to other platforms.
+
+.. image:: UartAsyncDriver.png
+   :width: 450px
+   :align: right
+
+The UART driver is a char-oriented driver designed to work with a
+National Semiconductor 16550 UART. The driver is responsible for
+receiving and sending bytes of data asynchronously.
 
 The UART driver is divided into two sections: an upper half and a lower
 half. The two halves communicate via semaphores and buffers. The lower
@@ -21,7 +29,7 @@ Physical UART
 The XINU backends have been equipped with serial ports that are
 representative of the National Semiconductor 16550 UART. Documentation
 on the 16550 UART can be found at
-`http://www.national.com/ds.cgi/NS/NS16C552.pdf <http://www.national.com/ds.cgi/NS/NS16C552.pdf>`__.
+http://www.national.com/ds.cgi/NS/NS16C552.pdf.
 
 Initialization
 --------------
@@ -115,5 +123,5 @@ explicitly.
 See also
 --------
 
--  `TTY Driver <TTY Driver>`__
+- :doc:`/features/TTY-Driver`
 

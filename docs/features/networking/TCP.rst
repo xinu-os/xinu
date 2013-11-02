@@ -59,10 +59,10 @@ Usage
     #include <ether.h>
     #include <tcp.h>
     #include <string.h>
-    
+
     #define MSG_MAX_LEN 64
     #define ECHO_PORT 7
-    
+
     /**
      * Shell command (echotest) sends a message to an echo server per RFC 862.
      * It waits for a response, then prints out the reply from the echo server.
@@ -75,22 +75,22 @@ Usage
     {
         ushort dev = 0;
         char buf[MSG_MAX_LEN + 1];
-    
+
         char *dest = args[1];
-    
+
         struct netaddr dst;
         struct netaddr *localhost;
         struct netif *interface;
-    
+
         int len;
-    
+
         /* Allocate a new TCP device */
         if ((ushort)SYSERR == (dev = tcpAlloc()))
         {
             fprintf(stderr, "Client: Failed to allocate a TCP device.");
             return SYSERR;
         }
-    
+
         /* Look up local ip info */
         interface = netLookup((ethertab[0].dev)->num);
         if (NULL == interface)
@@ -99,31 +99,31 @@ Usage
             return SYSERR;
         }
         localhost = &(interface->ip);
-    
+
         /* Change the destination to ipv4 */
         if (SYSERR == dot2ipv4(dest, &dst))
         {
             fprintf(stderr, "Client: Failed to convert ip address.");
             return SYSERR;
         }
-    
+
         /* Open the TCP device with the destination and echo port*/
         if (SYSERR == open(dev, localhost, &dst, NULL, ECHO_PORT, TCP_ACTIVE))
         {
             fprintf(stderr, "Client: Could not open the TCP device\r\n");
             return SYSERR;
         }
-    
+
         /* Send the message to the destination*/
         memcpy(buf, args[2], MSG_MAX_LEN);
-    
+
         if(SYSERR == write(dev, buf, MSG_MAX_LEN))
         {
             fprintf(stderr, "Client: Error writing packet to the network");
             close(dev);
             return SYSERR;
         }
-    
+
         /* Read a response from the server */
         if(SYSERR != (len = read(dev, buf, MSG_MAX_LEN)))
         {
@@ -131,10 +131,10 @@ Usage
             buf[len] = '\0';
             printf("Client: Got response - %s\r\n", buf);
         }
-    
+
         /* Close the device when done */
         close(dev);
-    
+
         return 0;
     }
 

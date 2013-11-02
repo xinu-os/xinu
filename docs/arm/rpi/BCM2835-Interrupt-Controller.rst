@@ -87,7 +87,7 @@ are numbered starting at 64.
 .. list-table:: Incomplete list of BCM2835 IRQs
     :widths: 5 15 30
     :header-rows: 1
-    
+
     * - IRQ
       - Device
       - Notes

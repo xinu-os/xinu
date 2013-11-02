@@ -117,19 +117,19 @@ Course Outline
       - Project 1: Interpreter
     * - 02
       - Lexical Analysis, Automata
-      - :doc:`Project 2: Scanner <Assignment--Scanner>`
+      - :doc:`Project 2: Scanner <assignments/Scanner>`
     * - 03
       - Syntax Analysis, Grammars
       - Homework 1: Automata and Grammars
     * - 04
       - Parser Generators
-      - :doc:`Project 3: Parser <Assignment--Parser>`
+      - :doc:`Project 3: Parser <assignments/Parser>`
     * - 05
       - Abstract Syntax Trees
       -
     * - 06
       - Semantic Analysis
-      - :doc:`Project 4: Semantic Analysis <Assignment--Semantic-Analysis>`
+      - :doc:`Project 4: Semantic Analysis <assignments/Semantic-Analysis>`
     * - 07
       - Activation Records
       -
@@ -138,7 +138,7 @@ Course Outline
       -
     * - 09
       - Basic Blocks
-      - :doc:`Project 5: Translation <Assignment--Translation>`
+      - :doc:`Project 5: Translation <assignments/Translation>`
     * - 10
       - Instruction Selection
       - Homework 2: Activation Records
@@ -150,7 +150,7 @@ Course Outline
       -
     * - 13
       - Register Allocation
-      - :doc:`Project 6: Instruction Selection <Assignment--Instruction-Selection>`
+      - :doc:`Project 6: Instruction Selection <assignments/Instruction-Selection>`
     * - 14
       - Advanced Topics
       -

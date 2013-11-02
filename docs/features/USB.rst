@@ -108,12 +108,10 @@ present standard interfaces (such as UHCI, OHCI, or EHCI--- all
 defined in specifications separate from the USB specification itself)
 to software. Others do not present a standard interface, but instead
 have vendor-provided documentation and/or a vendor-provided driver; an
-example of this is the
-:doc:`Synopsys DesignWare High-Speed USB 2.0 On-The-Go Controller
-</arm/rpi/Synopsys-DesignWare-High-Speed-USB-2-0-On-The-Go-Controller>`
-used on the :doc:`Raspberry Pi </arm/rpi/Raspberry-Pi>`.
-Obviously, a standard interface is highly preferred when independently
-implementing a Host Controller Driver.
+example of this is the :doc:`/arm/rpi/Synopsys-USB-Controller` used on
+the :doc:`/arm/rpi/Raspberry-Pi`.  Obviously, a standard interface is
+highly preferred when independently implementing a Host Controller
+Driver.
 
 Transfers
 ~~~~~~~~~
@@ -196,12 +194,10 @@ Components
    driver is to isolate differences in USB host controllers from all
    other code dealing with USB.  In Embedded Xinu, USB Host Controller
    Drivers must implement the interface declared in
-   :source:`include/usb_hcdi.h`.  (However, as of
-   this writing, there is only one Host USB Controller Driver
-   implemented and it controls the
-   :doc:`Synopsys DesignWare High-Speed USB 2.0 On-The-Go Controller
-   </arm/rpi/Synopsys-DesignWare-High-Speed-USB-2-0-On-The-Go-Controller>`
-   used on the :doc:`Raspberry Pi </arm/rpi/Raspberry-Pi>`.)
+   :source:`include/usb_hcdi.h`.  (However, as of this writing, there
+   is only one Host USB Controller Driver implemented and it controls
+   the :doc:`/arm/rpi/Synopsys-USB-Controller` used on the
+   :doc:`/arm/rpi/Raspberry-Pi`.)
 -  The **USB Core Driver** is responsible for maintaining the USB device
    model, including the tree structure, and providing a framework in
    which USB device drivers can be written. It provides many convenience
@@ -319,8 +315,9 @@ send and receive data over the USB.  Unfortunately, USB Host
 Controllers are not standardized by the USB specification itself,
 which is why this abstraction layer is needed.  USB Host Controllers
 include those compliant with the UHCI, OHCI, or EHCI specifications,
-as well as nonstandard ones such as the Synopsys DesignWare High-Speed
-USB 2.0 OTG Controller used on the Raspberry Pi.
+as well as nonstandard ones such as the
+:doc:`/arm/rpi/Synopsys-USB-Controller` used on the
+:doc:`/arm/rpi/Raspberry-Pi`.
 
 The very first step is to determine whether Xinu already supports the USB Host
 Controller for the hardware under consideration.  If so, you can use that code,
