@@ -36,7 +36,7 @@ You then should have a copy of the source:
     apps/    compile/  docs/     lib/     loader/   mem/ README.md  system/
     AUTHORS  device/   include/  LICENSE  mailbox/  network/  shell/ test/
 
-Note that XinuPi is licensed under a BSD-style license; see the
+Note that Embedded Xinu is licensed under a BSD-style license; see the
 copyright information in the source distribution for more details.
 
 Choosing a platform
@@ -60,14 +60,17 @@ to run a little-endian MIPS build of Embedded Xinu from within the
 Setting up a cross-compiler
 ---------------------------
 
-Since most of Embedded Xinu's supported platforms do *not* share the
+Since most of Embedded Xinu's supported platforms do not share the
 same processor architecture as an x86 workstation, building Embedded
 Xinu typically requires an appropriate :wikipedia:`cross compiler` for
-the C programming language.
+the C programming language.  The processor architecture of each
+Embedded Xinu platform is listed under *Cross-target* in the
+:ref:`list of supported platforms <supported_platforms>`; note that
+this is the value to pass to ``--target`` when configuring binutils
+and gcc.
 
 Currently, only the `gcc compiler <http://gcc.gnu.org>`__ is
-supported.  We have not yet tested clang as an alternative to gcc,
-although there is little reason why it should not work.
+supported.  (clang does not yet work!)
 
 Option 1: Install cross-compiler from repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,13 +150,8 @@ and :wikipedia:`linker <Linker (computing)>` must be installed.
 
    The argument given to ``--target`` is the target which the binutils
    will target, and must be set appropriately for the desired Embedded
-   Xinu platform.  A few of the available targets are:
-
-   - ``mipsel`` for little-endian MIPS platforms, such as the
-     :doc:`mips/WRT54GL` and :doc:`mips/Mipsel-qemu`.
-   - ``mips`` for big-endian MIPS platforms.
-   - ``arm-none-eabi`` for ARM platforms, such as the
-     :doc:`arm/rpi/Raspberry-Pi`.
+   Xinu platform, as shown under *Cross-target* in the :ref:`list of
+   supported platforms <supported_platforms>`.
 
    ``--disable-nls`` simply saves time and space by not supporting any
    human languages other than English.  You can skip this option if

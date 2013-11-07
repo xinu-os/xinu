@@ -10,8 +10,10 @@ Building
 --------
 
 :ref:`Compile Embedded Xinu <compiling>` with
-``PLATFORM=mipsel-qemu``.  This will produce the file ``xinu.boot`` in
-the ``compile/`` directory.
+``PLATFORM=mipsel-qemu``.  Note that this requires a :ref:`cross
+compiler <cross_compiler>` targeting little-endian MIPS ("mipsel").
+This will produce the file ``xinu.boot`` in the ``compile/``
+directory.
 
 Running
 -------

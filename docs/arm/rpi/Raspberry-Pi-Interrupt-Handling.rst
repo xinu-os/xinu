@@ -6,7 +6,7 @@ software and hardware used to configure and process
 :wikipedia:`interrupts`. An example of an interrupt that can be
 enabled on the :doc:`Raspberry-Pi` is that from the
 :doc:`BCM2835-System-Timer`, which is used in :doc:`XinuPi` to
-implement `preemptive multitasking
+implement :doc:`preemptive multitasking
 </arm/ARM-Preemptive-Multitasking>`.  Interrupt handling on the
 :doc:`Raspberry-Pi` consists of two complementary parts:
 

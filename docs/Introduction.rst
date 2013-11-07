@@ -74,46 +74,59 @@ environment, see :doc:`teaching/Laboratory`.
 Supported platforms
 -------------------
 
+These are all the platforms on which Embedded Xinu currently runs.
+
 .. list-table::
-    :widths: 10 12 22 10
+    :widths: 10 10 17 8 8
     :header-rows: 1
 
     * - Platform
       - Status
       - Comments
       - :ref:`PLATFORM value <makefile_variables>`
+      - :ref:`Cross-target <cross_compiler>`
     * - :doc:`Linksys WRT54GL <mips/WRT54GL>`
       - Supported
       - This is our primary development platform, on which Xinu has
         been tested thoroughly.
       - ``wrt54gl``
-    * - Linksys WRT54Gv8
+      - ``mipsel``
+    * - Linksys WRT54G v8
       - Supported
-      - Tested and running at the Embedded Xinu Lab.
+      - Tested and running at the Embedded Xinu Lab.  Supported via
+        same code as WRT54GL.
       - ``wrt54gl``
-    * - Linksys WRT54Gv4
+      - ``mipsel``
+    * - Linksys WRT54G v4
       - Probably Supported
       - The v4 is apparently the version on which WRT54GL is based,
         and so although the Embedded Xinu Lab has not explicitly
         tested it, it probably works.
       - ``wrt54gl``
+      - ``mipsel``
     * - Linksys WRT160NL
       - Supported
       - Newer model of WRT54GL. Full O/S teaching core functioning,
         including wired network interface.
       - ``wrt160nl``
+      - ``mips``
     * - Linksys E2100L
-      - ???
-      - ???
+      - Supported
+      - Full O/S teaching core functioning, including wired network
+        interface.
       - ``e2100l``
+      - ``mips``
     * - ASUS WL-330gE
-      - ???
-      - ???
+      - Not actively maintained
+      - This platform was working in the past but is no longer being
+        actively maintained or tested.
       - ``wl330ge``
+      - ``mipsel``
     * - :doc:`mipsel-qemu </mips/Mipsel-qemu>`
       - Supported
       - Full O/S teaching core functioning, network support in progress.
       - ``mipsel-qemu``
+      - ``mipsel``
     * - :doc:`Raspberry Pi </arm/rpi/Raspberry-Pi>`
       - Under Development
       - Core operating system including wired networking is
@@ -121,6 +134,7 @@ Supported platforms
         the full documentation (e.g. for a laboratory setup) hasn't
         been completed yet.
       - ``arm-rpi``
+      - ``arm-none-eabi``
 
 .. _Xinu:
 
