@@ -38,9 +38,10 @@
 #if USE_TLB
 #define BUF_LENGTH 512
 
-#ifndef LOOP
-#define LOOP (-1)
+#ifndef LOOP0
+#define LOOP0 (-1)
 #endif
+
 /**
  * @ingroup shell
  *
@@ -80,33 +81,33 @@ shellcmd xsh_user(int nargs, char **args)
         user_kill(5);           // pick a better number
         break;
     case 4:
-        user_open(LOOP, 0);
+        user_open(LOOP0, 0);
         break;
     case 5:
-        user_control(LOOP, 0, 1, 2);
+        user_control(LOOP0, 0, 1, 2);
         break;
     case 6:
         sprintf(buffer, "Process %d\n", gettid());
-        user_write(LOOP, buffer, BUF_LENGTH);
+        user_write(LOOP0, buffer, BUF_LENGTH);
         break;
     case 7:
-        user_read(LOOP, buffer, BUF_LENGTH);
+        user_read(LOOP0, buffer, BUF_LENGTH);
         printf("%s\n", buffer);
         break;
     case 8:
-        user_putc(LOOP, 'm');
+        user_putc(LOOP0, 'm');
         break;
     case 9:
-        printf("%c\n", user_getc(LOOP));
+        printf("%c\n", user_getc(LOOP0));
         break;
     case 10:
-        user_seek(LOOP, 5);
+        user_seek(LOOP0, 5);
         break;
     case 11:
-        user_close(LOOP);
+        user_close(LOOP0);
         break;
     case 12:
-        printf("%d\n", user_getdev("LOOP"));
+        printf("%d\n", user_getdev("LOOP0"));
         break;
     case 13:
         mybox = user_mboxalloc(50);

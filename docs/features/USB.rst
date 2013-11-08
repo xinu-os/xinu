@@ -168,6 +168,8 @@ As of this writing, Embedded Xinu's USB subsystem supports USB 2.0, so
 it supports devices operating at Low Speed, Full Speed, or High Speed.
 USB 3.0 Super Speed is not supported.
 
+.. _usb_subsystem:
+
 Embedded Xinu's USB subsystem
 -----------------------------
 
@@ -177,13 +179,26 @@ stack.  The description that follows is certainly not the only way to
 organize the code, but it is the way that is used in most operating
 systems and makes the most sense based on how USB was designed. In
 terms of Embedded Xinu, perhaps the main question is why USB devices
-and/or the USB controller do not show up as device(s) in 'devtab' like
-other Embedded Xinu devices. The reasons are that USB is a dynamic
-bus, so it cannot be described by a static table, and also because the
-highly nested structure of USB devices, as well as multiple supported
-transfer types, is too complicated for the simple ":source:`read()
-<system/read.c>` and :source:`write() <system/write.c>` from a device"
-paradigm.
+and/or the USB controller do not, by default, show up as device(s) in
+``devtab`` like other Embedded Xinu devices. The reasons are that USB is
+a dynamic bus, so it cannot be described by a static table, and also
+because the highly nested structure of USB devices, as well as
+multiple supported transfer types, is too complicated for the simple
+":source:`read() <system/read.c>` and :source:`write()
+<system/write.c>` from a device" paradigm.
+
+.. note::
+    Specific USB device drivers can still provide device entries in
+    ``devtab`` if needed.  However, they must account for the fact
+    that the physical devices are still hot-pluggable.
+
+.. note::
+
+    Not all Embedded Xinu :ref:`platforms <supported_platforms>`
+    support USB, either due to not having USB hardware available or
+    not having an appropriate USB host controller driver implemented.
+
+.. _usb_components:
 
 Components
 ~~~~~~~~~~
@@ -260,6 +275,8 @@ USB-related shell commands
 The **usbinfo** :doc:`shell command <Shell>` prints out information
 about devices attached to the USB.  See :source:`shell/xsh_usbinfo.c`
 for more details, or run ``usbinfo --help``.
+
+.. _how_to_write_usb_device_driver:
 
 How to write a USB device driver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

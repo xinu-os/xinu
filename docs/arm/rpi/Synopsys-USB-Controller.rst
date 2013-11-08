@@ -70,7 +70,7 @@ Notes
 
 .. [#nodocs] http://www.raspberrypi.org/phpBB3/viewtopic.php?f=72&t=27695
 .. [#linux_maintainers] http://lxr.linux.no/linux/MAINTAINERS
-.. [#usb_sucks_quote] http://lists.infradead.org/pipermail/linux-rpi-kernel/2012-September/000214.html</ref>
+.. [#usb_sucks_quote] http://lists.infradead.org/pipermail/linux-rpi-kernel/2012-September/000214.html
 .. [#linux_driver] https://github.com/raspberrypi/linux/tree/rpi-3.6.y/drivers/usb/host/dwc_otg
 .. [#csud] https://github.com/Chadderz121/csud
 .. [#plan9_driver] http://plan9.bell-labs.com/sources/plan9/sys/src/9/bcm/usbdwc.c

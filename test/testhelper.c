@@ -28,6 +28,7 @@ struct testcase testtab[] = {
     {"Mailbox", test_mailbox},
     {"Ethernet Driver", test_ether},
     {"Ethernet Loopback Driver", test_ethloop},
+    {"Tee driver", test_tee},
     {"Network Addresses", test_netaddr},
     {"Network Interface", test_netif},
     {"ARP", test_arp},

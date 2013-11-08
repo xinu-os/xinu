@@ -87,4 +87,6 @@ extern struct platform platform;
 void *setupStack(void *stackaddr, void *procaddr,
                  void *retaddr, uint nargs, va_list ap);
 
+int platforminit(void);
+
 #endif                          /* _PLATFORM_H_ */

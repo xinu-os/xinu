@@ -54,20 +54,7 @@ devcall fbPutc(device *devptr, char ch)
             screenClear(background);
             cursor_row = 0;
         }
-        /* TODO: hack to echo characters to the console as well.  A better
-         * solution is needed.  */
-#ifdef CONSOLE
-        putc(CONSOLE, ch);
-#endif
         return (uchar)ch;
-    }
-    else
-    {
-        /* TODO: hack to echo characters to the console as well.  A better
-         * solution is needed.  */
-#ifdef CONSOLE
-        return putc(CONSOLE, ch);
-#endif
     }
     return SYSERR;
 }

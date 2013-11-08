@@ -224,6 +224,8 @@ dwc_power_on(void)
 static void
 dwc_power_off(void)
 {
+    usb_info("Powering off Synopsys DesignWare Hi-Speed "
+             "USB 2.0 On-The-Go Controller\n");
     board_setpower(POWER_USB, FALSE);
 }
 

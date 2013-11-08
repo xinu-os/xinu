@@ -14,7 +14,6 @@
 #include <memory.h>
 #include <bufpool.h>
 #include <mips.h>
-#include <platform.h>
 #include <thread.h>
 #include <tlb.h>
 #include <queue.h>
@@ -28,19 +27,14 @@
 #include <string.h>
 #include <syscall.h>
 #include <safemem.h>
-#include <version.h>
+#include <platform.h>
 
 #ifdef WITH_USB
 #  include <usb_subsystem.h>
 #endif
 
-/* Linker provides start and end of image */
-extern void _start(void);       /* start of Xinu code                  */
-
 /* Function prototypes */
-extern void main(void);         /* main is the first thread created    */
-extern void xdone(void);        /* system "shutdown" procedure         */
-extern int platforminit(void);  /* determines platform settings        */
+extern thread main(void);       /* main is the first thread created    */
 static int sysinit(void);       /* intializes system structures        */
 
 /* Declarations of major kernel variables */
@@ -73,61 +67,19 @@ struct platform platform;       /* Platform specific configuration     */
  */
 void nulluser(void)
 {
+    /* Platform-specific initialization  */
     platforminit();
+
+    /* General initialization  */
     sysinit();
 
-    kprintf(VERSION);
-    kprintf("\r\n\r\n");
-
-#ifdef DETAIL
-    /* Output detected platform. */
-    kprintf("Processor identification: 0x%08X\r\n", cpuid);
-    kprintf("Detected platform as: %s, %s\r\n\r\n",
-            platform.family, platform.name);
-#endif
-
-    /* Output Xinu memory layout */
-    kprintf("%10d bytes physical memory.\r\n",
-            (ulong)platform.maxaddr - (ulong)platform.minaddr);
-#ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)platform.minaddr, (ulong)(platform.maxaddr - 1));
-#endif
-    kprintf("%10d bytes reserved system area.\r\n",
-            (ulong)_start - (ulong)platform.minaddr);
-#ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)platform.minaddr, (ulong)_start - 1);
-#endif
-
-    kprintf("%10d bytes Xinu code.\r\n", (ulong)&_end - (ulong)_start);
-#ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)_start, (ulong)&_end - 1);
-#endif
-
-    kprintf("%10d bytes stack space.\r\n", (ulong)memheap - (ulong)&_end);
-#ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)&_end, (ulong)memheap - 1);
-#endif
-
-    kprintf("%10d bytes heap space.\r\n",
-            (ulong)platform.maxaddr - (ulong)memheap);
-#ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n\r\n",
-            (ulong)memheap, (ulong)platform.maxaddr - 1);
-#endif
-    kprintf("\r\n");
-
-    open(CONSOLE, SERIAL0);
-    /* enable interrupts here */
+    /* Enable interrupts  */
     enable();
 
-    ready(create
-          ((void *)main, INITSTK, INITPRIO, "MAIN", 2, 0,
-           NULL), RESCHED_YES);
+    /* Spawn the main thread  */
+    ready(create(main, INITSTK, INITPRIO, "MAIN", 0), RESCHED_YES);
 
+    /* null thread has nothing else to do but cannot exit  */
     while (TRUE)
     {
 #ifndef DEBUG
@@ -144,7 +96,6 @@ static int sysinit(void)
 {
     int i;
     struct thrent *thrptr;      /* thread control block pointer  */
-    device *devptr;             /* device entry pointer          */
     struct sement *semptr;      /* semaphore entry pointer       */
     struct monent *monptr;      /* monitor entry pointer         */
     struct memblock *pmblock;   /* memory block pointer          */
@@ -252,11 +203,7 @@ static int sysinit(void)
 #if NDEVS
     for (i = 0; i < NDEVS; i++)
     {
-        if (!isbaddev(i))
-        {
-            devptr = (device *)&devtab[i];
-            (devptr->init) (devptr);
-        }
+        devtab[i].init((device*)&devtab[i]);
     }
 #endif
 

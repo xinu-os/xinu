@@ -8,6 +8,8 @@
 #ifndef _TESTSUITE_H_
 #define _TESTSUITE_H_
 
+#include <thread.h>
+
 thread test_bigargs(bool);
 thread test_schedule(bool);
 thread test_preempt(bool);
@@ -26,6 +28,7 @@ thread test_libLimits(bool);
 thread test_ttydriver(bool);
 thread test_ether(bool);
 thread test_ethloop(bool);
+thread test_tee(bool);
 thread test_memory(bool);
 thread test_bufpool(bool);
 thread test_nvram(bool);
