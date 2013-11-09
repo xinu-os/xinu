@@ -35,7 +35,7 @@ static void hexdump_print(uchar data, uchar mode)
 /**
  * @ingroup misc
  *
- * Dump a buffer of given length to the to a device.
+ * Dump a buffer of given length to stdout.
  * @param *buffer buffer to print out data in
  * @param length  length of buffer to print
  * @param canon   canonical representation (hex+ASCII)
@@ -48,7 +48,7 @@ void hexdump(void *buffer, ulong length, bool canon)
 
     for (n = 0; n < length; n += 0x10)
     {
-        fprintf(stdout, "%08x ", (ulong)buffer + n);
+        fprintf(stdout, "%08lx ", (ulong)buffer + n);
 
         remain = length - n;
 

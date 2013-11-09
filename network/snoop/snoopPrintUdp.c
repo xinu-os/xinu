@@ -15,19 +15,19 @@ static void snoopPrintUdpPort(ushort port, char *descrp)
     switch (net2hs(port))
     {
     case UDP_PORT_RDATE:
-        sprintf(descrp, "(Time)");
+        strcpy(descrp, "(Time)");
         break;
     case UDP_PORT_DHCPS:
-        sprintf(descrp, "(BOOTP/DHCP Server)");
+        strcpy(descrp, "(BOOTP/DHCP Server)");
         break;
     case UDP_PORT_DHCPC:
-        sprintf(descrp, "(BOOTP/DHCP Client)");
+        strcpy(descrp, "(BOOTP/DHCP Client)");
         break;
     case UDP_PORT_TRACEROUTE:
-        sprintf(descrp, "(Traceroute)");
+        strcpy(descrp, "(Traceroute)");
         break;
     default:
-        sprintf(descrp, "");
+        strcpy(descrp, "");
         break;
     }
 }
@@ -60,7 +60,7 @@ int snoopPrintUdp(struct udpPkt *udp, char verbose)
         }
         else
         {
-            sprintf(descrp, "");
+            strcpy(descrp, "");
         }
         sprintf(output, "%d %s", net2hs(udp->srcPort), descrp);
         printf("  Src Port: %-25s ", output);
@@ -72,7 +72,7 @@ int snoopPrintUdp(struct udpPkt *udp, char verbose)
         }
         else
         {
-            sprintf(descrp, "");
+            strcpy(descrp, "");
         }
         sprintf(output, "%d %s", net2hs(udp->dstPort), descrp);
         printf("Dst Port: %-25s\n", output);

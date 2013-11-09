@@ -8,7 +8,12 @@
 
 #define DATASIZE 4
 
-static int cmp_chars(const void *, const void *);
+#if defined(TEE1) && defined(LOOP1)
+static int cmp_chars(const void *p1, const void *p2)
+{
+    return *(const uchar*)p1 - *(const uchar*)p2;
+}
+#endif
 
 /**
  * Test tee driver (device/tee/)
@@ -100,9 +105,4 @@ thread test_tee(bool verbose)
     testSkip(TRUE, "");
 #endif
     return OK;
-}
-
-static int cmp_chars(const void *p1, const void *p2)
-{
-    return *(const uchar*)p1 - *(const uchar*)p2;
 }

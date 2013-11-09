@@ -333,6 +333,18 @@ static const struct {
         .nargs = 2,
         .args = {5, (uint)"truncate me"},
     },
+    { /* Non-truncated string, negative max-width has no effect  */
+        .format = "%.*s",
+        .expected_output = "truncate me",
+        .nargs = 2,
+        .args = {-1, (uint)"truncate me"},
+    },
+    { /* Truncated string, implicit zero max-width   */
+        .format = "%.s",
+        .expected_output = "",
+        .nargs = 1,
+        .args = {(uint)"truncate me"},
+    },
     { /* Right justified string */
         .format = "%10s",
         .expected_output = "     right",
@@ -356,6 +368,12 @@ static const struct {
         .expected_output = "left    ",
         .nargs = 2,
         .args = {8, (uint)"left"},
+    },
+    { /* Left justified string via negative min-width specified as vararg */
+        .format = "%*s",
+        .expected_output = "left    ",
+        .nargs = 2,
+        .args = {-8, (uint)"left"},
     },
     { /* Negative integer */
         .format = "%d",
@@ -446,6 +464,42 @@ static const struct {
         .expected_output = "00",
         .nargs = 1,
         .args = {0},
+    },
+    { /* Integer precision */
+        .format = "%.3d",
+        .expected_output = "003",
+        .nargs = 1,
+        .args = {3},
+    },
+    { /* Integer precision + padding  */
+        .format = "%6.3d",
+        .expected_output = "   003",
+        .nargs = 1,
+        .args = {3},
+    },
+    { /* Integer precision + padding (zero flag ignored) */
+        .format = "%06.3d",
+        .expected_output = "   003",
+        .nargs = 1,
+        .args = {3},
+    },
+    { /* Integer precision + padding (left) */
+        .format = "%-6.3d",
+        .expected_output = "003   ",
+        .nargs = 1,
+        .args = {3},
+    },
+    { /* Integer precision + padding (negative) */
+        .format = "%6.3d",
+        .expected_output = "  -003",
+        .nargs = 1,
+        .args = {-3},
+    },
+    { /* Integer precision + padding (left, negative) */
+        .format = "%-6.3d",
+        .expected_output = "-003  ",
+        .nargs = 1,
+        .args = {-3},
     },
     { /* Literal chars */
         .format = "literal",

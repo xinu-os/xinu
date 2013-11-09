@@ -4,10 +4,10 @@
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
-#include <stddef.h>
 #include <network.h>
 #include <snoop.h>
 #include <stdio.h>
+#include <string.h>
 #include <tcp.h>
 
 static void snoopPrintTcpPort(ushort port, char *descrp)
@@ -15,13 +15,13 @@ static void snoopPrintTcpPort(ushort port, char *descrp)
     switch (net2hs(port))
     {
     case TCP_PORT_HTTP:
-        sprintf(descrp, "(HTTP)");
+        strcpy(descrp, "(HTTP)");
         break;
     case TCP_PORT_TELNET:
-        sprintf(descrp, "(Telnet)");
+        strcpy(descrp, "(Telnet)");
         break;
     default:
-        sprintf(descrp, "");
+        strcpy(descrp, "");
         break;
     }
 }
@@ -46,7 +46,7 @@ int snoopPrintTcp(struct tcpPkt *tcp, char verbose)
 
     if (verbose >= SNOOP_VERBOSE_ONE)
     {
-        printf(" ----- TCP Header -----\n", "");
+        printf(" ----- TCP Header -----\n");
         /* Source Port */
         if (verbose >= SNOOP_VERBOSE_TWO)
         {
@@ -54,7 +54,7 @@ int snoopPrintTcp(struct tcpPkt *tcp, char verbose)
         }
         else
         {
-            sprintf(descrp, "");
+            strcpy(descrp, "");
         }
         sprintf(output, "%d %s", net2hs(tcp->srcpt), descrp);
         printf("  Src Port: %-25s ", output);
@@ -66,7 +66,7 @@ int snoopPrintTcp(struct tcpPkt *tcp, char verbose)
         }
         else
         {
-            sprintf(descrp, "");
+            strcpy(descrp, "");
         }
         sprintf(output, "%d %s", net2hs(tcp->dstpt), descrp);
         printf("Dst Port: %-25s\n", output);

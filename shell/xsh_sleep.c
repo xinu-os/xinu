@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 /**
  * @ingroup shell
@@ -19,7 +20,7 @@
  */
 shellcmd xsh_sleep(int nargs, char *args[])
 {
-    long delay;                 /* time to sleep */
+    uint delay;                 /* time to sleep */
 
     /* Output help, if '--help' argument was supplied */
     if (nargs == 2 && strcmp(args[1], "--help") == 0)
@@ -49,17 +50,17 @@ shellcmd xsh_sleep(int nargs, char *args[])
     }
 
     /* Calculate delay and sleep */
-    delay = atol(args[1]);
-    if (delay < 0)
+    if (1 != sscanf(args[1], "%u", &delay) || delay > UINT_MAX / 1000)
     {
-        fprintf(stderr, "%s: invalid delay of %d seconds\n", args[0],
-                delay);
+        fprintf(stderr, "%s: invalid delay of \"%s\" seconds\n",
+                args[0], args[1]);
+        return 1;
     }
 
     /* convert delay to milliseconds */
-    if (sleep(delay * 1000) == SYSERR)
+    if (SYSERR == sleep(delay * 1000))
     {
-        return -1;
+        return 1;
     }
 
     return 0;

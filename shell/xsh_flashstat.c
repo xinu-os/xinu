@@ -70,7 +70,7 @@ static void flashStat(ushort dev)
 
     /* Flash device information */
     /* Device location */
-    printf("\tFound CFI (Flash) device at 0x%08x\r\n", flash->base);
+    printf("\tFound CFI (Flash) device at 0x%08lx\r\n", flash->base);
 
     /* Which command set it uses */
     printf("\tUsing ");
@@ -85,7 +85,7 @@ static void flashStat(ushort dev)
     printf("Command Set (0x%04x)\r\n", flash->commands);
 
     /* Size */
-    printf("\tSize: %d bytes (split into %d blocks of %d bytes)\r\n",
+    printf("\tSize: %lu bytes (split into %lu blocks of %lu bytes)\r\n",
            flash->size, flash->nlog_blocks, flash->log_size);
 
     /* Region count and info */
@@ -94,8 +94,8 @@ static void flashStat(ushort dev)
     for (n = 0; n < flash->nregions; n++)
     {
         r = flash->regions[n];
-        printf("\tRegion %d at offset 0x%08x\r\n", n, r.region_start);
-        printf("\t\t%d blocks of %d bytes, totaling %d bytes\r\n",
+        printf("\tRegion %u at offset 0x%08lx\r\n", n, r.region_start);
+        printf("\t\t%lu blocks of %lu bytes, totaling %lu bytes\r\n",
                r.nblocks, r.block_size, r.region_size);
     }
 #endif

@@ -31,7 +31,7 @@ thread telnetServer(int ethdev, int port, ushort telnetdev,
     ushort tcpdev;
     struct netif *interface;
     struct netaddr *host;
-    char thrname[16];
+    char thrname[24];
     uchar buf[6];
 
     TELNET_TRACE("ethdev %d, port %d, telnet %d", ethdev, port,
@@ -55,7 +55,7 @@ thread telnetServer(int ethdev, int port, ushort telnetdev,
                     "telnet server failed to allocate TCP device\n");
             return SYSERR;
         }
-        sprintf(thrname, "telnetSvrKill_%d\0", (devtab[telnetdev].minor));
+        sprintf(thrname, "telnetSvrKill_%d", (devtab[telnetdev].minor));
         killtid = create((void *)telnetServerKiller, INITSTK, INITPRIO,
                          thrname, 2, telnetdev, tcpdev);
         ready(killtid, RESCHED_YES);

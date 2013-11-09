@@ -9,6 +9,7 @@
 #include <ether.h>
 #include <interrupt.h>
 
+#if NETHER
 static int ethn_test(bool verbose, int dev);
 
 #define ETH_ADDR_LEN 6
@@ -23,6 +24,7 @@ struct etherGram
     ushort type_len;            /* EthernetII type/Ethernet length */
     char payload[1];            /* Payload data */
 };
+#endif /* NETHER */
 
 /**
  * Test for ethernet driver packet acceptance.
@@ -55,7 +57,7 @@ thread test_ether(bool verbose)
     return OK;
 }
 
-#ifdef NETHER
+#if NETHER
 static int ethn_test(bool verbose, int devminor)
 {
     bool passed = TRUE;

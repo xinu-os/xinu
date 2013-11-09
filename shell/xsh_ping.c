@@ -161,18 +161,18 @@ shellcmd xsh_ping(int nargs, char *args[])
     printf("--- %s ping statistics ---\n", str);
     printf("%d packets transmitted, %d received,", count, recv);
     printf(" %d%% packet loss,", (count - recv) * 100 / count);
-    printf(" time %dms\n", (clktime - startsec) * 1000 +
+    printf(" time %lums\n", (clktime - startsec) * 1000 +
            ((clkticks - startms) * 1000) / CLKTICKS_PER_SEC);
-    printf("rtt min/avg/max = %d.%03d/", min / 1000, min % 1000);
+    printf("rtt min/avg/max = %lu.%03lu/", min / 1000, min % 1000);
     if (0 != recv)
     {
-        printf("%d.%03d/", (total / recv) / 1000, (total / recv) % 1000);
+        printf("%lu.%03lu/", (total / recv) / 1000, (total / recv) % 1000);
     }
     else
     {
         printf("-/");
     }
-    printf("%d.%03d ms\n", max / 1000, max % 1000);
+    printf("%lu.%03lu ms\n", max / 1000, max % 1000);
 
     return SHELL_OK;
 }
@@ -287,7 +287,7 @@ static void echoPrintPkt(struct packet *pkt, ulong elapsed)
     netaddrsprintf(str, &src);
     printf("%d bytes from %s: ", net2hs(ip->len), str);
     printf("icmp_seq=%d ttl=%d ", net2hs(echo->seq), ip->ttl);
-    printf("time=%d.%03d ms\n", elapsed / 1000, elapsed % 1000);
+    printf("time=%lu.%03lu ms\n", elapsed / 1000, elapsed % 1000);
 }
 
 /**

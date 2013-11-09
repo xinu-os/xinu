@@ -17,8 +17,8 @@ void qsort(void *base, size_t nmemb, size_t size,
            int (*compar)(const void *, const void*));
 int rand(void);
 void srand(unsigned int seed);
-void *malloc(size_t size) __attribute__((deprecated));
-void free(void *ptr) __attribute__((deprecated));
+void *malloc(size_t size);
+void free(void *ptr);
 
 #define RAND_MAX 32767
 

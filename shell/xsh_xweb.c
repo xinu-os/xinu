@@ -23,18 +23,6 @@
  */
 shellcmd xsh_xweb(int nargs, char *args[])
 {
-    int i;
-    int descrp;
-    struct netif *interface;
-    struct thrent *thrptr;
-    semaphore oldsem;
-
-    i = 0;
-    descrp = 0;
-    oldsem = 0;
-    thrptr = NULL;
-    interface = NULL;
-
     /* Output help, if '--help' argument was supplied */
     if (nargs == 2 && strcmp(args[1], "--help") == 0)
     {
@@ -55,6 +43,12 @@ shellcmd xsh_xweb(int nargs, char *args[])
     }
 
 #ifdef NHTTP
+
+    int i = 0;
+    int descrp = 0;
+    struct netif *interface = NULL;
+    struct thrent *thrptr = NULL;
+    semaphore oldsem = 0;
 
     /* Halt XWeb thread */
     if (nargs == 2 && strcmp(args[1], "-h") == 0)

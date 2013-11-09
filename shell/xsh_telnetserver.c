@@ -136,7 +136,7 @@ shellcmd xsh_telnetserver(int nargs, char *args[])
     for (i = 0; i < NTELNET; i++)
     {
         spawntelnet = telnetAlloc();
-        sprintf(thrname, "telnetServ_%d\0", (spawntelnet - TELNET0));
+        sprintf(thrname, "telnetServ_%d", (spawntelnet - TELNET0));
         TELNET_TRACE("Spawning %s on %d", thrname, spawntelnet - TELNET0);
         ready(create((void *)telnetServer, INITSTK, INITPRIO, thrname,
                      4, descrp, port, spawntelnet, "SHELL2"),

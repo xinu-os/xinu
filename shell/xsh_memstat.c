@@ -278,7 +278,7 @@ static void printFreeList(struct memblock *base, char *ident)
     printf("-----------  --------\n");
     for (block = base->next; block != NULL; block = block->next)
     {
-        printf("0x%08X   %8d\n", block, block->length);
+        printf("0x%08lX   %8u\n", (ulong)block, block->length);
     }
     printf("\n");
 }

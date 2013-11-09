@@ -45,7 +45,7 @@ shellcmd xsh_route(int nargs, char *args[])
     {
         printf("\nUsage: %s ", args[0]);
         printf("[add <DESTINATION> <GATEWAY> <MASK> <INTERFACE>] ");
-        printf("[del <DESTINATION>]\n\n", args[0]);
+        printf("[del <DESTINATION>]\n\n");
         printf("Description:\n");
         printf("\tDisplays routing table\n");
         printf("Options:\n");

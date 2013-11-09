@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef GPIO_BASE
+
 /**
  * @ingroup shell
  *
@@ -79,7 +81,6 @@ shellcmd xsh_led(int nargs, char *args[])
                 args[0]);
     }
 
-#ifdef GPIO_BASE
     /* change led state */
     if (strcmp(args[2], "on") == 0)
     {
@@ -95,7 +96,8 @@ shellcmd xsh_led(int nargs, char *args[])
         fprintf(stderr, "Try '%s --help' for more information\n",
                 args[0]);
     }
-#endif                          /* GPIO_BASE */
 
     return 0;
 }
+
+#endif /* GPIO_BASE */

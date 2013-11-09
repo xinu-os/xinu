@@ -70,9 +70,9 @@ shellcmd xsh_gpiostat(int nargs, char *args[])
         {
             printf(" Input  ");
         }
-        printf("   %1d    ", (pgcsr->input & offset) >> p);
-        printf("   %1d    ", (pgcsr->output & offset) >> p);
-        printf("   %1d    ", (pgcsr->control & offset) >> p);
+        printf("   %1lu    ", (pgcsr->input & offset) >> p);
+        printf("   %1lu    ", (pgcsr->output & offset) >> p);
+        printf("   %1lu    ", (pgcsr->control & offset) >> p);
         printf("\n");
     }
 
