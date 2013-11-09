@@ -36,5 +36,4 @@ DEVICES  := ethloop         \
             usb             \
             usbkbd          \
             loopback        \
-            tee             \
             tty

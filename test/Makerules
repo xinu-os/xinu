@@ -4,7 +4,7 @@
 COMP = test
 
 # Source files for this component
-C_FILES = testhelper.c test_arp.c test_mailbox.c test_semaphore3.c test_bigargs.c test_memory.c test_semaphore4.c test_bufpool.c test_messagePass.c test_semaphore.c test_deltaQueue.c test_netaddr.c test_snoop.c test_ether.c test_netif.c test_ethloop.c test_tee.c test_nvram.c test_system.c test_ip.c test_preempt.c test_tlb.c test_libCtype.c test_procQueue.c test_ttydriver.c test_libLimits.c test_raw.c test_udp.c test_libStdio.c test_recursion.c test_umemory.c test_libStdlib.c test_schedule.c test_libString.c test_semaphore2.c
+C_FILES = testhelper.c test_arp.c test_mailbox.c test_semaphore3.c test_bigargs.c test_memory.c test_semaphore4.c test_bufpool.c test_messagePass.c test_semaphore.c test_deltaQueue.c test_netaddr.c test_snoop.c test_ether.c test_netif.c test_ethloop.c test_nvram.c test_system.c test_ip.c test_preempt.c test_tlb.c test_libCtype.c test_procQueue.c test_ttydriver.c test_libLimits.c test_raw.c test_udp.c test_libStdio.c test_recursion.c test_umemory.c test_libStdlib.c test_schedule.c test_libString.c test_semaphore2.c
 
 
 S_FILES =

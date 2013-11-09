@@ -4,62 +4,125 @@
 /* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
 #include <device.h>
+#include <ether.h>
 #include <platform.h>
 #include <shell.h>
 #include <stdio.h>
-#include <tee.h>
 #include <thread.h>
 #include <version.h>
 
 static void print_os_info(void);
-static int open_console(void);
-static int start_shells(void);
 
 /**
  * Main thread.  You can modify this routine to customize what Embedded Xinu
- * does when it starts up.
+ * does when it starts up.  The default is designed to do something reasonable
+ * on all platforms based on the devices and features configured.
  */
 thread main(void)
 {
-    /* Print information about the operating system.  */
+#if HAVE_SHELL
+    int shelldevs[4][3];
+    uint nshells = 0;
+#endif
+
+    /* Print information about the operating system  */
     print_os_info();
 
-#ifdef CONSOLE
-    /* Associate the CONSOLE with the main input and output devices  */
-    if (SYSERR == open_console())
-    {
-        kprintf("WARNING: Can't open CONSOLE device\r\n");
-    }
-#endif
-
-#if defined(TTY1) && defined(SERIAL1)
-    /* Associate TTY1 with second serial port, if present.  */
-    if (SYSERR == open(TTY1, SERIAL1))
-    {
-        kprintf("WARNING: Can't open TTY1 over SERIAL1\r\n");
-    }
-#endif
-
-#if NETHER
     /* Open all ethernet devices */
+#if NETHER
     {
-        int dev;
+        uint i;
 
-        for (dev = ETH0; dev < ETH0 + NETHER; dev++)
+        for (i = 0; i < NETHER; i++)
         {
-            if (SYSERR == open(dev))
+            if (SYSERR == open(ethertab[i].dev->num))
             {
-                kprintf("WARNING: Failed to open ETH%d\r\n", dev - ETH0);
+                kprintf("WARNING: Failed to open %s\r\n",
+                        ethertab[i].dev->name);
             }
         }
     }
+#endif /* NETHER */
+
+    /* Set up the first TTY (CONSOLE)  */
+#if defined(CONSOLE) && defined(SERIAL0)
+    if (OK == open(CONSOLE, SERIAL0))
+    {
+  #if HAVE_SHELL
+        shelldevs[nshells][0] = CONSOLE;
+        shelldevs[nshells][1] = CONSOLE;
+        shelldevs[nshells][2] = CONSOLE;
+        nshells++;
+  #endif
+    }
+    else
+    {
+        kprintf("WARNING: Can't open CONSOLE over SERIAL0\r\n");
+    }
+#elif defined(SERIAL0)
+  #warning "No TTY for SERIAL0"
 #endif
 
-    /* If shell enabled, start one on each available TTY  */
-#if HAVE_SHELL
-    if (SYSERR == start_shells())
+    /* Set up the second TTY (TTY1) if possible  */
+#if defined(TTY1)
+  #if defined(USBKBD0) && defined(FRAMEBUF)
+    /* Associate TTY1 with keyboard and use framebuffer output  */
+    if (OK == open(TTY1, USBKBD0))
     {
-        kprintf("WARNING: Failed to start all shells\n");
+    #if HAVE_SHELL
+        shelldevs[nshells][0] = TTY1;
+        shelldevs[nshells][1] = FRAMEBUF;
+        shelldevs[nshells][2] = FRAMEBUF;
+        nshells++;
+    #endif
+    }
+    else
+    {
+        kprintf("WARNING: Can't open TTY1 over USBKBD0\r\n");
+    }
+  #elif defined(SERIAL1)
+    /* Associate TTY1 with SERIAL1  */
+    if (OK == open(TTY1, SERIAL1))
+    {
+    #if HAVE_SHELL
+        shelldevs[nshells][0] = TTY1;
+        shelldevs[nshells][1] = TTY1;
+        shelldevs[nshells][2] = TTY1;
+        nshells++;
+    #endif
+    }
+    else
+    {
+        kprintf("WARNING: Can't open TTY1 over SERIAL1\r\n");
+    }
+  #endif /* SERIAL1 */
+#else /* TTY1 */
+  #if defined(USBKBD0) && defined(FRAMEBUF)
+    #warning "No TTY for USBKBD0 and FRAMEBUF"
+  #elif defined(SERIAL1)
+    #warning "No TTY for SERIAL1"
+  #endif
+#endif /* TTY1 */
+
+    /* Start shells  */
+#if HAVE_SHELL
+    {
+        uint i;
+        char name[16];
+
+        for (i = 0; i < nshells; i++)
+        {
+            sprintf(name, "SHELL%u", i);
+            if (SYSERR == ready(create
+                                (shell, INITSTK, INITPRIO, name, 3,
+                                 shelldevs[i][0],
+                                 shelldevs[i][1],
+                                 shelldevs[i][2]),
+                                RESCHED_NO))
+            {
+                kprintf("WARNING: Failed to create %s", name);
+            }
+        }
     }
 #endif
 
@@ -117,103 +180,3 @@ static void print_os_info(void)
 #endif
     kprintf("\r\n");
 }
-
-#ifdef CONSOLE
-/* Attempt to open CONSOLE, which is the default TTY device.  Default to the
- * first UART, unless there is a TEE device available, in which case input can
- * also be taken from a USB keyboard (if available) and output can be cloned to
- * a framebuffer (if available).  */
-static int open_console(void)
-{
-    int maindev = -1;
-
-#ifdef SERIAL0
-    maindev = SERIAL0;
-#endif
-
-#if NTEE
-    {
-        int ndevs = 0;
-    #ifdef SERIAL0
-        ndevs++;
-    #endif
-    #ifdef FRAMEBUF
-        ndevs++;
-    #endif
-    #ifdef USBKBD0
-        ndevs++;
-    #endif
-
-        if (ndevs >= 2)
-        {
-            int teedev = teeAlloc();
-            if (SYSERR != teedev)
-            {
-                if (SYSERR != open(teedev, ndevs
-                            #ifdef SERIAL0
-                                   ,SERIAL0
-                            #endif
-                            #ifdef FRAMEBUF
-                                   ,FRAMEBUF
-                            #endif
-                            #ifdef USBKBD0
-                                   ,USBKBD0
-                            #endif
-                                  ))
-                {
-                    maindev = teedev;
-                #ifdef FRAMEBUF
-                    /* Framebuffer is output-only  */
-                    control(teedev, TEE_CTRL_SUBDEV_SET_FLAGS, FRAMEBUF,
-                            TEE_SUBDEV_FLAG_READ_DISABLED);
-                #endif
-                #ifdef USBKBD0
-                    /* Keyboard is input-only  */
-                    control(teedev, TEE_CTRL_SUBDEV_SET_FLAGS, USBKBD0,
-                            TEE_SUBDEV_FLAG_WRITE_DISABLED);
-                #endif
-                    /* Don't let write errors to one device (e.g. FRAMEBUF) mask
-                     * successful writes to another (e.g. SERIAL0).  */
-                    control(teedev, TEE_CTRL_SET_FLAGS, TEE_FLAG_BEST_WRITE, 0);
-                }
-            }
-        }
-    }
-#endif /* NTEE */
-
-    return open(CONSOLE, maindev);
-}
-#endif /* CONSOLE */
-
-#ifdef HAVE_SHELL
-
-/* Start a shell on each opened TTY device  */
-static int start_shells(void)
-{
-    int ttys[NTTY];
-    int nttys = 0;
-    int retval = OK;
-    int i;
-
-#ifdef CONSOLE
-    ttys[nttys++] = CONSOLE;
-#endif
-
-#ifdef TTY1
-    ttys[nttys++] = TTY1;
-#endif
-
-    for (i = 0; i < nttys; i++)
-    {
-        char name[TNMLEN];
-        sprintf(name, "SHELL%d", i);
-        if (SYSERR == ready(create
-                            (shell, INITSTK, INITPRIO, name, 3,
-                             ttys[i], ttys[i], ttys[i]), RESCHED_NO))
-        {
-            retval = SYSERR;
-        }
-    }
-    return retval;
-}
-#endif /* HAVE_SHELL */

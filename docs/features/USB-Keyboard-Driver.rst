@@ -64,7 +64,6 @@ See also
 - :doc:`USB`
 - :ref:`how_to_write_usb_device_driver`
 - :doc:`TTY-Driver`
-- :doc:`Tee-Driver`
 
 References
 ----------

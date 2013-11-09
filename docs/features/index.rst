@@ -20,5 +20,4 @@ platforms.  Platform-specific documentation can be found in
    networking/index
    USB
    USB-Keyboard-Driver
-   Tee-Driver
    *
