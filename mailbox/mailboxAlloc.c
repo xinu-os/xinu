@@ -1,25 +1,30 @@
 /**
  * @file mailboxAlloc.c
- *
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
 #include <mailbox.h>
 #include <memory.h>
 
 /**
  * @ingroup mailbox
  *
- * Allocate a mailbox that allows count outstanding messages.
- * @param count maximum number of messages allowed for the mailbox
- * @return the number of the mailbox, SYSERR if none are available
+ * Allocate a mailbox that allows up to the specified number of outstanding
+ * messages.
+ *
+ * @param count
+ *      Maximum number of messages allowed for the mailbox.
+ *
+ * @return
+ *      The index of the newly allocated mailbox, or ::SYSERR if all mailboxes
+ *      are already in use or other resources could not be allocated.
  */
 syscall mailboxAlloc(uint count)
 {
-    static int nextmbx = 0;
+    static uint nextmbx = 0;
+    uint i;
     struct mbox *mbxptr;
-    ushort i = 0;
+    int retval = SYSERR;
 
     /* wait until other threads are done editing the mailbox table */
     wait(mboxtabsem);
@@ -28,35 +33,31 @@ syscall mailboxAlloc(uint count)
     for (i = 0; i < NMAILBOX; i++)
     {
         nextmbx = (nextmbx + 1) % NMAILBOX;
-        /* when we find a free mailbox set that one up and return it */
-        if (MAILBOX_FREE == mboxtab[nextmbx].state)
-        {
-            mbxptr = &mboxtab[nextmbx];
+        mbxptr = &mboxtab[nextmbx];
 
+        /* when we find a free mailbox set that one up and return it */
+        if (MAILBOX_FREE == mbxptr->state)
+        {
             /* get memory space for the message queue */
             mbxptr->msgs = memget(sizeof(int) * count);
 
             /* check if memory was allocated correctly */
             if (SYSERR == (int)mbxptr->msgs)
             {
-                /* signal and return SYSERR */
-                signal(mboxtabsem);
-                return SYSERR;
+                break;
             }
 
             /* initialize mailbox details and semaphores */
             mbxptr->max = count;
-
             mbxptr->sender = semcreate(count);
             mbxptr->receiver = semcreate(0);
-            if ((SYSERR ==
-                 (int)mbxptr->sender)
-                || (SYSERR == (int)mbxptr->receiver))
+            if ((SYSERR == (int)mbxptr->sender) ||
+                (SYSERR == (int)mbxptr->receiver))
             {
                 memfree(mbxptr->msgs, sizeof(int) * (mbxptr->max));
                 semfree(mbxptr->sender);
                 semfree(mbxptr->receiver);
-                return SYSERR;
+                break;
             }
             mbxptr->count = 0;
             mbxptr->start = 0;
@@ -64,15 +65,15 @@ syscall mailboxAlloc(uint count)
             /* mark this mailbox as being used */
             mbxptr->state = MAILBOX_ALLOC;
 
-            /* signal this thread is done editing the mbox tab */
-            signal(mboxtabsem);
-
-            /* return the this entry in the mboxtab */
-            return nextmbx;
+            /* return value is index of the allocated mailbox */
+            retval = nextmbx;
+            break;
         }
     }
 
-    /* signal and return SYSERR because we didn't find a free spot */
+    /* signal this thread is done editing the mbox tab */
     signal(mboxtabsem);
-    return SYSERR;
+
+    /* return either SYSERR or the index of the allocated mailbox */
+    return retval;
 }

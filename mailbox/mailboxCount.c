@@ -1,40 +1,45 @@
 /**
  * @file mailboxCount.c
- *
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
 #include <interrupt.h>
 #include <mailbox.h>
 
 /**
  * @ingroup mailbox
  *
- * Count the number of messages in a mailbox.
- * @param box the number of the mailbox to count
- * @return count of messages in mailbox, SYSERR if error occured
+ * Retrieve the number of outstanding messages in the specified mailbox.
+ *
+ * @param box
+ *      The index of the mailbox for which to retrieve the number of outstanding
+ *      messages.
+ *
+ * @return
+ *      The number of messages in the mailbox, or ::SYSERR if @p box did not
+ *      specify a valid allocated mailbox.
  */
 syscall mailboxCount(mailbox box)
 {
-    struct mbox *mbxptr;
+    const struct mbox *mbxptr;
     irqmask im;
-    uint count;
+    int retval;
 
-    if (box >= NMAILBOX)
+    if (!(0 <= box && box < NMAILBOX))
     {
         return SYSERR;
     }
 
     mbxptr = &mboxtab[box];
-    if (mbxptr->state != MAILBOX_ALLOC)
-    {
-        return SYSERR;
-    }
-
     im = disable();
-    count = mbxptr->count;
+    if (MAILBOX_ALLOC == mbxptr->state)
+    {
+        retval = mbxptr->count;
+    }
+    else
+    {
+        retval = SYSERR;
+    }
     restore(im);
-
-    return count;
+    return retval;
 }

@@ -1,6 +1,5 @@
 /**
  * @file mailbox.h
- *
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
