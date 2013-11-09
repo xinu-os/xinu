@@ -48,6 +48,8 @@ syscall mailboxAlloc(uint count)
             }
 
             /* initialize mailbox details and semaphores */
+            mbxptr->count = 0;
+            mbxptr->start = 0;
             mbxptr->max = count;
             mbxptr->sender = semcreate(count);
             mbxptr->receiver = semcreate(0);
@@ -59,8 +61,6 @@ syscall mailboxAlloc(uint count)
                 semfree(mbxptr->receiver);
                 break;
             }
-            mbxptr->count = 0;
-            mbxptr->start = 0;
 
             /* mark this mailbox as being used */
             mbxptr->state = MAILBOX_ALLOC;
