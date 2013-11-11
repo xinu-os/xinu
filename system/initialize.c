@@ -96,10 +96,7 @@ static int sysinit(void)
 {
     int i;
     struct thrent *thrptr;      /* thread control block pointer  */
-    struct sement *semptr;      /* semaphore entry pointer       */
-    struct monent *monptr;      /* monitor entry pointer         */
     struct memblock *pmblock;   /* memory block pointer          */
-    struct bfpentry *bfpptr;
 
     /* Initialize system variables */
     /* Count this NULLTHREAD as the first thread in the system. */
@@ -134,27 +131,20 @@ static int sysinit(void)
     /* Initialize semaphores */
     for (i = 0; i < NSEM; i++)
     {
-        semptr = &semtab[i];
-        semptr->state = SFREE;
-        semptr->count = 0;
-        semptr->queue = queinit();
+        semtab[i].state = SFREE;
+        semtab[i].queue = queinit();
     }
 
     /* Initialize monitors */
     for (i = 0; i < NMON; i++)
     {
-        monptr = &montab[i];
-        monptr->state = SFREE;
-        monptr->count = 0;
-        monptr->owner = NOOWNER;
-        monptr->sem = NULL;
+        montab[i].state = MFREE;
     }
 
     /* Initialize buffer pools */
     for (i = 0; i < NPOOL; i++)
     {
-        bfpptr = &bfptab[i];
-        bfpptr->state = BFPFREE;
+        bfptab[i].state = BFPFREE;
     }
 
     /* initialize thread ready list */

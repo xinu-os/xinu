@@ -167,19 +167,21 @@ thread shell(int indescrp, int outdescrp, int errdescrp)
     stderr = errdescrp;
 
     /* Print shell banner to framebuffer, if exists */
-#if FRAMEBUF
-    foreground = RASPBERRY;
-    printf(SHELL_BANNER_PI_NONVT100);
-    foreground = LEAFGREEN;
-    printf(SHELL_START);
-    foreground = GREEN;
-#else 
-    printf(SHELL_BANNER);
-    printf(SHELL_START);
+#if defined(FRAMEBUF)
+    if (indescrp == FRAMEBUF)
+    {
+        foreground = RASPBERRY;
+        printf(SHELL_BANNER_NONVT100);
+        foreground = LEAFGREEN;
+        printf(SHELL_START);
+        foreground = GREEN;
+    }
+    else
 #endif
-
-
-   
+    {
+        printf(SHELL_BANNER);
+        printf(SHELL_START);
+    }
 
     /* Continually receive and handle commands */
     while (TRUE)
