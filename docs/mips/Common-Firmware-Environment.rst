@@ -49,10 +49,10 @@ Command Line Interface
 
 The CFE Command Line Interface (CLI) is a very simple "shell-like"
 command prompt. It has a few environmental variables and minimal
-functionality. However, it is complex enough power to load a boot image
-over the network and begin executing code. The User interface is
-described on page 19 of 145 in the `CFE
-documentation <:Image:Cfe-broadcom.pdf>`__.
+functionality. However, it is complex enough power to load a boot
+image over the network and begin executing code. The User interface is
+described on page 19 of 145 in the `CFE documentation
+<http://melbourne.wireless.org.au/files/wrt54/cfe.pdf>`__.
 
 To get the to the CLI, you can use either the power-on method or load
 OpenWRT and type reboot. The CFE boot screen looks like:

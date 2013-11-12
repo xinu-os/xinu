@@ -17,6 +17,8 @@ follows:
 Note that the :doc:`WRT54GL` only has 16 MB of main memory, so a 1-1
 mapping is not be available above ``0x..FF FFFF``.
 
+.. _mips_user_segment:
+
 User Segment
 ------------
 
@@ -46,8 +48,8 @@ instructions long and begins at ``0x8000 0000``.
 User Segment under Xinu
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Embedded Xinu has basic `memory management
-</features/Memory-Management>`_ as of the 2.0 release.  During
+Embedded Xinu has basic :doc:`memory management
+</features/Memory-Management>` as of the 2.0 release.  During
 initialization, the kernel allocates some amount of memory (defined in
 ``xinu.conf`` as ``UHEAP_SIZE``) to act as the user memory heap. Once
 this memory is initialized, calls to ``malloc`` and ``free`` will use

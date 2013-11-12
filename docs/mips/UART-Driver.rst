@@ -6,7 +6,7 @@ UART driver
    This page appears to have been written with :doc:`WRT54GL` routers
    in mind and may or may not be applicable to other platforms.
 
-.. image:: UartAsyncDriver.png
+.. image:: images/UartAsyncDriver.png
    :width: 450px
    :align: right
 

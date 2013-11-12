@@ -29,4 +29,4 @@ WRT54Gv8 : 0x00810904
 
 WRT350Nv1.0 : 0x00810904
 
-.. figure:: Impcode.png
+.. figure:: images/Impcode.png

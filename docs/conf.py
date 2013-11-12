@@ -183,7 +183,13 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+
+# Increase the DPI from the default of 72 to get images sizes specified in
+# pixels to look similar in the HTML and PDF outputs
+'preamble': """
+        \pdfpxdimen=1in
+        \divide\pdfpxdimen by 144
+    """,
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

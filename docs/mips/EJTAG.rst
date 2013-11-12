@@ -56,22 +56,22 @@ cable can be no longer than 6" (not 6'). This is partially substantiated
 by photographs "out there" of similar 6 inch cables used with a variety
 of devices.
 
-.. figure:: Te_jtag_cable.png
+.. figure:: images/Te_jtag_cable.png
    :width: 900px
 
    Total Embedded buffered cable
 
-.. figure:: Wiggler.png
+.. figure:: images/Wiggler.png
    :width: 700px
 
    "wiggler" clone from OpenWRT
 
-.. figure:: JTAGunbuffered.png
+.. figure:: images/JTAGunbuffered.png
    :width: 400px
 
    unbuffered cable from OpenWRT; used by de-brick utility
 
-.. figure:: Xinu-Wiggler.png
+.. figure:: images/Xinu-Wiggler.png
    :width: 700px
 
    Our current buffer/wiggler setup

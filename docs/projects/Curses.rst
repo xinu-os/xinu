@@ -5,12 +5,12 @@ Curses
 
    {{Historical}}
 
-`Ncurses <http://en.wikipedia.org/wiki/Ncurses>`__ is a programming
-library API for implementing text user interfaces. Currently, XINU's
-interface for output is limited to sequential lines of output using the
-`TTY driver <TTY_Driver>`__ and `serial driver <UART_Driver>`__. The
-addition of an ncurses library in XINU would allow for more advanced
-text based interfaces.
+:wikipedia`Ncurses` is a programming library API for implementing text
+user interfaces. Currently, XINU's interface for output is limited to
+sequential lines of output using the :doc:`TTY driver
+</features/TTY-Driver>` and :doc:`serial driver </mips/UART-Driver>`.
+The addition of an ncurses library in XINU would allow for more
+advanced text based interfaces.
 
 Why it is called curses
 -----------------------
@@ -65,4 +65,3 @@ Resources
 -  Gookin, Dan. *Programmer's Guide to nCurses*. Indianapolis: Wiley,
    2007.
 -  `Announcing ncurses 5.6 <http://www.gnu.org/software/ncurses/>`__
-

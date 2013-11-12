@@ -31,7 +31,7 @@ semaphore table, and thread table.
 
 The two important functions associated with monitors are ``lock()``
 and ``unlock()``. Full C code for these functions can be found in
-:source:`system/lock.c`` and :source:`system/unlock.c`.  It is
+:source:`system/lock.c` and :source:`system/unlock.c`.  It is
 important to notice that these functions themselves must be
 "synchronized" to ensure correctness.  In the code we have disabled
 interrupts, but a more lightweight synchronization mechanism could

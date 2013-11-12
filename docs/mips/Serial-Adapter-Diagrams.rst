@@ -10,11 +10,11 @@ between an `Etherlite serial bay and XINU backends
 for UART 0 (DTE). The second diagram is for the platform-dependent
 UART 1 (DCE).
 
-.. image:: DB9M.png
+.. image:: images/DB9M.png
    :width: 400px
    :align: center
 
-.. image:: NullModem.png
+.. image:: images/NullModem.png
    :width: 400px
    :align: center
 
@@ -34,14 +34,14 @@ Baytech serial-controlled power strip and the EtherLite terminal annex.
 The final two diagrams are the Baytech/Etherlite diagram broken into two
 parts, representing the mating of two individual RJ45/DB9 adapters.
 
-.. image:: BaytechWiring.png
+.. image:: images/BaytechWiring.png
    :width: 500px
    :align: center
 
-.. image:: DB9M.png
+.. image:: images/DB9M.png
    :width: 300px
    :align: center
 
-.. image:: Baytech.png
+.. image:: images/Baytech.png
    :width: 300px
    :align: center

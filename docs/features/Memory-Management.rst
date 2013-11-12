@@ -110,7 +110,7 @@ Translation lookaside buffer
 To facilitate memory protection, XINU uses the translation lookaside
 buffer (TLB) built into the MIPS processors of the WRT54GL series of
 routers. When a piece of software attempts to access memory in the
-`user segment <Memory#User_Segment>`__, a TLB load or store exception
+:ref:`user segment <mips_user_segment>`, a TLB load or store exception
 will occur. When this occurs the processor jumps to a specific
 exception handler which allows the kernel to look up the page table
 entry, check if the faulting thread is in the same memory space as the
