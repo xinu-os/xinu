@@ -1,10 +1,8 @@
 /**
  * @file icmpInit.c
- *
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
-#include <stddef.h>
 #include <mailbox.h>
 #include <icmp.h>
 #include <stdlib.h>

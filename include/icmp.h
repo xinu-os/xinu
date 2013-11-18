@@ -1,6 +1,5 @@
 /*
  * @file icmp.h
- *
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
@@ -151,9 +150,6 @@ struct icmpEchoQueue
 
 extern struct icmpEchoQueue echotab[NPINGQUEUE];
 
-/* Variable to indicate trace route is active */
-extern bool tracing;
-
 /* ICMP echo request queue */
 extern mailbox icmpqueue;
 
@@ -161,11 +157,12 @@ extern mailbox icmpqueue;
 thread icmpDaemon(void);
 syscall icmpInit(void);
 syscall icmpRecv(struct packet *);
-syscall icmpDestUnreach(const struct packet *, int);
-syscall icmpEchoReply(struct packet *, struct netif *);
+syscall icmpDestUnreach(const struct packet *, uchar);
 syscall icmpEchoRequest(struct netaddr *dst, ushort id, ushort seq);
-syscall icmpRedirect(struct packet *, int code, struct rtEntry *);
-syscall icmpSend(struct packet *, uchar, uchar, int, struct netaddr *);
-syscall icmpTimeExceeded(struct packet *, int code);
+syscall icmpEchoReply(struct packet *request);
+syscall icmpRedirect(struct packet *, uchar code, struct rtEntry *);
+syscall icmpSend(struct packet *pkt, uchar type, uchar code,
+                 uint datalen, struct netaddr *src, struct netaddr *dst);
+syscall icmpTimeExceeded(struct packet *, uchar code);
 
 #endif                          /* _NET_H_ */

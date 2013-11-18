@@ -1,13 +1,11 @@
 /**
  * @file icmpDestUnreach.c
- *
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
-#include <stddef.h>
 #include <ipv4.h>
 #include <icmp.h>
-#include <stdlib.h>
+#include <string.h>
 
 /**
  * @ingroup icmp
@@ -17,13 +15,14 @@
  * @param code      ICMP destination unreachable code number
  * @return OK if packet was sent, otherwise SYSERR
  */
-syscall icmpDestUnreach(const struct packet *unreached, int code)
+syscall icmpDestUnreach(const struct packet *unreached, uchar code)
 {
-    struct packet *pkt = NULL;
-    const struct ipv4Pkt *ip = NULL;
+    struct packet *pkt;
+    const struct ipv4Pkt *ip;
     struct netaddr dst;
-    int result = OK;
-    int ihl = 0;
+    int result;
+    int ihl;
+    struct netaddr src;
 
     ICMP_TRACE("destination unreachable (%d)", code);
     pkt = netGetbuf();
@@ -51,7 +50,9 @@ syscall icmpDestUnreach(const struct packet *unreached, int code)
     pkt->len += 4;
     *((ulong *)pkt->curr) = 0;
 
-    result = icmpSend(pkt, ICMP_UNREACH, code, pkt->len, &dst);
+    src.type = 0;
+
+    result = icmpSend(pkt, ICMP_UNREACH, code, pkt->len, &src, &dst);
 
     netFreebuf(pkt);
     return result;

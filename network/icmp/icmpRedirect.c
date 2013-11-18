@@ -1,13 +1,11 @@
 /**
  * @file icmpRedirect.c
- *
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
-#include <stddef.h>
 #include <ipv4.h>
 #include <icmp.h>
-#include <stdlib.h>
+#include <string.h>
 #include <route.h>
 
 /**
@@ -19,14 +17,15 @@
  * @param route new gateway for packet
  * @return OK if packet was sent, otherwise SYSERR
  */
-syscall icmpRedirect(struct packet *redir, int code,
+syscall icmpRedirect(struct packet *redir, uchar code,
                      struct rtEntry *route)
 {
-    struct packet *pkt = NULL;
-    struct ipv4Pkt *ip = NULL;
+    struct packet *pkt;
+    struct ipv4Pkt *ip;
     struct netaddr dst;
-    int result = OK;
-    int ihl = 0;
+    int result;
+    int ihl;
+    struct netaddr src;
 
     ICMP_TRACE("ICMP redirect, code(%d)", code);
     pkt = netGetbuf();
@@ -55,7 +54,8 @@ syscall icmpRedirect(struct packet *redir, int code,
 
     memcpy(pkt->curr, route->gateway.addr, IPv4_ADDR_LEN);
 
-    result = icmpSend(pkt, ICMP_REDIRECT, code, pkt->len, &dst);
+    src.type = 0;
+    result = icmpSend(pkt, ICMP_REDIRECT, code, pkt->len, &src, &dst);
 
     netFreebuf(pkt);
     return result;

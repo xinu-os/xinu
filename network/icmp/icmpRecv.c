@@ -1,19 +1,15 @@
 /**
  * @file icmpRecv.c
- *
  */
 /* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
 
-#include <stddef.h>
 #include <icmp.h>
 #include <clock.h>
-#include <ethernet.h>
 #include <interrupt.h>
 #include <ipv4.h>
 #include <mailbox.h>
 #include <thread.h>
 #include <network.h>
-#include <string.h>
 
 /**
  * @ingroup icmp
@@ -24,11 +20,9 @@
  */
 syscall icmpRecv(struct packet *pkt)
 {
-    struct icmpPkt *icmp = NULL;
-    struct icmpEcho *echo = NULL;
-    struct icmpEchoQueue *eq = NULL;
-    int id = 0, i = 0;
-    irqmask im;
+    struct icmpPkt *icmp;
+    struct icmpEcho *echo;
+    int id;
 
     /* Error check pointers */
     if (NULL == pkt)
@@ -46,6 +40,9 @@ syscall icmpRecv(struct packet *pkt)
         id = net2hs(echo->id);
         if ((id >= 0) && (id < NTHREAD))
         {
+            int i;
+            irqmask im;
+
             im = disable();
 
             echo->arrivcyc = clkcount();
@@ -54,6 +51,8 @@ syscall icmpRecv(struct packet *pkt)
 
             for (i = 0; i < NPINGQUEUE; i++)
             {
+                struct icmpEchoQueue *eq;
+
                 eq = &echotab[i];
                 if (id == eq->tid)
                 {
