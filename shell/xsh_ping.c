@@ -30,7 +30,7 @@ static ulong echoTripTime(struct packet *pkt);
  * Shell command (ping).
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
- * @return OK for success, SYSERR for syntax error
+ * @return SHELL_OK for success, SHELL_ERROR if failed
  */
 shellcmd xsh_ping(int nargs, char *args[])
 {
@@ -51,31 +51,18 @@ shellcmd xsh_ping(int nargs, char *args[])
         printf("Options:\n");
         printf("\t<IP>\t\tIP address\n");
         printf("\t-c count\tstop after sending count packets\n");
-        printf
-            ("\t-i interval\tsleep interval milliseconds between pings\n");
+        printf("\t-i interval\tsleep interval milliseconds between pings\n");
         printf("\t--help\t\tdisplay this help and exit\n");
         return OK;
     }
 
-    /* Check for correct number of arguments */
-    if (nargs < 2)
-    {
-        fprintf(stderr, "ping: too few arguments\n");
-        fprintf(stderr, "Try 'ping --help' for more information\n");
-        return SHELL_ERROR;
-    }
 
-    i = 1;
-    while (i < nargs)
+    for (i = 1; i < nargs; i++)
     {
         if (0 == strcmp(args[i], "-c"))
         {
             i++;
-            if (i < nargs)
-            {
-                count = atoi(args[i]);
-            }
-            else
+            if (i == nargs || 1 != sscanf(args[i], "%d", &count))
             {
                 fprintf(stderr, "ping: -c requires integer argument\n");
                 return SHELL_ERROR;
@@ -84,31 +71,38 @@ shellcmd xsh_ping(int nargs, char *args[])
         else if (0 == strcmp(args[i], "-i"))
         {
             i++;
-            if (i < nargs)
-            {
-                interval = atoi(args[i]);
-            }
-            else
+            if (i == nargs || 1 != sscanf(args[i], "%d", &interval))
             {
                 fprintf(stderr, "ping: -i requires integer argument\n");
                 return SHELL_ERROR;
             }
         }
-        else if (SYSERR == dot2ipv4(args[i], &target))
+        else
         {
-            fprintf(stderr, "ping: %s is not a valid IPv4 address.\n",
-                    args[i]);
-            return SHELL_ERROR;
+            break;
         }
-        i++;
     }
 
-    netaddrsprintf(str, &target);
-    if (0 == strcmp(str, "ERROR"))
+    if (i == nargs)
     {
         fprintf(stderr, "ping: destination IP address required.\n");
         return SHELL_ERROR;
     }
+
+    if (i < nargs - 1)
+    {
+        fprintf(stderr, "ping: only one destination IP address is allowed.\n");
+        return SHELL_ERROR;
+    }
+
+    if (SYSERR == dot2ipv4(args[i], &target))
+    {
+        fprintf(stderr, "ping: %s is not a valid IPv4 address.\n", args[i]);
+        return SHELL_ERROR;
+    }
+
+    netaddrsprintf(str, &target);
+
     printf("PING %s\n", str);
 
     echoq = echoQueueAlloc();
