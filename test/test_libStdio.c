@@ -651,6 +651,18 @@ static struct {
         .expected_nmatches = 1,
         .expected_results = { INT_ARG(-123), },
     },
+    { /* Numbers with max width specified  */
+        .input="123456",
+        .format = "%3d%3d",
+        .expected_nmatches = 2,
+        .expected_results = { INT_ARG(123), INT_ARG(456), },
+    },
+    { /* Numbers with max width specified  */
+        .input="-123456",
+        .format = "%3d%3d%c%c",
+        .expected_nmatches = 3,
+        .expected_results = { INT_ARG(-12), INT_ARG(345), STRING_ARG("6"), },
+    },
     { /* Negative number with leading zeroes and leading whitespace */
         .input = "     -000123",
         .format = "%d",

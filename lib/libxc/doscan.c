@@ -300,7 +300,6 @@ static int scan_number_or_string(void *ptr, uchar type, uint maxlen,
     uint base;
     uint len;
     bool had_sign;
-    bool done;
     uint nmatch = 0;
 
     *eofptr = FALSE;
@@ -361,9 +360,13 @@ static int scan_number_or_string(void *ptr, uchar type, uint maxlen,
 
     /* Parse digits.  n is the number we are building up.  */
     n = 0;
-    done = FALSE;
-    while (len < maxlen && c != EOF)
+    for (;;)
     {
+        if (c == EOF)
+        {
+            break;
+        }
+
         c = tolower(c);
         switch (base)
         {
@@ -393,19 +396,22 @@ static int scan_number_or_string(void *ptr, uchar type, uint maxlen,
                 len++;
                 break;
             }
+            /* Fall through */
         default:
             /* Not a digit in this base. */
-            done = TRUE;
             ungetch(arg1, arg2);
-            break;
+            goto num_scanned;
         }
 
-        if (done)
+        if (len >= maxlen)
         {
             break;
         }
+
         c = getch(arg1, arg2);
     }
+
+num_scanned:
 
     if (c == EOF)
     {
