@@ -142,10 +142,10 @@ struct icmpEcho
 
 struct icmpEchoQueue
 {
-    tid_typ tid;
-    int head;
-    int tail;
-    struct packet *pkts[NPINGHOLD];
+    tid_typ tid;        /**< ID of thread that send the ICMP Echo Request.  */
+    int head;           /**< Position to store next ICMP Echo Reply.        */
+    int tail;           /**< Position of next ICMP Echo Reply to get.       */
+    struct packet *pkts[NPINGHOLD]; /*< Stored ICMP Echo Replies.           */
 };
 
 extern struct icmpEchoQueue echotab[NPINGQUEUE];

@@ -1,49 +1,62 @@
 /*
- * @file     xsh_ping.c
- *
+ * @file xsh_ping.c
  */
-/* Embedded Xinu, Copyright (C) 2009.  All rights reserved. */
+/* Embedded Xinu, Copyright (C) 2009, 2013.  All rights reserved. */
 
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <thread.h>
-#include <string.h>
-#include <network.h>
-#include <ipv4.h>
-#include <icmp.h>
-#include <clock.h>
-#include <shell.h>
-#include <interrupt.h>
-#include <platform.h>
+#include <conf.h>
 
 #if NETHER
+
+#include <clock.h>
+#include <icmp.h>
+#include <interrupt.h>
+#include <ipv4.h>
+#include <limits.h>
+#include <network.h>
+#include <platform.h>
+#include <shell.h>
+#include <stdio.h>
+#include <string.h>
+#include <thread.h>
+
 static int echoQueueAlloc(void);
-static int echoQueueDealloc(int echoent);
+static void echoQueueDealloc(int echoent);
 static struct packet *echoQueueGet(int echoent);
-static void echoPrintPkt(struct packet *pkt, ulong elapsed);
-static ulong echoTripTime(struct packet *pkt);
+static void echoPrintPkt(const struct packet *pkt, ulong elapsed);
+static ulong echoTripTime(const struct packet *pkt);
+static ulong tickDiff(ulong startsec, ulong startticks,
+                      ulong endsec, ulong endticks);
 
 /**
  * @ingroup shell
  *
  * Shell command (ping).
+ *
  * @param nargs  number of arguments in args array
  * @param args   array of arguments
- * @return SHELL_OK for success, SHELL_ERROR if failed
+ *
+ * @return
+ *      ::SHELL_OK if successful; ::SHELL_ERROR if there was a syntax error or
+ *      any echo requests could not be sent.  (Failure to receive echo replies
+ *      is not considered a cause to return ::SHELL_ERROR.)
  */
 shellcmd xsh_ping(int nargs, char *args[])
 {
-    int i = 0;
-    int interval = 1000, count = 10, recv = 0, echoq = 0;
-    ulong rtt = 0, min = 0, max = 0, total = 0;
-    ulong startsec = 0, startms = 0;
+    uint i;
+    uint interval = 1000;
+    uint intervalticks;
+    uint count = 10;
+    uint num_recv = 0;
+    int echoq;
+    ulong min_rtt = ULONG_MAX, max_rtt = 0, total_rtt = 0;
+    ulong startsec, startticks;
+    ulong endsec, endticks;
     struct netaddr target;
-    struct packet *pkt = NULL;
-    char str[50];
+    char target_str[50];
+    irqmask im;
 
-    /* Output help, if '--help' argument was supplied */
-    if (nargs == 2 && strcmp(args[1], "--help") == 0)
+    /* Output help if '--help' argument was supplied.  */
+    if (2 == nargs && 0 == strcmp(args[1], "--help"))
     {
         printf("Usage: ping <IP>\n\n");
         printf("Description:\n");
@@ -53,25 +66,31 @@ shellcmd xsh_ping(int nargs, char *args[])
         printf("\t-c count\tstop after sending count packets\n");
         printf("\t-i interval\tsleep interval milliseconds between pings\n");
         printf("\t--help\t\tdisplay this help and exit\n");
-        return OK;
+        return SHELL_OK;
     }
-
 
     for (i = 1; i < nargs; i++)
     {
         if (0 == strcmp(args[i], "-c"))
         {
+            char tmp;
+
             i++;
-            if (i == nargs || 1 != sscanf(args[i], "%d", &count))
+            if (i == nargs ||
+                1 != sscanf(args[i], "%u%c", &count, &tmp) ||
+                0 >= count)
             {
-                fprintf(stderr, "ping: -c requires integer argument\n");
+                fprintf(stderr, "ping: -c requires positive integer argument\n");
                 return SHELL_ERROR;
             }
         }
         else if (0 == strcmp(args[i], "-i"))
         {
+            char tmp;
+
             i++;
-            if (i == nargs || 1 != sscanf(args[i], "%d", &interval))
+            if (i == nargs ||
+                1 != sscanf(args[i], "%u%c", &interval, &tmp))
             {
                 fprintf(stderr, "ping: -i requires integer argument\n");
                 return SHELL_ERROR;
@@ -101,9 +120,9 @@ shellcmd xsh_ping(int nargs, char *args[])
         return SHELL_ERROR;
     }
 
-    netaddrsprintf(str, &target);
+    netaddrsprintf(target_str, &target);
 
-    printf("PING %s\n", str);
+    printf("PING %s\n", target_str);
 
     echoq = echoQueueAlloc();
     if (SYSERR == echoq)
@@ -112,101 +131,135 @@ shellcmd xsh_ping(int nargs, char *args[])
         return SHELL_ERROR;
     }
 
+    im = disable();
     startsec = clktime;
-    startms = clkticks;
+    startticks = clkticks;
+    restore(im);
+
+    intervalticks = interval * CLKTICKS_PER_SEC / 1000;
 
     for (i = 0; i < count; i++)
     {
+        ulong sendsec, sendticks;
+
         // Send ping packet
-        if (SYSERR == icmpEchoRequest(&target, gettid(), i))
+        if (OK != icmpEchoRequest(&target, gettid(), i))
         {
-            printf("...Failed to reach %s\n", str);
+            printf("...Failed to reach %s\n", target_str);
+            echoQueueDealloc(echoq);
             return SHELL_ERROR;
         }
 
-        sleep(interval);
-        if (NOMSG != recvclr())
-        {
-            // pick reply packets off of the queue
-            pkt = echoQueueGet(echoq);
-            while ((NULL != (ulong)pkt) && (SYSERR != (ulong)pkt))
-            {
-                rtt = echoTripTime(pkt);
-                total += rtt;
-                if ((rtt < min) || (0 == min))
-                {
-                    min = rtt;
-                }
-                if (rtt > max)
-                {
-                    max = rtt;
-                }
+        im = disable();
+        sendsec = clktime;
+        sendticks = clkticks;
+        restore(im);
 
+        // Wait for response
+        if (TIMEOUT != recvtime(intervalticks))
+        {
+            struct packet *pkt;
+
+            // pick reply packets off of the queue
+            while (NULL != (pkt = echoQueueGet(echoq)))
+            {
+                ulong rtt;
+
+                rtt = echoTripTime(pkt);
+                total_rtt += rtt;
+                min_rtt = min(min_rtt, rtt);
+                max_rtt = max(max_rtt, rtt);
                 echoPrintPkt(pkt, rtt);
                 netFreebuf(pkt);
-                recv++;
-                pkt = echoQueueGet(echoq);
+                num_recv++;
+            }
+
+            // Sleep for remaining time
+            if (i < count - 1)
+            {
+                ulong elapsedticks;
+                ulong recvsec, recvticks;
+
+                im = disable();
+                recvsec = clktime;
+                recvticks = clkticks;
+                restore(im);
+
+                elapsedticks = tickDiff(sendsec, sendticks, recvsec, recvticks);
+
+                if (elapsedticks < intervalticks)
+                {
+                    sleep((intervalticks - elapsedticks) * 1000 / CLKTICKS_PER_SEC);
+                }
             }
         }
     }
+
     echoQueueDealloc(echoq);
 
-    netaddrsprintf(str, &target);
-    printf("--- %s ping statistics ---\n", str);
-    printf("%d packets transmitted, %d received,", count, recv);
-    printf(" %d%% packet loss,", (count - recv) * 100 / count);
-    printf(" time %lums\n", (clktime - startsec) * 1000 +
-           ((clkticks - startms) * 1000) / CLKTICKS_PER_SEC);
-    printf("rtt min/avg/max = %lu.%03lu/", min / 1000, min % 1000);
-    if (0 != recv)
+    if (min_rtt == ULONG_MAX)
     {
-        printf("%lu.%03lu/", (total / recv) / 1000, (total / recv) % 1000);
+        min_rtt = 0;
+    }
+
+    im = disable();
+    endsec = clktime;
+    endticks = clkticks;
+    restore(im);
+
+    printf("--- %s ping statistics ---\n", target_str);
+    printf("%u packets transmitted, %u received,", count, num_recv);
+    printf(" %u%% packet loss,", (count - num_recv) * 100 / count);
+    printf(" time %lums\n",
+           tickDiff(startsec, startticks,
+                    endsec, endticks) * 1000 / CLKTICKS_PER_SEC);
+    printf("rtt min/avg/max = %lu.%03lu/", min_rtt / 1000, min_rtt % 1000);
+    if (0 != num_recv)
+    {
+        printf("%lu.%03lu/", (total_rtt / num_recv) / 1000,
+               (total_rtt / num_recv) % 1000);
     }
     else
     {
         printf("-/");
     }
-    printf("%lu.%03lu ms\n", max / 1000, max % 1000);
+    printf("%lu.%03lu ms\n", max_rtt / 1000, max_rtt % 1000);
 
     return SHELL_OK;
 }
 
-/**
- * Search for an echo reply queue that is not in use.
- */
+/* Allocate an ICMP Echo Reply queue.  Return index of allocated queue, or
+ * SYSERR if none are available.  */
 static int echoQueueAlloc(void)
 {
     irqmask im;
-    int i = 0;
+    int i;
+    int retval;
 
     im = disable();
+    retval = SYSERR;
+
     for (i = 0; i < NPINGQUEUE; i++)
     {
         if (BADTID == echotab[i].tid)
         {
             echotab[i].tid = gettid();
-            restore(im);
-            return i;
+            retval = i;
+            break;
         }
     }
 
     restore(im);
-    return SYSERR;
+    return retval;
 }
 
-/**
- * Give up an echo reply queue, and flush any loitering packets.
- */
-static int echoQueueDealloc(int echoent)
+/* Release an echo reply queue, freeing any buffered packets.  */
+static void echoQueueDealloc(int echoent)
 {
     irqmask im;
-    struct packet *pkt = NULL;
-    struct icmpEchoQueue *eq = NULL;
+    struct packet *pkt;
+    struct icmpEchoQueue *eq;
 
-    if ((echoent < 0) || (echoent >= NPINGQUEUE))
-    {
-        return SYSERR;
-    }
     eq = &echotab[echoent];
 
     im = disable();
@@ -214,95 +267,117 @@ static int echoQueueDealloc(int echoent)
     while (eq->tail != eq->head)
     {
         pkt = eq->pkts[eq->tail];
-        ICMP_TRACE("Discarding ping packet from closed queue %d",
-                   echoent);
+        ICMP_TRACE("Discarding ping packet from closed queue %d", echoent);
         netFreebuf(pkt);
         eq->tail = (eq->tail + 1) % NPINGHOLD;
     }
 
     restore(im);
-    return OK;
 }
 
-/**
- * Fetch a packet from an echo reply queue.
- */
+/* Fetch a packet from an ICMP Echo Reply queue.  Returns a pointer to the
+ * resulting packet buffer, or NULL if no packets are available in the specified
+ * queue.  */
 static struct packet *echoQueueGet(int echoent)
 {
     irqmask im;
-    struct packet *pkt = NULL;
-    struct icmpEchoQueue *eq = NULL;
+    struct packet *pkt;
+    struct icmpEchoQueue *eq;
 
-    if ((echoent < 0) || (echoent >= NPINGQUEUE))
-    {
-        return (struct packet *)SYSERR;
-    }
     eq = &echotab[echoent];
-
     im = disable();
-
-    if (eq->tid != gettid())
+    if (eq->head != eq->tail)
     {
-        restore(im);
-        return (struct packet *)SYSERR;
+        pkt = eq->pkts[eq->tail];
+        eq->tail = (eq->tail + 1) % NPINGHOLD;
     }
-
-    if (eq->head == eq->tail)
+    else
     {
-        restore(im);
-        return (struct packet *)NULL;
+        pkt = NULL;
     }
-    pkt = eq->pkts[eq->tail];
-    eq->tail = (eq->tail + 1) % NPINGHOLD;
 
     restore(im);
     return pkt;
 }
 
-/**
- * Print out a echo reply packet.
- */
-static void echoPrintPkt(struct packet *pkt, ulong elapsed)
+/* Prints information from an ICMP Echo Reply packet.
+ *
+ * @elapsed specifies the number of microseconds that have elapsed since the
+ * corresponding ICMP Echo Request was sent.  */
+static void echoPrintPkt(const struct packet *pkt, ulong elapsed)
 {
-    struct icmpPkt *icmp = NULL;
-    struct icmpEcho *echo = NULL;
-    struct ipv4Pkt *ip = NULL;
+    const struct ipv4Pkt *ip;
+    const struct icmpPkt *icmp;
+    const struct icmpEcho *echo;
     struct netaddr src;
-    char str[50];
+    char src_str[50];
 
-    ip = (struct ipv4Pkt *)pkt->nethdr;
-    icmp = (struct icmpPkt *)pkt->curr;
-    echo = (struct icmpEcho *)icmp->data;
+    ip = (const struct ipv4Pkt *)pkt->nethdr;
+    icmp = (const struct icmpPkt *)pkt->curr;
+    echo = (const struct icmpEcho *)icmp->data;
 
     src.type = NETADDR_IPv4;
     src.len = IPv4_ADDR_LEN;
     memcpy(src.addr, ip->src, src.len);
 
-    netaddrsprintf(str, &src);
-    printf("%d bytes from %s: ", net2hs(ip->len), str);
+    netaddrsprintf(src_str, &src);
+    printf("%d bytes from %s: ", net2hs(ip->len), src_str);
     printf("icmp_seq=%d ttl=%d ", net2hs(echo->seq), ip->ttl);
     printf("time=%lu.%03lu ms\n", elapsed / 1000, elapsed % 1000);
 }
 
-/**
- * Return elapsed trip time in microseconds.
+/*
+ * Return the elapsed round trip time of an ICMP echo request and reply, in
+ * microseconds.
+ *
+ * This relies on the timecyc, timetic, and timesec fields that were stored in
+ * the echo request and echoed back, as well as the arrivcyc, arrivtic, and
+ * arrivsec fields which were set by icmpRecv().
  */
-static ulong echoTripTime(struct packet *pkt)
+static ulong echoTripTime(const struct packet *pkt)
 {
-    struct icmpPkt *icmp = NULL;
-    struct icmpEcho *echo = NULL;
-    ulong elapsed = 0, cycPerTick = 0;
+    const struct icmpPkt *icmp;
+    const struct icmpEcho *echo;
+    ulong cycPerTick;
+    ulong elapsedticks, elapsedcyc;
 
-    icmp = (struct icmpPkt *)pkt->curr;
-    echo = (struct icmpEcho *)icmp->data;
+    icmp = (const struct icmpPkt *)pkt->curr;
+    echo = (const struct icmpEcho *)icmp->data;
 
     cycPerTick = platform.clkfreq / CLKTICKS_PER_SEC;
 
-    elapsed = (echo->arrivcyc - net2hl(echo->timecyc)) % cycPerTick;
-    elapsed += (echo->arrivtic - net2hl(echo->timetic)) * cycPerTick;
-    elapsed +=
-        (echo->arrivsec - net2hl(echo->timesec)) * platform.clkfreq;
-    elapsed = elapsed / (platform.clkfreq / 1000000);
-    return elapsed;
+    elapsedticks = tickDiff(net2hl(echo->timesec), net2hl(echo->timetic),
+                            echo->arrivsec, echo->arrivtic);
+
+    elapsedcyc = elapsedticks * cycPerTick;
+
+    elapsedcyc += (echo->arrivcyc - net2hl(echo->timecyc)) % cycPerTick;
+
+    return elapsedcyc / (platform.clkfreq / 1000000);
 }
+
+/* Returns the number of timer ticks that have elapsed between two times.
+ *
+ * NOTE: This function is needed because tick wraparound occurs before
+ * wraparound in the underlying data type and therefore needs special handling.
+ */
+static ulong tickDiff(ulong startsec, ulong startticks,
+                      ulong endsec, ulong endticks)
+{
+    ulong elapsedticks;
+
+    elapsedticks = (endsec - startsec) * CLKTICKS_PER_SEC;
+
+    if (endticks >= startticks)
+    {
+        elapsedticks += (endticks - startticks);
+    }
+    else
+    {
+        elapsedticks -= (startticks - endticks);
+    }
+
+    return elapsedticks;
+}
+
 #endif /* NETHER */
