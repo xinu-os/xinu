@@ -10,6 +10,8 @@
 #ifndef _INTERRUPT_H_
 #define _INTERRUPT_H_
 
+#include <system/arch/mips/interrupt.h>
+
 /** Address of interrupt request handler.                          */
 #define IRQ_ADDR      0x80000180
 /** Address of Xinu-defined trap (exception) vector.               */

@@ -56,4 +56,21 @@ syscall buffree(void *);
 int bfpalloc(uint, uint);
 syscall bfpfree(int);
 
+#ifndef NPOOL
+#  define NPOOL 0
+#endif
+
+/* Fill in dummy definitions if no pools are defined  */
+#if NPOOL == 0
+#  ifndef POOL_MAX_BUFSIZE
+#    define POOL_MAX_BUFSIZE 0
+#  endif
+#  ifndef POOL_MIN_BUFSIZE
+#    define POOL_MIN_BUFSIZE 0
+#  endif
+#  ifndef POOL_MAX_NBUFS
+#    define POOL_MAX_NBUFS 0
+#  endif
+#endif
+
 #endif                          /* _BUFPOOL_H_ */
