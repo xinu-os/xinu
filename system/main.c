@@ -65,20 +65,20 @@ thread main(void)
 
     /* Set up the second TTY (TTY1) if possible  */
 #if defined(TTY1)
-  #if defined(USBKBD0) && defined(FRAMEBUF)
+  #if defined(KBDMON0)
     /* Associate TTY1 with keyboard and use framebuffer output  */
-    if (OK == open(TTY1, USBKBD0))
+    if (OK == open(TTY1, KBDMON0))
     {
     #if HAVE_SHELL
         shelldevs[nshells][0] = TTY1;
-        shelldevs[nshells][1] = FRAMEBUF;
-        shelldevs[nshells][2] = FRAMEBUF;
+        shelldevs[nshells][1] = TTY1;
+        shelldevs[nshells][2] = TTY1;
         nshells++;
     #endif
     }
     else
     {
-        kprintf("WARNING: Can't open TTY1 over USBKBD0\r\n");
+        kprintf("WARNING: Can't open TTY1 over KBDMON0\r\n");
     }
   #elif defined(SERIAL1)
     /* Associate TTY1 with SERIAL1  */
@@ -97,8 +97,8 @@ thread main(void)
     }
   #endif /* SERIAL1 */
 #else /* TTY1 */
-  #if defined(USBKBD0) && defined(FRAMEBUF)
-    #warning "No TTY for USBKBD0 and FRAMEBUF"
+  #if defined(KBDMON0)
+    #warning "No TTY for KBDMON0"
   #elif defined(SERIAL1)
     #warning "No TTY for SERIAL1"
   #endif
