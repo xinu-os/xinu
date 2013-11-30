@@ -32,8 +32,8 @@ struct tftpFileDataBlock
  *      Remote protocol address to use for the connection (address of TFTP
  *      server).
  * @param[out] len_ret
- *      On success, the length of the file, which is also the length of the
- *      returned buffer, is written into this location.
+ *      On success, the length of the file in bytes, which is also the length of
+ *      the returned buffer, is written into this location.
  *
  * @return
  *      On success, returns a pointer (cast to an @c int) to a buffer containing
