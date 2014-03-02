@@ -51,9 +51,9 @@ See the :ref:`list of platforms supported by Embedded Xinu
 
 If you do not have "real embedded hardware" available and simply would
 like to try out Embedded Xinu from your laptop or desktop, you can use
-the :doc:`mipsel-qemu <mips/Mipsel-qemu>` platform, which allows you
-to run a little-endian MIPS build of Embedded Xinu from within the
-`QEMU processor emulator <http://qemu.org>`__.
+either the :doc:`mipsel-qemu <mips/Mipsel-qemu>` or the :doc:`arm-qemu
+<arm/ARM-qemu>` ports, each of which runs in the
+`QEMU system emulator <http://qemu.org>`__.
 
 .. _cross_compiler:
 
@@ -360,7 +360,8 @@ are:
 
 - Raspberry Pi:  See :ref:`raspberry_pi_booting` and
   :ref:`xinupi_getting_started`.
-- Mipsel-Qemu:  See :doc:`/mips/Mipsel-qemu`.
+- Mipsel-QEMU:  See :doc:`/mips/Mipsel-qemu`.
+- ARM-QEMU  See :doc:`/arm/ARM-qemu`.
 
 Places to go next:
 

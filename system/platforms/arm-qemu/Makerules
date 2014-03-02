@@ -1,0 +1,21 @@
+# Rules to build files in this directory
+
+# Name of this component (the directory this file is stored in)
+COMP = system/platforms/arm-qemu
+
+# Source files for this component
+S_FILES = ctxsw.S          \
+          halt.S           \
+          intutils.S       \
+          irq_handler.S    \
+          memory_barrier.S \
+          pause.S
+
+C_FILES = platforminit.c     \
+          pl190.c            \
+          setupStack.c       \
+          sp804.c
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

@@ -1,0 +1,27 @@
+#
+# Platform-specific Makefile definitions for the ARM QEMU (emulating an ARM
+# Versatile Platform Baseboard) port of Embedded Xinu.
+#
+
+# Include default ARM definitions
+include arch/arm/platformVars
+
+PLATFORM_NAME := ARM QEMU
+
+# Set extra compiler and assembler flags to specifically target ARM1176 CPUs.
+#
+# Note: When running the resulting kernel With qemu-system-arm, use the option
+# '-cpu arm1176'.  Although QEMU can emulate many different ARM CPUs, ARM1176 is
+# chosen here because it is the same core used on the Raspberry Pi (Embedded
+# Xinu platform "arm-rpi").
+CFLAGS   += -mcpu=arm1176jz-s
+ASFLAGS  += -mcpu=arm1176jz-s
+
+# Add a define so we can test for ARM QEMU in C code if absolutely needed
+DEFS     += -D_XINU_PLATFORM_ARM_QEMU_
+
+# Embedded Xinu components to build into the kernel image
+APPCOMPS := apps mailbox shell test
+
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES  := loopback tty uart-pl011

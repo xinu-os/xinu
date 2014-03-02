@@ -8,7 +8,7 @@
 #include <clock.h>
 #include "pl011.h"
 
-/* NOTE: the following definitions are probably BCM2835 specific */
+#ifdef _XINU_PLATFORM_ARM_RPI_
 
 /* Offset of UART registers from the starti of the GPIO registers. */
 #define UART_GPIO_OFFSET 0x1000
@@ -49,6 +49,7 @@ static void setup_gpio_pins(void *uart_regs)
     udelay(2);
     *GPPUDCLK0_ptr = 0;
 }
+#endif /* _XINU_PLATFORM_ARM_RPI_ */
 
 devcall uartHwInit(device *devptr)
 {
@@ -60,8 +61,10 @@ devcall uartHwInit(device *devptr)
     /* Disable the UART by zeroing the "control register".  */
     regptr->cr = 0;
 
+#ifdef _XINU_PLATFORM_ARM_RPI_
     /* Configure the GPIO pins on the Raspberry Pi correctly. */
     setup_gpio_pins((void*)regptr);
+#endif
 
     /* Poll the "flags register" to wait for the UART to stop transmitting or
      * receiving. */

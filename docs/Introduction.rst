@@ -128,12 +128,14 @@ These are all the platforms on which Embedded Xinu currently runs.
       - ``mipsel-qemu``
       - ``mipsel``
     * - :doc:`Raspberry Pi </arm/rpi/Raspberry-Pi>`
-      - Under Development
-      - Core operating system including wired networking is
-        functional. Some new features are still being worked on, and
-        the full documentation (e.g. for a laboratory setup) hasn't
-        been completed yet.
+      - Supported
+      - Core operating system including wired networking is functional.
       - ``arm-rpi``
+      - ``arm-none-eabi``
+    * - :doc:`arm-qemu </arm/ARM-qemu>`
+      - Supported
+      - Core operating system, excluding wired networking, is functional.
+      - ``arm-qemu``
       - ``arm-none-eabi``
 
 .. _Xinu:
