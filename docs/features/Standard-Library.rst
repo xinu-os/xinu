@@ -53,8 +53,8 @@ libraries in the following ways:
   support; time functions; complex arithmetic.
 
 - Formatted printing and scanning support only a limited range of
-  format specifiers.  See :source:`_doscan() <lib/libxc/_doscan.c>`
-  and :source:`_doprnt() <lib/libxc/_doprint.c>` for more information.
+  format specifiers.  See :source:`_doscan() <lib/libxc/doscan.c>`
+  and :source:`_doprnt() <lib/libxc/doprnt.c>` for more information.
 
 - The ctype functions declared in :source:`include/ctype.h` do not
   handle ``EOF`` (end-of-file) as specified by C99.
