@@ -48,4 +48,8 @@ SECTIONS {
 
     . = ALIGN(64);
     _end = .;
+
+    /DISCARD/ : {
+        *(*)
+    }
 }
