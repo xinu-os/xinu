@@ -49,4 +49,11 @@ SECTIONS {
 
     . = ALIGN(64);
     _end = .;
+
+    /* Discard comment and note (but not debugging) sections.  Some
+     * versions of GNU ld would otherwise automatically place the
+     * ".note.gnu.build-id" section before _start!  */
+    /DISCARD/ : {
+        *(.comment .comment.* .note .note.*)
+    }
 }
