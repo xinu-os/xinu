@@ -40,7 +40,7 @@
 syscall dhcpClient(int descrp, uint timeout, struct dhcpData *data)
 {
     int retval;
-    uint recvTimeout = 2000;  /* Milliseconds to wait before timing out a
+    uint recvTimeout = 5000;  /* Milliseconds to wait before timing out a
                                  given receive (not the whole client)  */
     uint delay = 1000;  /* Milliseconds to wait after non-timeout error */
     ulong starttime = clktime;
