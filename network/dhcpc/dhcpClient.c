@@ -5,6 +5,7 @@
 
 #include <clock.h>
 #include <device.h>
+#include <ether.h>
 #include "dhcp.h"
 #include <stdlib.h>
 #include <string.h>
@@ -88,7 +89,7 @@ syscall dhcpClient(int descrp, uint timeout, struct dhcpData *data)
             data->serverIpv4Addr = 0;     /* Server IP address is unknown  */
 
             /* Client hardware address is known; get it from network device.  */
-            if (SYSERR == control(descrp, NET_GET_HWADDR,
+            if (SYSERR == control(descrp, ETH_CTRL_GET_MAC,
                                   (long)data->clientHwAddr, 0))
             {
                 DHCP_TRACE("Failed to get client hardware address");
