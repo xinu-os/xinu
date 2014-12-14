@@ -165,4 +165,14 @@ The home of the Embedded Xinu project
 More information about the Embedded Xinu Lab at Marquette University
 
     http://www.mscs.mu.edu/~brylow/xinu/
+    
+### Douglas Comer on the Design of the XINU Operating System ###
+
+[Operating System Design: The Xinu Approach (v. 1)](http://www.amazon.com/Operating-System-Design-XINU-Approach/dp/0136375391/ref=sr_1_11?s=books&ie=UTF8&qid=1418550979&sr=1-11), 1983
+
+[Operating System Design: The Xinu Approach, Linksys Version](http://www.amazon.com/Operating-System-Design-Approach-Linksys/dp/143988109X/ref=sr_1_1?ie=UTF8&qid=1418547577&sr=8-1&keywords=the+xinu+approach) - covering Linksys E2100L, 2011
+
+[Operating System Design: The Xinu Approach, Second Edition](http://www.amazon.com/Operating-System-Design-Approach-Second/dp/1498712436/ref=sr_1_3?ie=UTF8&qid=1418547577&sr=8-3&keywords=the+xinu+approach) - covering ARM (Raspberry Pi) and Intel, 2015
+
+    
 
