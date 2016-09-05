@@ -174,7 +174,8 @@ STRIP    := $(COMPILER_ROOT)strip
 OBJCOPY  := $(COMPILER_ROOT)objcopy
 
 # Sanity check: does 'gcc' actually exist?
-ifneq ($(shell if $(CC) --version &> /dev/null; then echo 1; fi),1)
+#ifneq ($(shell if $(CC) --version &> /dev/null; then echo 1; fi),1)
+ifneq ($(shell if $(CC) --version > /dev/null 2>&1; then echo 1; fi),1)
   $(warning $(CC) not found; try overriding COMPILER_ROOT \
 	    (see README.compiling))
 endif
@@ -306,11 +307,11 @@ objects: $(COMP_OBJ)
 
 %.o: %.c
 	@echo -e "\tCompiling" $@
-	$(CC) $(DEPFLAGS) $(CFLAGS) -o $@ $<
+	$(CC) $(DEPFLAGS) $(CFLAGS) -g -o $@ $<
 
 %.o: %.S
 	@echo -e "\tAssembling" $@
-	$(CC) $(DEPFLAGS) $(ASFLAGS) -o $@ $<
+	$(CC) $(DEPFLAGS) $(ASFLAGS) -g -o $@ $<
 
 clean:
 	@echo -e "\tCleaning all objects"
