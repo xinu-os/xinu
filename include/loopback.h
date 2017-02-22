@@ -11,7 +11,9 @@
 #include <stddef.h>
 #include <semaphore.h>
 
+#ifndef LOOP_BUFFER
 #define LOOP_BUFFER 1024        /**< loopback buffer length             */
+#endif
 
 /* LOOP device states */
 #define LOOP_STATE_FREE     0
