@@ -21,12 +21,12 @@ syscall resume(tid_typ tid)
     int prio;
 
     im = disable();
-    thrptr = &thrtab[tid];
     if (isbadtid(tid) || (thrptr->state != THRSUSP))
     {
         restore(im);
         return SYSERR;
     }
+    thrptr = &thrtab[tid];
 
     prio = thrptr->prio;
     ready(tid, RESCHED_YES);
