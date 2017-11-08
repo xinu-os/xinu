@@ -310,7 +310,7 @@ objects: $(COMP_OBJ)
 
 %.o: %.S
 	@echo -e "\tAssembling" $@
-	$(CC) $(DEPFLAGS) $(ASFLAGS) -o $@ $<
+	$(CC) $(DEPFLAGS) $(ASFLAGS) $(ASCFLAGS) -o $@ $<
 
 clean:
 	@echo -e "\tCleaning all objects"
