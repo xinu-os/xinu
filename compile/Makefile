@@ -174,7 +174,7 @@ STRIP    := $(COMPILER_ROOT)strip
 OBJCOPY  := $(COMPILER_ROOT)objcopy
 
 # Sanity check: does 'gcc' actually exist?
-ifneq ($(shell if $(CC) --version &> /dev/null; then echo 1; fi),1)
+ifneq ($(shell if $(CC) --version > /dev/null 2>&1; then echo 1; fi),1)
   $(warning $(CC) not found; try overriding COMPILER_ROOT \
 	    (see README.compiling))
 endif
