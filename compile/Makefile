@@ -175,7 +175,7 @@ OBJCOPY  := $(COMPILER_ROOT)objcopy
 
 # Sanity check: does 'gcc' actually exist?
 ifneq ($(shell if $(CC) --version > /dev/null 2>&1; then echo 1; fi),1)
-  $(warning $(CC) not found; try install both gcc and binutils aiming target platform; also try overriding COMPILER_ROOT \
+  $(warning $(CC) not found; try install both gcc and binutils for target platform; also try overriding COMPILER_ROOT \
 	    (see README.compiling) to fix the problem.)
 endif
 
