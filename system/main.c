@@ -160,7 +160,7 @@ static void print_os_info(void)
             (ulong)platform.minaddr, (ulong)_start - 1);
 #endif
 
-    kprintf("%10d bytes Xinu code.\r\n", (ulong)&_end - (ulong)_start);
+    kprintf("%10d bytes Xinu code.\r\n", (ulong)&_etext - (ulong)_start);
 #ifdef DETAIL
     kprintf("           [0x%08X to 0x%08X]\r\n",
             (ulong)_start, (ulong)&_end - 1);

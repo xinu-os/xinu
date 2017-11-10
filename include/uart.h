@@ -11,8 +11,12 @@
 #include <stddef.h>
 
 /* UART Buffer lengths */
+#ifndef UART_IBLEN
 #define UART_IBLEN      1024
+#endif
+#ifndef UART_OBLEN
 #define UART_OBLEN      1024
+#endif
 
 #define UART_BAUD       115200  /**< Default console baud rate.         */
 
