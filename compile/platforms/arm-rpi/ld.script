@@ -31,6 +31,7 @@ SECTIONS {
     .text : {
         *(.text .text.*)
         *(.rodata .rodata.*)
+        _etext = .;
     }
 
     . = ALIGN(64);

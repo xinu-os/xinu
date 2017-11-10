@@ -45,8 +45,9 @@ extern struct memblock memlist;     /**< head of free memory list           */
 
 /* Other memory data */
 
-extern void *_end;              /**< linker provides end of image       */
-extern void *memheap;           /**< bottom of heap                     */
+extern void *_end;              /**< linker provides end of image           */
+extern void *_etext;            /**< linker provides end of text segment    */
+extern void *memheap;           /**< bottom of heap                         */
 
 /* Memory function prototypes */
 void *memget(uint);

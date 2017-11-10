@@ -11,7 +11,9 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#ifndef TTY_IBLEN
 #define TTY_IBLEN           1024 /**< input buffer length               */
+#endif
 
 /* TTY input flags */
 #define TTY_IRAW            0x01 /**< read unbuffered and uncooked      */

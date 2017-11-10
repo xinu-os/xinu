@@ -35,7 +35,9 @@
 #define BADTID      (-1)        /**< used when invalid tid needed       */
 
 /* thread initialization constants */
+#ifndef INITSTK
 #define INITSTK     65536       /**< initial thread stack size          */
+#endif
 #define INITPRIO    20          /**< initial thread priority            */
 #define MINSTK      128         /**< minimum thread stack size          */
 #ifdef JTAG_DEBUG
