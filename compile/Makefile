@@ -247,7 +247,7 @@ LIB_ARC  := $(LIBS:%=$(LIBDIR)/%.a)
 MAIN_OBJ := $(MAIN_SRC:%.c=%.o)
 
 # Data is relative to the compile directory
-DATA     := data
+DATA     ?= data
 
 DATA_SRC :=
 include $(DATA:%=%/Makerules)
