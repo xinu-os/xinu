@@ -32,7 +32,7 @@ SECTIONS {
     .text : {
         *(.text .text.*)
         *(.rodata .rodata.*)
-        _extext = .;
+        _etext = .;
     }
 
     . = ALIGN(64);
