@@ -21,7 +21,7 @@
  *      The returned pointer is guaranteed to be 8-byte aligned.  Free the block
  *      with memfree() when done with it.
  */
-void *memget(uint nbytes)
+void *memget(uintptr_t nbytes)
 {
     register struct memblock *prev, *curr, *leftover;
     irqmask im;
