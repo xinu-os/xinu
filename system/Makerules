@@ -38,7 +38,7 @@ C_FILES += minijava.c
 # Files for reading tape archives
 C_FILES += tar.c
 
-# Files for readinf device tre
+# Files for reading device tree
 C_FILES += dtb.c
 
 # Add the files to the compile source path
