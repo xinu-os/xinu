@@ -12,6 +12,7 @@ Embedded Xinu documentation contents
    features/index
    mips/index
    arm/index
+   riscv/index
    teaching/index
    projects/index
    development/index
