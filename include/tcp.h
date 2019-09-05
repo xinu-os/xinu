@@ -106,7 +106,7 @@ struct tcb
     ushort dev;          /**< TCP device entry */
     uchar state;         /**< connection state */
     uchar devstate;      /**< allocation state of the device internally */
-    semaphore mutex;     /**< Mutual exclusion sempahore */
+    semaphore mutex;     /**< Mutual exclusion semaphore */
 
     /* Connection details */
     ushort localpt;             /**< Local port number */
