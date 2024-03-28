@@ -67,13 +67,13 @@ Currently, Embedded Xinu supports Linksys WRT54GL, Linksys WRT160NL,
 and the Qemu-mipsel virtual machine.  For an updated list
 of supported platforms, visit:
 
-http://xinu.mscs.mu.edu/List_of_supported_platforms
+https://xinu.cs.mu.edu/index.php/List_of_supported_platforms
 
 In order to communicate with the router, you need to perform a hardware
 modification that will expose the serial port that exists on the PCB.  For
 more information on this process, see:
 
-http://xinu.mscs.mu.edu/Modify_the_Linksys_hardware
+https://xinu.cs.mu.edu/index.php/Modify_the_Linksys_hardware
 
 ### 3.2 Cross-compiler ###
 
@@ -82,7 +82,7 @@ computer's architecture to MIPSEL (little endian MIPS for the 54GL router)
 or MIPS (big endian for the 160NL router).  Instructions on how to do this
 can be found here:
 
-http://xinu.mscs.mu.edu/Build_Xinu#Cross-Compiler
+https://xinu.cs.mu.edu/index.php/Build_Xinu#Cross-Compiler
 
 ### 3.3 Serial communication software ###
 
@@ -91,7 +91,7 @@ a program called tty-connect which can serve the purpose for a UNIX
 environment.  More information about the Xinu Console Tools can be found 
 at:
 
-http://xinu.mscs.mu.edu/Console_Tools#Xinu_Console_Tools
+https://xinu.cs.mu.edu/index.php/Console_Tools#Xinu_Console_Tools
 
 ### 3.4 TFTP server software ###
 
@@ -158,7 +158,7 @@ If all has gone correctly the router you will be greeted with the Xinu Shell
 
 The home of the Embedded Xinu project
 
-    http://xinu.mscs.mu.edu/
+    https://xinu.cs.mu.edu/index.php/
 
 ### Dr. Brylow's Embedded Xinu Lab Infrastructure Page ###
 
