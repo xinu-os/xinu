@@ -1,0 +1,9 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+	"name": "Xinu Build Container",
+	"image": "ghcr.io/xinu-os/xinu-dev-container:v0.1",
+	"mounts": [
+		"source=xinu-bashhistory,target=/commandhistory,type=volume"
+	]
+}
