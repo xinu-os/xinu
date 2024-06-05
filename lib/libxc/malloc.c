@@ -35,7 +35,7 @@ void *malloc(size_t size)
 
     /* acquire memory from kernel */
     pmem = (struct memblock *)memget(size);
-    if (SYSERR == (uint)pmem)
+    if (SYSERR == (intptr_t)pmem)
     {
         return NULL;
     }
