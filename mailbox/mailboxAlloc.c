@@ -42,7 +42,7 @@ syscall mailboxAlloc(uint count)
             mbxptr->msgs = memget(sizeof(int) * count);
 
             /* check if memory was allocated correctly */
-            if (SYSERR == (int)mbxptr->msgs)
+            if (SYSERR == (intptr_t)mbxptr->msgs)
             {
                 break;
             }

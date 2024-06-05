@@ -1,0 +1,24 @@
+#
+# Makefile definitions for Embedded Xinu shared between all supported RISCV64
+# platforms.
+#
+
+TEMPLATE_ARCH := riscv64
+
+# Architecture root and prefix (ignored if user overrides COMPILER_ROOT from the
+# toplevel Makefile).
+ARCH_ROOT     :=
+ARCH_PREFIX   := riscv64-unknown-elf-
+
+# Flag for producing GDB debug information.
+BUGFLAG       := -gstabs+
+
+# Objcopy flags, used for including data files in the resulting binary.
+OCFLAGS       := -I binary -O elf64-littleriscv -B riscv
+
+# Add a way to test for any RISCV64 platform in C code.
+DEFS          += -D_XINU_ARCH_RISCV64_
+
+# Default built target.  For RISCV64 we just translate the kernel into a raw binary.
+$(BOOTIMAGE): xinu.elf
+	$(OBJCOPY) -O binary $^ $@
