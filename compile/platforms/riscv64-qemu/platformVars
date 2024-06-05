@@ -1,0 +1,35 @@
+#
+# Platform-specific Makefile definitions for the RISCV64 SPIKE port
+#
+
+# Include default RISCV64 definitions
+include arch/riscv64/platformVars
+
+PLATFORM_NAME := RISCV64 QEMU
+
+# Set extra compiler and assembler flags
+#
+CFLAGS   += -fPIE -O0
+
+# Add a define so we can test for RISCV64 QEMU in C code if absolutely needed
+DEFS     += -D_XINU_PLATFORM_RISCV64_QEMU_
+
+# Embedded Xinu components to build into the kernel image
+APPCOMPS := shell apps mailbox test
+# TODO: network
+
+# the --no-warn-mismatch option is required for successfull linking of
+# data files: Object files are compiled with the elf e_flags header
+# field according to the ABI setting (0x5 = hard float-double |
+# compressed instructions). Objcopy, on the other hand, does not seem
+# to be able to set compatible flag and without this option final
+# linking would fail.
+LDFLAGS+=--no-warn-mismatch
+
+# Embedded Xinu device drivers to build into the kernel image
+DEVICES  := tty  loopback uart-ns16550
+# TODO: ethloop  udp tcp telnet
+#        raw             \
+#        tcp             \
+#        telnet          \
+#        udp     

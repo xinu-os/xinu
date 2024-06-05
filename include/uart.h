@@ -79,6 +79,7 @@ devcall uartGetc(device *);
 devcall uartPutc(device *, char);
 devcall uartControl(device *, int, long, long);
 interrupt uartInterrupt(void);
+interrupt uartInterruptNoRsch(void);
 void uartStat(ushort);
 
 /**

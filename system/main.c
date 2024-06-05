@@ -129,6 +129,19 @@ thread main(void)
     return 0;
 }
 
+
+#ifdef DETAIL
+extern ulong cpuid;
+#endif
+
+#if __LP64__
+#define HEXWIDTH 16
+#define DECWIDTH 20
+#else
+#define HEXWIDTH 8
+#define DECWIDTH 10
+#endif
+
 /* Start of kernel in memory (provided by linker)  */
 extern void _start(void);
 
@@ -139,44 +152,49 @@ static void print_os_info(void)
 
 #ifdef DETAIL
     /* Output detected platform. */
-    kprintf("Processor identification: 0x%08X\r\n", cpuid);
+    kprintf("Processor identification: 0x%lX\r\n", cpuid);
     kprintf("Detected platform as: %s, %s\r\n\r\n",
             platform.family, platform.name);
 #endif
 
     /* Output Xinu memory layout */
-    kprintf("%10d bytes physical memory.\r\n",
-            (ulong)platform.maxaddr - (ulong)platform.minaddr);
+    kprintf("%*ld bytes physical memory.\r\n",
+	    DECWIDTH, (uintptr_t)platform.maxaddr - (uintptr_t)platform.minaddr);
 #ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)platform.minaddr, (ulong)(platform.maxaddr - 1));
+    kprintf("           [0x%0*X to 0x%0*X]\r\n",
+	    HEXWIDTH, (uintptr_t)platform.minaddr,
+	    HEXWIDTH, (uintptr_t)(platform.maxaddr - 1));
 #endif
 
-
-    kprintf("%10d bytes reserved system area.\r\n",
-            (ulong)_start - (ulong)platform.minaddr);
+    kprintf("%*ld bytes reserved system area.\r\n",
+	    DECWIDTH, (uintptr_t)_start - (uintptr_t)platform.minaddr);
 #ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)platform.minaddr, (ulong)_start - 1);
+    kprintf("           [0x%0*lX to 0x%0*lX]\r\n", 
+	    HEXWIDTH, (uintptr_t)platform.minaddr,
+	    HEXWIDTH, (uintptr_t)_start - 1);
 #endif
 
-    kprintf("%10d bytes Xinu code.\r\n", (ulong)&_etext - (ulong)_start);
+    kprintf("%*ld bytes Xinu code.\r\n", DECWIDTH, (uintptr_t)&_etext - (uintptr_t)_start);
 #ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)_start, (ulong)&_end - 1);
+    kprintf("           [0x%0*lX to 0x%0*lX]\r\n",
+	    HEXWIDTH, (uintptr_t)_start,
+	    HEXWIDTH, (uintptr_t)&_end - 1);
 #endif
 
-    kprintf("%10d bytes stack space.\r\n", (ulong)memheap - (ulong)&_end);
+    kprintf("%*ld bytes stack space.\r\n",
+	    DECWIDTH, (uintptr_t)memheap - (uintptr_t)&_end);
 #ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n",
-            (ulong)&_end, (ulong)memheap - 1);
+    kprintf("           [0x%0*lX to 0x%0*lX]\r\n",
+	    HEXWIDTH, (uintptr_t)&_end,
+	    HEXWIDTH, (uintptr_t)memheap - 1);
 #endif
 
-    kprintf("%10d bytes heap space.\r\n",
-            (ulong)platform.maxaddr - (ulong)memheap);
+    kprintf("%*ld bytes heap space.\r\n",
+            DECWIDTH, (uintptr_t)platform.maxaddr - (uintptr_t)memheap);
 #ifdef DETAIL
-    kprintf("           [0x%08X to 0x%08X]\r\n\r\n",
-            (ulong)memheap, (ulong)platform.maxaddr - 1);
+    kprintf("           [0x%0*lX to 0x%0*lX]\r\n\r\n",
+	    HEXWIDTH, (uintptr_t)memheap,
+	    HEXWIDTH, (uintptr_t)platform.maxaddr - 1);
 #endif
     kprintf("\r\n");
 }

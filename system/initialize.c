@@ -106,9 +106,9 @@ static int sysinit(void)
     memheap = roundmb(memheap);
     platform.maxaddr = truncmb(platform.maxaddr);
     memlist.next = pmblock = (struct memblock *)memheap;
-    memlist.length = (uint)(platform.maxaddr - memheap);
+    memlist.length = (uintptr_t)(platform.maxaddr - memheap);
     pmblock->next = NULL;
-    pmblock->length = (uint)(platform.maxaddr - memheap);
+    pmblock->length = (uintptr_t)(platform.maxaddr - memheap);
 
     /* Initialize thread table */
     for (i = 0; i < NTHREAD; i++)
