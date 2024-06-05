@@ -11,7 +11,9 @@ Steven Munson.  The Motorola 68000 (Sun 3) port of Xinu was developed
 by Shawn Ostermann, circa 1988.  The Sparc port of Xinu was developed
 by Jim Griffioen.  The PowerPC port of Xinu was developed in 2005 by
 Dennis Brylow.  The MIPS implementation of Embedded Xinu was developed
-in 2006 by Dennis Brylow.
+in 2006 by Dennis Brylow. The ARM implementation of Embedded Xinu was developed
+in 2010 by Dennis Brylow and the Embedded Xinu team. The RISC-V implementation 
+of Embedded Xinu was developed in 2023 by Alex Gebhard, Jack Forden, and Dennis Brylow. 
 
    The Embedded Xinu operating system is Copyright (c) 2007, 2008, 2009,
 and 2010 by Douglas Comer and Dennis Brylow.
