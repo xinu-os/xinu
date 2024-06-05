@@ -8,8 +8,8 @@
 #include <stddef.h>
 #include <stdio.h>
 
-static int sgetch(int, int);
-static int sungetch(int, int);
+static int sgetch(int, uintptr_t);
+static int sungetch(int, uintptr_t);
 
 /**
  * @ingroup libxc
@@ -36,7 +36,7 @@ int sscanf(const char *str, const char *format, ...)
     int ret;
 
     va_start(ap, format);
-    ret = _doscan(format, ap, sgetch, sungetch, 0, (int)&str);
+    ret = _doscan(format, ap, sgetch, sungetch, 0, (uintptr_t) &str);
     va_end(ap);
 
     return ret;
@@ -45,7 +45,7 @@ int sscanf(const char *str, const char *format, ...)
 /* The first argument to the below functions is ignored, as we only need one
  * argument to specify the current position in the string.  */
 
-static int sgetch(int _ignored, int _str_p)
+static int sgetch(int _ignored, uintptr_t _str_p)
 {
     const char **str_p = (const char **)_str_p;
     const char *str = *str_p;
@@ -63,7 +63,7 @@ static int sgetch(int _ignored, int _str_p)
     return c;
 }
 
-static int sungetch(int _ignored, int _str_p)
+static int sungetch(int _ignored, uintptr_t _str_p)
 {
     const char **str_p = (const char**)_str_p;
     const char *str = *str_p;

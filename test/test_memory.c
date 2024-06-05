@@ -20,7 +20,7 @@ thread test_memory(bool verbose)
     /* Allocate a small piece of memory */
     testPrint(verbose, "Allocate small piece");
     testblock = (struct memblock *)memget(1);
-    if (SYSERR == (uint)testblock)
+    if (SYSERR == (intptr_t)testblock)
     {
         passed = FALSE;
         testFail(verbose, "memget SYSERR");
@@ -68,7 +68,7 @@ thread test_memory(bool verbose)
     }
 
     saddr = stkget(1);
-    if (SYSERR == (uint)saddr)
+    if (SYSERR == (intptr_t)saddr)
     {
         passed = FALSE;
         testFail(verbose, "\nstkget SYSERR");

@@ -6,8 +6,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-static int getch(int, int);
-static int ungetch(int, int);
+static int getch(int, uintptr_t);
+static int ungetch(int, uintptr_t);
 
 struct ch_buf
 {
@@ -44,14 +44,14 @@ int fscanf(int dev, const char *format, ...)
 
     buf.ch_avail = FALSE;
     va_start(ap, format);
-    ret = _doscan(format, ap, getch, ungetch, dev, (int)&buf);
+    ret = _doscan(format, ap, getch, ungetch, dev, (uintptr_t)&buf);
     va_end(ap);
     return ret;
 }
 
 /* Get a character from the device, storing it in the character buffer in case
  * an unget is requested.  */
-static int getch(int dev, int _ch_buf)
+static int getch(int dev, uintptr_t _ch_buf)
 {
     struct ch_buf *buf = (struct ch_buf *)_ch_buf;
     int c;
@@ -72,7 +72,7 @@ static int getch(int dev, int _ch_buf)
 }
 
 /* Put back a character.  */
-static int ungetch(int dev, int _chbuf)
+static int ungetch(int dev, uintptr_t _chbuf)
 {
     struct ch_buf *buf = (struct ch_buf *)_chbuf;
 

@@ -38,6 +38,9 @@ C_FILES += minijava.c
 # Files for reading tape archives
 C_FILES += tar.c
 
+# Files for reading device tree
+C_FILES += dtb.c
+
 # Add the files to the compile source path
 DIR = ${TOPDIR}/${COMP}
 COMP_SRC += ${C_FILES:%=${DIR}/%}
