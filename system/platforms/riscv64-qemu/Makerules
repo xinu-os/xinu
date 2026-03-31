@@ -1,0 +1,20 @@
+# Rules to build files in this directory
+
+# Name of this component (the directory this file is stored in)
+COMP = system/platforms/riscv64-qemu
+
+# Source files for this component
+S_FILES = intutils.S  \
+	pause.S \
+	halt.S \
+	ctxsw.S		
+
+C_FILES = panic.c \
+	platforminit.c \
+	plic.c \
+	riscvclk.c \
+	setupStack.c 
+
+# Add the files to the compile source path
+DIR = ${TOPDIR}/${COMP}
+COMP_SRC += ${S_FILES:%=${DIR}/%} ${C_FILES:%=${DIR}/%}

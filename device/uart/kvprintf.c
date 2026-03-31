@@ -33,7 +33,7 @@ syscall kvprintf(const char *format, va_list ap)
      * it prevents kprintf()'s from stepping on each other toes if you happen to
      * call kprintf() from an interrupt handler.  */
     im = disable();
-    retval = _doprnt(format, ap, (int (*)(int, int))kputc, (int)&devtab[SERIAL0]);
+    retval = _doprnt(format, ap, (int (*)(int, uintptr_t))kputc, (uintptr_t)&devtab[SERIAL0]);
     restore(im);
     return retval;
 }
