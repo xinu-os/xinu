@@ -235,7 +235,7 @@ static const struct {
     const char *format;
     const char *expected_output;
     uint nargs;
-    uint args[4]; /* Assumes all args are 4 bytes. */
+    uintptr_t args[4]; /* Assumes all args are 4 bytes. */
 } fprintf_specs[] = {
     { /* Empty string */
         .format = "",
@@ -247,7 +247,7 @@ static const struct {
         .format = "%s",
         .expected_output = "",
         .nargs = 1,
-        .args = {(uint)""},
+        .args = {(uintptr_t)""},
     },
     { /* Binary number */
         .format = "%b",
@@ -295,7 +295,7 @@ static const struct {
         .format = "%s",
         .expected_output = "aoeu",
         .nargs = 1,
-        .args = {(uint)"aoeu"},
+        .args = {(uintptr_t)"aoeu"},
     },
     { /* Null string */
         .format = "%s",
@@ -325,55 +325,55 @@ static const struct {
         .format = "%.5s",
         .expected_output = "trunc",
         .nargs = 1,
-        .args = {(uint)"truncate me"},
+        .args = {(uintptr_t)"truncate me"},
     },
     { /* Truncated string, max-width specified as vararg */
         .format = "%.*s",
         .expected_output = "trunc",
         .nargs = 2,
-        .args = {5, (uint)"truncate me"},
+        .args = {5, (uintptr_t)"truncate me"},
     },
     { /* Non-truncated string, negative max-width has no effect  */
         .format = "%.*s",
         .expected_output = "truncate me",
         .nargs = 2,
-        .args = {-1, (uint)"truncate me"},
+        .args = {-1, (uintptr_t)"truncate me"},
     },
     { /* Truncated string, implicit zero max-width   */
         .format = "%.s",
         .expected_output = "",
         .nargs = 1,
-        .args = {(uint)"truncate me"},
+        .args = {(uintptr_t)"truncate me"},
     },
     { /* Right justified string */
         .format = "%10s",
         .expected_output = "     right",
         .nargs = 1,
-        .args = {(uint)"right"},
+        .args = {(uintptr_t)"right"},
     },
     { /* Right justified string, min-width specified as vararg */
         .format = "%*s",
         .expected_output = "     right",
         .nargs = 2,
-        .args = {10, (uint)"right"},
+        .args = {10, (uintptr_t)"right"},
     },
     { /* Left justified string */
         .format = "%-8s",
         .expected_output = "left    ",
         .nargs = 1,
-        .args = {(uint)"left"},
+        .args = {(uintptr_t)"left"},
     },
     { /* Left justified string, min-width specified as vararg */
         .format = "%-*s",
         .expected_output = "left    ",
         .nargs = 2,
-        .args = {8, (uint)"left"},
+        .args = {8, (uintptr_t)"left"},
     },
     { /* Left justified string via negative min-width specified as vararg */
         .format = "%*s",
         .expected_output = "left    ",
         .nargs = 2,
-        .args = {-8, (uint)"left"},
+        .args = {-8, (uintptr_t)"left"},
     },
     { /* Negative integer */
         .format = "%d",
@@ -397,7 +397,7 @@ static const struct {
         .format = "%u",
         .expected_output = "2147483648",
         .nargs = 1,
-        .args = {(uint)INT_MAX + 1},
+        .args = {(uintptr_t)INT_MAX + 1},
     },
     { /* min width (left justified, overriding zero padding) */
         .format = "%-06d", /* '-' overrides '0' */
@@ -433,13 +433,13 @@ static const struct {
         .format = "%23s",
         .expected_output = "     ""     ""     ""     ""123",
         .nargs = 1,
-        .args = {(uint)"123"},
+        .args = {(uintptr_t)"123"},
     },
     { /* Large max width */
         .format = "%.23s",
         .expected_output = "abcdefghijklmnopqrstuvw",
         .nargs = 1,
-        .args = {(uint)"abcdefghijklmnopqrstuvwxyz"},
+        .args = {(uintptr_t)"abcdefghijklmnopqrstuvwxyz"},
     },
     { /* Zero */
         .format = "%d",
@@ -517,7 +517,7 @@ static const struct {
         .format = "literal %08d\t%-8s\t%c%cliteral",
         .expected_output = "literal 00004000\tfoobar  \t\xfeXliteral",
         .nargs = 4,
-        .args = {4000, (uint)"foobar", 0xfe, 'X'},
+        .args = {4000, (uintptr_t)"foobar", 0xfe, 'X'},
     },
 };
 
@@ -532,7 +532,7 @@ static bool do_detailed_fprintf_tests(bool verbose, bool passed)
         const char *format = fprintf_specs[i].format;
         const char *expected_output = fprintf_specs[i].expected_output;
         uint nargs = fprintf_specs[i].nargs;
-        const uint *args = fprintf_specs[i].args;
+        const uintptr_t *args = fprintf_specs[i].args;
         int ret;
         int len = strlen(expected_output);
         uchar obuf[len + 1];

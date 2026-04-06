@@ -24,7 +24,7 @@
  *      the base of a stack growing down.  Free the stack with stkfree() when
  *      done with it.
  */
-void *stkget(uint nbytes)
+void *stkget(uintptr_t nbytes)
 {
     irqmask im;
     struct memblock *prev, *next, *fits, *fitsprev;
@@ -35,7 +35,7 @@ void *stkget(uint nbytes)
     }
 
     /* round to multiple of memblock size   */
-    nbytes = (uint)roundmb(nbytes);
+    nbytes = (uintptr_t)roundmb(nbytes);
 
     im = disable();
 
@@ -76,5 +76,5 @@ void *stkget(uint nbytes)
 
     memlist.length -= nbytes;
     restore(im);
-    return (void *)((ulong)fits + nbytes - sizeof(int));
+    return (void *)((ulong)fits + nbytes - sizeof(void*));
 }

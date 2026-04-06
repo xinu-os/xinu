@@ -23,7 +23,7 @@
  *      ::OK on success; ::SYSERR on failure.  This function can only fail
  *      because of memory corruption or specifying an invalid memory block.
  */
-syscall memfree(void *memptr, uint nbytes)
+syscall memfree(void *memptr, uintptr_t nbytes)
 {
     register struct memblock *block, *next, *prev;
     irqmask im;
