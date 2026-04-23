@@ -28,7 +28,7 @@ int printf(const char *format, ...)
     int ret;
 
     va_start(ap, format);
-    ret = _doprnt(format, ap, fputc, stdout);
+    ret = _doprnt(format, ap,  (int (*)(int,  uintptr_t))  fputc, (uintptr_t)stdout);
     va_end(ap);
 
     return ret;

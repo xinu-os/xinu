@@ -9,11 +9,13 @@
 #define _MEMORY_H_
 
 #include <stddef.h>
+#include <stdint.h>
 
+#define MEMORY_DMBDEC (2*sizeof(uintptr_t)-1)
 /* roundmb - round address up to size of memblock  */
-#define roundmb(x)  (void *)( (7 + (ulong)(x)) & ~0x07 )
+#define roundmb(x)  (void *)( (MEMORY_DMBDEC + (ulong)(x)) & ~MEMORY_DMBDEC )
 /* truncmb - truncate address down to size of memblock */
-#define truncmb(x)  (void *)( ((ulong)(x)) & ~0x07 )
+#define truncmb(x)  (void *)( ((ulong)(x)) & ~MEMORY_DMBDEC )
 
 /**
  * @ingroup memory_mgmt
@@ -38,7 +40,7 @@
 struct memblock
 {
     struct memblock *next;          /**< pointer to next memory block       */
-    uint length;                    /**< size of memory block (with struct) */
+    uintptr_t length;                    /**< size of memory block (with struct) */
 };
 
 extern struct memblock memlist;     /**< head of free memory list           */
@@ -50,8 +52,8 @@ extern void *_etext;            /**< linker provides end of text segment    */
 extern void *memheap;           /**< bottom of heap                         */
 
 /* Memory function prototypes */
-void *memget(uint);
-syscall memfree(void *, uint);
-void *stkget(uint);
+void *memget(uintptr_t);
+syscall memfree(void *, uintptr_t);
+void *stkget(uintptr_t);
 
 #endif                          /* _MEMORY_H_ */

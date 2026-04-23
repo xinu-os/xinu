@@ -6,6 +6,7 @@
 #ifndef _STDIO_H_
 #define _STDIO_H_
 
+#include <stdint.h>
 #include <compiler.h>
 #include <stdarg.h>
 #include <thread.h>  /* For thrtab and thrcurrent. */
@@ -31,8 +32,8 @@
 
 /* Formatted input  */
 int _doscan(const char *fmt, va_list ap,
-            int (*getch) (int, int), int (*ungetch) (int, int),
-            int arg1, int arg2);
+            int (*getch) (int, uintptr_t), int (*ungetch) (int, uintptr_t),
+            int arg1, uintptr_t arg2);
 
 int fscanf(int dev, const char *format, ...);
 
@@ -45,7 +46,7 @@ int sscanf(const char *str, const char *format, ...);
 
 /* Formatted output  */
 int _doprnt(const char *format, va_list,
-	    int (*putc_func)(int, int), int putc_arg);
+	    int (*putc_func)(int, uintptr_t), uintptr_t putc_arg);
 
 int fprintf(int dev, const char *format, ...) __printf_format(2, 3);
 int printf(const char *format, ...) __printf_format(1, 2);

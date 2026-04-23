@@ -48,7 +48,7 @@ tid_typ create(void *procaddr, uint ssize, int priority,
 
     /* Allocate new stack.  */
     saddr = stkget(ssize);
-    if (SYSERR == (int)saddr)
+    if (SYSERR == (intptr_t)saddr)
     {
         restore(im);
         return SYSERR;

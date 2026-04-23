@@ -20,15 +20,15 @@ enum integer_size {
 
 static int scan_string(char *ptr, int type, uint maxlen,
                        const uchar *stopchar_tab,
-                       int (*getch) (int, int), int (*ungetch) (int, int),
-                       int arg1, int arg2, bool *eofptr);
+                       int (*getch) (int, uintptr_t), int (*ungetch) (int, uintptr_t),
+                       int arg1, uintptr_t arg2, bool *eofptr);
 
 static int scan_number_or_string(void *ptr, uchar type, uint maxlen,
                                  enum integer_size size,
                                  const uchar *stopchar_tab,
-                                 int (*getch) (int, int),
-                                 int (*ungetch) (int, int),
-                                 int arg1, int arg2, bool *eofptr);
+                                 int (*getch) (int, uintptr_t),
+                                 int (*ungetch) (int, uintptr_t),
+                                 int arg1, uintptr_t arg2, bool *eofptr);
 
 static const uchar *build_stopchar_tab(const uchar *ufmt, uchar *stopchar_tab);
 
@@ -81,8 +81,8 @@ static const uchar *build_stopchar_tab(const uchar *ufmt, uchar *stopchar_tab);
  *      returned.
  */
 int _doscan(const char *fmt, va_list ap,
-            int (*getch) (int, int), int (*ungetch) (int, int),
-            int arg1, int arg2)
+            int (*getch) (int, uintptr_t), int (*ungetch) (int, uintptr_t),
+            int arg1, uintptr_t arg2)
 {
     int nmatch;
     uint maxlen;
@@ -235,8 +235,8 @@ int _doscan(const char *fmt, va_list ap,
 }
 
 static int scan_string(char *ptr, int type, uint maxlen, const uchar *stopchar_tab,
-                       int (*getch) (int, int), int (*ungetch) (int, int),
-                       int arg1, int arg2, bool *eofptr)
+                       int (*getch) (int, uintptr_t), int (*ungetch) (int, uintptr_t),
+                       int arg1, uintptr_t arg2, bool *eofptr)
 {
     uint len;
     int c;
@@ -290,9 +290,9 @@ static int scan_string(char *ptr, int type, uint maxlen, const uchar *stopchar_t
 static int scan_number_or_string(void *ptr, uchar type, uint maxlen,
                                  enum integer_size size,
                                  const uchar *stopchar_tab,
-                                 int (*getch) (int, int),
-                                 int (*ungetch) (int, int),
-                                 int arg1, int arg2, bool *eofptr)
+                                 int (*getch) (int, uintptr_t),
+                                 int (*ungetch) (int,uintptr_t),
+                                 int arg1, uintptr_t arg2, bool *eofptr)
 {
     int c = EOF;
     ulong n;

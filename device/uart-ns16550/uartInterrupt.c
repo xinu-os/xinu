@@ -15,7 +15,7 @@ extern int resdefer;
  *
  * Decode hardware interrupt request from UART device.
  */
-interrupt uartInterrupt(void)
+interrupt uartInterruptNoRsch(void)
 {
     int u = 0, iir = 0, lsr = 0, count = 0;
     char c;
@@ -124,10 +124,22 @@ interrupt uartInterrupt(void)
             break;
         }
     }
+}
 
-    if (--resdefer > 0)
-    {
-        resdefer = 0;
-        resched();
+/**
+ * @ingroup uarthardware
+ *
+ * Decode hardware interrupt request from UART device and call
+ * resched() if needed. Normally used as UART interrupt handler except
+ * on the architectures where devices share interrupts.
+ *
+ */
+interrupt uartInterrupt(void)
+{
+    uartInterruptNoRsch();
+    if (--resdefer > 0) 
+    { 
+	 resdefer = 0; 
+	 resched();
     }
 }

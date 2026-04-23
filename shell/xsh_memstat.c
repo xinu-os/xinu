@@ -19,6 +19,12 @@
 #define PRINT_REGION  0x04
 #define PRINT_THREAD  0x08
 
+#if  __LP64__
+#define HEXWIDTH 16
+#else
+#define HEXWIDTH 8
+#endif
+
 extern char *maxaddr;
 extern void _start(void);
 
@@ -40,6 +46,8 @@ static void usage(char *command)
     printf("\t-t <TID>\tprint user free list of thread id tid\n");
     printf("\t--help\t\tdisplay this help and exit\n");
 }
+
+
 
 /**
  * @ingroup shell
@@ -129,17 +137,17 @@ shellcmd xsh_memstat(int nargs, char *args[])
 static void printMemUsage(void)
 {
     int i;
-    uint phys = 0;              /* total physical memory          */
-    uint resrv = 0;             /* total reserved system memory   */
-    uint code = 0;              /* total Xinu code memory         */
-    uint stack = 0;             /* total stack memory             */
-    uint kheap = 0;             /* total kernel heap memory       */
-    uint kused = 0;             /* total used kernel heap memory  */
-    uint kfree = 0;             /* total free memory              */
+    uintptr_t phys = 0;         /* total physical memory          */
+    uintptr_t resrv = 0;        /* total reserved system memory   */
+    uintptr_t code = 0;         /* total Xinu code memory         */
+    uintptr_t stack = 0;        /* total stack memory             */
+    uintptr_t kheap = 0;        /* total kernel heap memory       */
+    uintptr_t kused = 0;        /* total used kernel heap memory  */
+    uintptr_t kfree = 0;        /* total free memory              */
     struct memblock *block;     /* memory block pointer           */
 #ifdef UHEAP_SIZE
-    uint uheap = 0;             /* total user heap memory         */
-    uint uused = 0;             /* total used user heap memory    */
+    uintptr_t uheap = 0;        /* total user heap memory         */
+    uintptr_t uused = 0;        /* total used user heap memory    */
     struct memregion *regptr;   /* point to memory region */
 #endif                          /* UHEAP_SIZE */
 
@@ -179,7 +187,7 @@ static void printMemUsage(void)
     /* Calculate amount of user heap memory */
 #ifdef UHEAP_SIZE
     /* determine used user heap amount */
-    for (regptr = regalloclist; (int)regptr != SYSERR;
+    for (regptr = regalloclist; (uintptr_t)regptr != SYSERR;
          regptr = regptr->next)
     {
         uused += regptr->length;
@@ -187,7 +195,7 @@ static void printMemUsage(void)
 
     /* determine total user heap size */
     uheap = uused;
-    for (regptr = regfreelist; (int)regptr != SYSERR;
+    for (regptr = regfreelist; (uintptr_t)regptr != SYSERR;
          regptr = regptr->next)
     {
         uheap += regptr->length;
@@ -200,16 +208,16 @@ static void printMemUsage(void)
 
     /* Ouput current memory usage */
     printf("Current System Memory Usage:\n");
-    printf("----------------------------\n");
-    printf("%10d bytes system area\n", resrv);
-    printf("%10d bytes Xinu code\n", code);
-    printf("%10d bytes stack space\n", stack);
-    printf("%10d bytes kernel heap space (%d used)\n", kheap, kused);
+    printf("-----------------------------------------------------\n");
+    printf("%20ld bytes system area\n", (ulong)resrv);
+    printf("%20ld bytes Xinu code\n",  (ulong)code);
+    printf("%20ld bytes stack space\n",  (ulong)stack);
+    printf("%20ld bytes kernel heap space (%ld used)\n",  (ulong)kheap,  (ulong)kused);
 #ifdef UHEAP_SIZE
-    printf("%10d bytes user heap space (%d used)\n", uheap, uused);
+    printf("%20ld bytes user heap space (%ld used)\n",  (ulong)uheap,  (ulong)uused);
 #endif                          /* UHEAP_SIZE */
-    printf("----------------------------\n");
-    printf("%10d bytes physical memory\n\n", phys);
+    printf("-----------------------------------------------------\n");
+    printf("%20ld bytes physical memory\n\n", (ulong)phys);
 }
 
 /**
@@ -223,15 +231,15 @@ static void printRegAllocList(void)
 
     /* Output free list */
     printf("Region Allocated List:\n");
-    printf("Index  Start       Length    TID\n");
-    printf("-----  ----------  --------  ---\n");
+    printf("Index  Start                Length               TID\n");
+    printf("-----  -------------------  -------------------  ---\n");
 
-    for (regptr = regalloclist; (int)regptr != SYSERR;
+    for (regptr = regalloclist; (uintptr_t)regptr != SYSERR;
          regptr = regptr->next)
     {
-        index = ((uint)regptr - (uint)regtab) / sizeof(struct memregion);
-        printf("%5d  0x%08x  %8d  %3d\n", index, regptr->start,
-               regptr->length, regptr->thread_id);
+        index = ((uintptr_t)regptr - (uintptr_t)regtab) / sizeof(struct memregion);
+        printf("%5d  0x%*lx  %20ld  %3d\n", index, HEXWIDTH, (ulong)regptr->start,
+               (ulong)regptr->length, regptr->thread_id);
     }
     printf("\n");
 #else
@@ -250,19 +258,20 @@ static void printRegFreeList(void)
 
     /* Output free list */
     printf("Region Free List:\n");
-    printf("Index  Start       Length  \n");
-    printf("-----  ----------  --------\n");
+    printf("Index  Start            Length\n");
+    printf("-----  ---------------  -----------------\n");
 
     for (regptr = regfreelist; (int)regptr != SYSERR;
          regptr = regptr->next)
     {
-        index = ((uint)regptr - (uint)regtab) / sizeof(struct memregion);
-        printf("%5d  0x%08x  %8d\n", index, regptr->start,
-               regptr->length);
+        index = ((uintptr_t)regptr - (uintptr_t)regtab) / sizeof(struct memregion);
+        printf("%5d  0x%0*lx  %20ld\n", index, HEXWIDTH, (ulong)regptr->start,
+               (ulong)regptr->length);
     }
     printf("\n");
 #endif                          /* UHEAP_SIZE */
 }
+
 
 /**
  * Dump the current free list of a specific thread.
@@ -274,11 +283,11 @@ static void printFreeList(struct memblock *base, char *ident)
 
     /* Output free list */
     printf("Free List (%s):\n", ident);
-    printf("BLOCK START  LENGTH  \n");
-    printf("-----------  --------\n");
+    printf("BLOCK START         LENGTH  \n");
+    printf("------------------  --------------------\n");
     for (block = base->next; block != NULL; block = block->next)
     {
-        printf("0x%08lX   %8u\n", (ulong)block, block->length);
+        printf("0x%0*lX  %20lu\n", HEXWIDTH, (ulong)block, (ulong)block->length);
     }
     printf("\n");
 }

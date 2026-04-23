@@ -137,6 +137,11 @@ These are all the platforms on which Embedded Xinu currently runs.
       - Core operating system, excluding wired networking, is functional.
       - ``arm-qemu``
       - ``arm-none-eabi``
+    * - :doc:`riscv64-qemu </riscv/RISCV-qemu>`
+      - Supported
+      - Core operating system is functional.
+      - ``riscv64-qemu``
+      - ``riscv64-unknown-elf``		
 
 .. _Xinu:
 
