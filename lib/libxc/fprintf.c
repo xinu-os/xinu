@@ -30,7 +30,7 @@ int fprintf(int dev, const char *format, ...)
     int ret;
 
     va_start(ap, format);
-    ret = _doprnt(format, ap, fputc, dev);
+    ret = _doprnt(format, ap,  (int (*)(int,  uintptr_t)) fputc, (uintptr_t) dev);
     va_end(ap);
     return ret;
 }

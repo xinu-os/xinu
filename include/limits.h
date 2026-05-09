@@ -28,7 +28,11 @@
 #define INT_MIN   (-INT_MAX-1)  /**< minimum value of int               */
 #define UINT_MAX  (2U*INT_MAX+1) /**< maximum value of unsigned int     */
 
+#ifdef __LP64__  /* 64 bit arch */
+#define LONG_MAX  9223372036854775807L  /**< maximum value of long      */
+#else            /* 32 bit arch */
 #define LONG_MAX  2147483647    /**< maximum value of long              */
+#endif
 #define LONG_MIN  (-LONG_MAX-1) /**< minimum value of long              */
 #define ULONG_MAX (2UL*LONG_MAX+1) /**< maximum value of unsigned long  */
 
