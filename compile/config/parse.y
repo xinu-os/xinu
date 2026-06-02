@@ -3,6 +3,15 @@ extern char *doing;
 extern int   currname;
 extern int   currtname;
 extern int   currdname;
+
+int yylex();
+void mktype(int);
+int cktname(int);
+int lookup(const char *);
+void newattr(int, int);
+void mkdev(int, int, int);
+int  ckdname(int);
+void yyerror(const char *s);
 %}
 
 /* Token semantic values */

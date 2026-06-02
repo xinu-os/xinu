@@ -46,6 +46,8 @@ int linectr = 1;
 char *doing = "device type declaration";
 char *s;
 
+// TODO: figure out how this is typedef'd to "device"
+// typedef struct dev_ent device
 struct dev_ent
 {
 	char *name;               /* device name (not used in types) */
@@ -521,4 +523,3 @@ int ckdname(int devid)
 
 	return devid;
 }
-
